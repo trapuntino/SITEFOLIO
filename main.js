@@ -14,61 +14,91 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 
 // CAMERA
-const camera = new THREE.PerspectiveCamera(
-  75,
-  container.clientWidth / container.clientHeight,
-  0.1,
-  1000
-);
+const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 camera.position.set(0, 2, 6);
 
-// TARGET CAMERA E FOV
+// CAMERA TARGET E FOV
 const cameraTarget = new THREE.Vector3(0, 2, 6);
 const lookTarget = new THREE.Vector3(0, 1.5, 0);
 let fovTarget = 75;
 
-// LUCI
+// LUCE
 const light = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
 scene.add(light);
 
-// MODELLO + ANIMAZIONE
+// MODELLO E ANIMAZIONE
 let trackedModel;
 let mixer;
 let targetRotationX = 0;
 let targetRotationY = 0;
 
 const loader = new GLTFLoader();
-loader.load(
-  'model.glb',
-  function (gltf) {
-    const model = gltf.scene;
-    model.scale.set(2.5, 2.5, 2.5);
-    model.position.set(0, 0, 0);
-    scene.add(model);
-    trackedModel = model;
+loader.load('model.glb', function (gltf) {
+  const model = gltf.scene;
+  model.scale.set(2.5, 2.5, 2.5);
+  model.position.set(0, 0, 0);
+  scene.add(model);
+  trackedModel = model;
 
-    // 👇 Carica e applica animazione appena il modello è pronto
-    const animLoader = new GLTFLoader();
-    animLoader.load('standing_up.glb', function (animGltf) {
-      const clip = animGltf.animations[0];
-      mixer = new THREE.AnimationMixer(trackedModel);
-      const action = mixer.clipAction(clip);
-      action.play();
+  mixer = new THREE.AnimationMixer(trackedModel);
+  const animLoader = new GLTFLoader();
+
+  const animations = {}; // cache animazioni
+
+  function loadClip(name) {
+    return new Promise((resolve, reject) => {
+      if (animations[name]) return resolve(animations[name]);
+      animLoader.load(`${name}.glb`, gltf => {
+        const clip = gltf.animations[0];
+        animations[name] = clip;
+        resolve(clip);
+      }, undefined, reject);
     });
-  },
-  undefined,
-  function (error) {
-    console.error('Errore nel caricamento del modello:', error);
   }
-);
+
+  function playSequence(names) {
+    if (!names.length) return;
+
+    const [current, ...rest] = names;
+    loadClip(current).then(clip => {
+      const action = mixer.clipAction(clip);
+      action.reset();
+      action.setLoop(THREE.LoopOnce);
+      action.clampWhenFinished = true;
+      action.play();
+
+      mixer.addEventListener('finished', function onEnd() {
+        mixer.removeEventListener('finished', onEnd);
+        playSequence(rest);
+      });
+    });
+  }
+
+  // 👉 Sequenza iniziale: standing_up → stretch → point
+  playSequence(['standing_up', 'stretch', 'point']);
+
+  // Inactivity logic
+  let inactivityTimeout;
+  function resetInactivityTimer() {
+    clearTimeout(inactivityTimeout);
+    inactivityTimeout = setTimeout(() => {
+      playSequence(['stretch', 'point']);
+    }, 10000); // 10 sec
+  }
+
+  // Interazione = resetta timer
+  ['mousemove', 'click', 'keydown', 'touchstart'].forEach(event => {
+    window.addEventListener(event, resetInactivityTimer);
+  });
+
+  resetInactivityTimer(); // avvia timer iniziale
+});
 
 // ANIMAZIONE
 function animate() {
   requestAnimationFrame(animate);
 
-  if (mixer) {
-    mixer.update(0.016); // ~60fps
-  }
+  if (mixer) mixer.update(0.016);
 
   camera.position.lerp(cameraTarget, 0.05);
   camera.fov += (fovTarget - camera.fov) * 0.05;
@@ -100,13 +130,13 @@ document.querySelectorAll('#ui a').forEach(link => {
     const section = link.dataset.section;
 
     if (section === 'cv') {
+      allowRotation = true;
       container.classList.add('compact');
       cameraTarget.set(0, 2.5, 2);
       lookTarget.set(0, 2.5, 0);
       fovTarget = 45;
-    }
-
-    if (section === 'bio') {
+    } else {
+      allowRotation = false;
       container.classList.remove('compact');
       cameraTarget.set(0, 2, 6);
       lookTarget.set(0, 1.5, 0);
@@ -120,7 +150,11 @@ document.querySelectorAll('#ui a').forEach(link => {
 });
 
 // CURSORE (DESKTOP)
+let allowRotation = false; // controllo attivo
+
 document.addEventListener('mousemove', (e) => {
+  if (!allowRotation) return;
+
   const x = (e.clientX / window.innerWidth - 0.5) * 2;
   const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
