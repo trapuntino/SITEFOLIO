@@ -32,11 +32,13 @@ const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
 scene.add(light);
 
 // MODELLO
-let trackedModel; // riferimento globale al modello
+let trackedModel;
+let targetRotationX = 0;
+let targetRotationY = 0;
 
 const loader = new GLTFLoader();
 loader.load(
-  './male.glb',
+  'male.glb',
   function (gltf) {
     const model = gltf.scene;
     model.scale.set(0.8, 0.8, 0.8);
@@ -59,6 +61,12 @@ function animate() {
   camera.fov += (fovTarget - camera.fov) * 0.05;
   camera.updateProjectionMatrix();
   camera.lookAt(lookTarget);
+
+  // SMUSSAMENTO ROTAZIONE MODELLO
+  if (trackedModel) {
+    trackedModel.rotation.y += (targetRotationY - trackedModel.rotation.y) * 0.1;
+    trackedModel.rotation.x += (targetRotationX - trackedModel.rotation.x) * 0.1;
+  }
 
   // RENDER
   renderer.setSize(container.clientWidth, container.clientHeight);
@@ -106,22 +114,47 @@ document.addEventListener('mousemove', (e) => {
   const x = (e.clientX / window.innerWidth - 0.5) * 2;
   const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
-  if (trackedModel) {
-    trackedModel.rotation.y = THREE.MathUtils.clamp(x * Math.PI / 4, -Math.PI / 4, Math.PI / 4);
-    trackedModel.rotation.x = THREE.MathUtils.clamp(y * Math.PI / 4, -Math.PI / 4, Math.PI / 4);
-  }
+  targetRotationY = THREE.MathUtils.clamp(x * Math.PI / 4, -Math.PI / 4, Math.PI / 4);
+  targetRotationX = THREE.MathUtils.clamp(y * Math.PI / 4, -Math.PI / 4, Math.PI / 4);
 });
 
 // TILT (MOBILE)
-window.addEventListener('deviceorientation', (event) => {
-  const gamma = event.gamma || 0; // sinistra/destra
-  const beta = event.beta || 0;   // su/giù
+if (
+  typeof DeviceOrientationEvent !== 'undefined' &&
+  typeof DeviceOrientationEvent.requestPermission === 'function'
+) {
+  // iOS 13+
+  const button = document.createElement('button');
+  button.innerText = 'Attiva movimento';
+  button.style.position = 'absolute';
+  button.style.top = '20px';
+  button.style.left = '20px';
+  button.style.zIndex = 100;
+  document.body.appendChild(button);
+
+  button.addEventListener('click', () => {
+    DeviceOrientationEvent.requestPermission()
+      .then(response => {
+        if (response === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+          button.remove();
+        } else {
+          alert('Permesso non concesso per usare il giroscopio');
+        }
+      })
+      .catch(console.error);
+  });
+} else {
+  window.addEventListener('deviceorientation', handleOrientation);
+}
+
+function handleOrientation(event) {
+  const gamma = event.gamma || 0;
+  const beta = event.beta || 0;
 
   const x = THREE.MathUtils.clamp(gamma / 45, -1, 1);
-  const y = THREE.MathUtils.clamp((beta - 90) / 45, -1, 1);
+  const y = THREE.MathUtils.clamp((beta - 45) / 45, -1, 1); // offset 45° incluso
 
-  if (trackedModel) {
-    trackedModel.rotation.y = x * Math.PI / 4;
-    trackedModel.rotation.x = y * Math.PI / 4;
-  }
-});
+  targetRotationY = x * Math.PI / 4;
+  targetRotationX = y * Math.PI / 4;
+}
