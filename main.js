@@ -38,7 +38,7 @@ let targetRotationY = 0;
 
 const loader = new GLTFLoader();
 loader.load(
-  'male.glb',
+  'model.glb',
   function (gltf) {
     const model = gltf.scene;
     model.scale.set(0.8, 0.8, 0.8);
