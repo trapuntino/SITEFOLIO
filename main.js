@@ -28,11 +28,12 @@ const lookTarget = new THREE.Vector3(0, 1.5, 0);
 let fovTarget = 75;
 
 // LUCI
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
 scene.add(light);
 
-// MODELLO
+// MODELLO + ANIMAZIONE
 let trackedModel;
+let mixer;
 let targetRotationX = 0;
 let targetRotationY = 0;
 
@@ -41,10 +42,19 @@ loader.load(
   'model.glb',
   function (gltf) {
     const model = gltf.scene;
-    model.scale.set(0.8, 0.8, 0.8);
-    model.position.set(0, 2, 0);
+    model.scale.set(2.5, 2.5, 2.5);
+    model.position.set(0, 0, 0);
     scene.add(model);
     trackedModel = model;
+
+    // 👇 Carica e applica animazione appena il modello è pronto
+    const animLoader = new GLTFLoader();
+    animLoader.load('standing_up.glb', function (animGltf) {
+      const clip = animGltf.animations[0];
+      mixer = new THREE.AnimationMixer(trackedModel);
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
   },
   undefined,
   function (error) {
@@ -56,19 +66,20 @@ loader.load(
 function animate() {
   requestAnimationFrame(animate);
 
-  // MOVIMENTO CAMERA
+  if (mixer) {
+    mixer.update(0.016); // ~60fps
+  }
+
   camera.position.lerp(cameraTarget, 0.05);
   camera.fov += (fovTarget - camera.fov) * 0.05;
   camera.updateProjectionMatrix();
   camera.lookAt(lookTarget);
 
-  // SMUSSAMENTO ROTAZIONE MODELLO
   if (trackedModel) {
     trackedModel.rotation.y += (targetRotationY - trackedModel.rotation.y) * 0.1;
     trackedModel.rotation.x += (targetRotationX - trackedModel.rotation.x) * 0.1;
   }
 
-  // RENDER
   renderer.setSize(container.clientWidth, container.clientHeight);
   camera.aspect = container.clientWidth / container.clientHeight;
   renderer.render(scene, camera);
@@ -102,7 +113,6 @@ document.querySelectorAll('#ui a').forEach(link => {
       fovTarget = 75;
     }
 
-    // MOSTRA TESTO CORRISPONDENTE
     document.querySelectorAll('.section-text').forEach(el => el.classList.remove('active'));
     const current = document.querySelector(`.${section}-text`);
     if (current) current.classList.add('active');
@@ -123,7 +133,6 @@ if (
   typeof DeviceOrientationEvent !== 'undefined' &&
   typeof DeviceOrientationEvent.requestPermission === 'function'
 ) {
-  // iOS 13+
   const button = document.createElement('button');
   button.innerText = 'Attiva movimento';
   button.style.position = 'absolute';
@@ -153,7 +162,7 @@ function handleOrientation(event) {
   const beta = event.beta || 0;
 
   const x = THREE.MathUtils.clamp(gamma / 45, -1, 1);
-  const y = THREE.MathUtils.clamp((beta - 45) / 45, -1, 1); // offset 45° incluso
+  const y = THREE.MathUtils.clamp((beta - 45) / 45, -1, 1);
 
   targetRotationY = x * Math.PI / 4;
   targetRotationX = y * Math.PI / 4;
