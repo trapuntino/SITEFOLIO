@@ -8,18 +8,27 @@
 </head>
 <body>
 
-  <div id="ui" class="menu">
-    <a data-section="cv">CV</a>
-    <a data-section="progetti">PROJECTS</a>
-    <a data-section="bio">BIOGRAPHY</a>
+  <!-- TOOLBAR stile Illustrator -->
+  <div id="toolbar">
+    <a class="tool" data-section="cv" title="CV">
+      <img src="icons/cv.svg" alt="CV">
+    </a>
+    <a class="tool" data-section="progetti" title="Projects">
+      <img src="icons/projects.svg" alt="Projects">
+    </a>
+    <a class="tool" data-section="bio" title="Biography">
+      <img src="icons/bio.svg" alt="Biography">
+    </a>
   </div>
-  
+
+  <!-- Modello 3D -->
   <div id="viewport-container"></div>
 
+  <!-- Contenuti -->
   <div id="content">
     <div class="cv-text section-text">Questo è il mio CV</div>
   </div>
 
-  <script type="module" src="./mainnn.js"></script>
+  <script type="module" src="./funziona.js"></script>
 </body>
 </html>

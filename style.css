@@ -1,53 +1,69 @@
-body{
-  background-color: #0000ff
+body {
+  background-color: #0000ff;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  #ui {
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    gap: 2rem;
-    font-family: sans-serif;
-    font-size: 1rem;
-  }
-  
-  #ui a {
-    text-decoration: none;
-    color: black;
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-  }
-  
-  #ui a:hover {
-    opacity: 1;
-  }
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
 
-  #viewport-container {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    top: 100px;
-    transition: 
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* TOOLBAR VERTICALE */
+#toolbar {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #2e2e2e;
+  padding: 10px 6px;
+  border: 1px solid #1c1c1c;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.tool {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tool:hover {
+  background-color: #505050;
+  border-radius: 4px;
+}
+
+.tool img {
+  width: 24px;
+  height: 24px;
+  filter: invert(100%);
+}
+
+
+/* VIEWPORT */
+#viewport-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  top: 100px;
+  transition: 
     width 1s ease,
     height 1s ease,
     aspect-ratio 2s ease,
@@ -55,29 +71,27 @@ body{
     left 1s ease,
     right 2s ease,
     bottom 1s ease; 
-  }
-  
+}
+
+#viewport-container.compact {
+  width: 400px;
+  height: 400px;
+  position: absolute;
+  top: 100px;
+  right: 100px;
+}
+
+@media (max-width: 768px) {
   #viewport-container.compact {
-    width: 400px;
-    height: 400px;
-    position: absolute;
-    top: 100px;
-    right: 100px;
+    width: 80vw;
+    aspect-ratio: 1 / 1;
+    top: auto;
+    right: auto;
   }
+}
 
-  @media (max-width: 768px) {
-    #viewport-container.compact {
-      width: 80vw;
-      aspect-ratio: 1 / 1;
-      position: absolute;
-      top: auto;
-      right: auto;
-    }
-  }
-
-  /* CURRICULUM */
-
-  #content {
+/* CONTENUTO */
+#content {
   position: absolute;
   top: 100px;
   left: 50px;
@@ -95,33 +109,4 @@ body{
 .section-text.active {
   display: block;
   opacity: 1;
-}
-
-.menu {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: #c0c0c0;
-  padding: 12px;
-  border: 2px solid #808080;
-  box-shadow: 4px 4px 0 #808080;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-}
-
-.menu a {
-  color: black;
-  text-decoration: none;
-  padding: 4px 8px;
-  border: 1px solid transparent;
-  background-color: #e0e0e0;
-}
-
-.menu a:hover {
-  border: 1px solid black;
-  background-color: white;
-  cursor: pointer;
 }
