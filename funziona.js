@@ -126,20 +126,8 @@ loader.load('model.glb', function (gltf) {
     if (isInFightMode) registerHit();
   });
 
-  // 🔧 Aggiunta Fight Mode Button alla Toolbar
-  const toolbar = document.getElementById('toolbar');
-
-  const fightBtn = document.createElement('a');
-  fightBtn.classList.add('tool');
-  fightBtn.setAttribute('title', 'Toggle Fight Mode');
-
-  const fightIcon = document.createElement('img');
-  fightIcon.src = 'icons/fight.svg'; // <-- cambia path se necessario
-  fightIcon.alt = 'Fight Mode';
-
-  fightBtn.appendChild(fightIcon);
-  toolbar.appendChild(fightBtn);
-
+  // 🔧 Fight Mode gestito tramite HTML
+  const fightBtn = document.getElementById('fight-mode-btn');
   fightBtn.addEventListener('click', () => {
     toggleFightMode();
     fightBtn.classList.toggle('active', isInFightMode);
@@ -173,7 +161,8 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-document.querySelectorAll('#ui a').forEach(link => {
+// ✅ Navigazione sezioni da #toolbar
+document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const section = link.dataset.section;
