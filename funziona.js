@@ -13,10 +13,10 @@ const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container
 camera.position.set(0, 4, 6);
 
 const cameraTarget = new THREE.Vector3(0, 4, 6);
-const lookTarget = new THREE.Vector3(0, 1.5, 0);
+const lookTarget = new THREE.Vector3(0, 2, 0);
 let fovTarget = 75;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 4);
 scene.add(light);
 
 let trackedModel;
@@ -34,7 +34,7 @@ const pointer = new THREE.Vector2();
 const loader = new GLTFLoader();
 loader.load('model.glb', function (gltf) {
   const model = gltf.scene;
-  model.scale.set(2.5, 2.5, 2.5);
+  model.scale.set(3, 3, 3);
   model.position.set(0, 0, 0);
   scene.add(model);
   trackedModel = model;
@@ -88,12 +88,22 @@ loader.load('model.glb', function (gltf) {
     if (isPlayingAnimation) return;
     isInFightMode = true;
     hitCount = 0;
+
+    light.color.set(0xff6057);
+    light.groundColor.set(0x000000);
+    light.intensity = 5;
+
     playSequence(['standing_to_fight']);
   }
 
   function exitFightMode() {
     if (isPlayingAnimation) return;
     isInFightMode = false;
+
+    light.color.set(0xffffff);
+    light.groundColor.set(0x444444);
+    light.intensity = 4;
+
     playSequence(['fight_to_standing']);
   }
 
@@ -126,12 +136,13 @@ loader.load('model.glb', function (gltf) {
     if (isInFightMode) registerHit();
   });
 
-  // 🔧 Fight Mode gestito tramite HTML
   const fightBtn = document.getElementById('fight-mode-btn');
-  fightBtn.addEventListener('click', () => {
-    toggleFightMode();
-    fightBtn.classList.toggle('active', isInFightMode);
-  });
+  if (fightBtn) {
+    fightBtn.addEventListener('click', () => {
+      toggleFightMode();
+      fightBtn.classList.toggle('active', isInFightMode);
+    });
+  }
 });
 
 function animate() {
@@ -167,22 +178,48 @@ document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
     e.preventDefault();
     const section = link.dataset.section;
 
+    // Reset visibilità scena 3D
+    container.classList.remove('compact');
+    container.classList.remove('hidden');
+
+    // Sezione CV
     if (section === 'cv') {
       allowRotation = true;
       container.classList.add('compact');
-      cameraTarget.set(0, 4.5, 2);
-      lookTarget.set(0, 4, 0);
+      cameraTarget.set(0, 5, 3);
+      lookTarget.set(0, 5, 0);
       fovTarget = 30;
       scene.background = new THREE.Color(0xffffff);
-    } else {
+    }
+
+    // Sezione Progetti
+    else if (section === 'progetti') {
+      container.classList.add('hidden');
+
+      // Rimuove classe .visible da tutte le card (reset)
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => card.classList.remove('visible'));
+
+      // Attiva le card una alla volta con delay
+      setTimeout(() => {
+        cards.forEach((card, i) => {
+          setTimeout(() => {
+            card.classList.add('visible');
+          }, i * 100);
+        });
+      }, 300); // attende leggermente l'attivazione visiva della sezione
+    }
+
+    // Tutte le altre sezioni
+    else {
       allowRotation = false;
-      container.classList.remove('compact');
       cameraTarget.set(0, 4, 6);
       lookTarget.set(0, 1.5, 0);
       fovTarget = 75;
       scene.background = new THREE.Color(0x0000ff);
     }
 
+    // Mostra la sezione attiva
     document.querySelectorAll('.section-text').forEach(el => el.classList.remove('active'));
     const current = document.querySelector(`.${section}-text`);
     if (current) current.classList.add('active');
@@ -190,3 +227,24 @@ document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
 });
 
 let allowRotation = false;
+
+// FILTRO PROGETTI
+const filterButtons = document.querySelectorAll('.filter-box button');
+const projectCards = document.querySelectorAll('.project-card');
+
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.getAttribute('data-filter');
+
+    filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    projectCards.forEach(card => {
+      if (filter === 'all' || card.classList.contains(filter)) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
