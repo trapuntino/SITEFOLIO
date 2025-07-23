@@ -130,17 +130,28 @@ loader.load('model.glb', function (gltf) {
     }
   }
 
+  // ▶️ Animazione iniziale
   playSequence(['standing_up', 'stretch', 'point']);
 
   renderer.domElement.addEventListener('click', () => {
     if (isInFightMode) registerHit();
   });
 
+  // 🥊 Fight mode
   const fightBtn = document.getElementById('fight-mode-btn');
   if (fightBtn) {
     fightBtn.addEventListener('click', () => {
       toggleFightMode();
       fightBtn.classList.toggle('active', isInFightMode);
+    });
+  }
+
+  // 🌀 Backflip
+  const backflipBtn = document.getElementById('backflip-btn');
+  if (backflipBtn) {
+    backflipBtn.addEventListener('click', () => {
+      if (isPlayingAnimation) return;
+      playSequence(['backflip']);
     });
   }
 });
@@ -207,7 +218,7 @@ document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
             card.classList.add('visible');
           }, i * 100);
         });
-      }, 300); // attende leggermente l'attivazione visiva della sezione
+      }, 300);
     }
 
     // Tutte le altre sezioni
@@ -228,7 +239,7 @@ document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
 
 let allowRotation = false;
 
-// FILTRO PROGETTI
+// 🔍 Filtro progetti
 const filterButtons = document.querySelectorAll('.filter-box button');
 const projectCards = document.querySelectorAll('.project-card');
 
