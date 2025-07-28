@@ -10,30 +10,54 @@
 
 <body>
 
-  <!-- Toolbar verticale stile Illustrator -->
+<!-- CANVAS SFONDO SEMPRE ATTIVO -->
+<canvas id="background-canvas"></canvas>
+
+<!-- LOADER CON PARTICELLE FORMANTI + FREE -->
+<div id="loader">
+  <canvas id="loader-canvas"></canvas>
+  <img id="logo-loader" src="icons/logo.svg" alt="Logo Fabrizio Confortola" />
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="loading-text">Sto accendendo i pixel...</div>
+</div>
+
+
+
+
+
+<!-- 🔘 BOTTONE APERTURA MENU PRINCIPALE -->
+  <div id="menu-toggle" class="menu-icon">+</div>
+
+<!-- 📂 MENU PRINCIPALE -->
+  <div id="main-menu" class="menu hidden">
+    <div class="menu-header">
+      <div class="menu-close">×</div>
+    </div>
+    <ul class="menu-list">
+      <li data-section="home">HOME</li>
+      <li data-section="bio">BIOGRAFIA</li>
+      <li data-section="progetti">PROGETTI</li>
+      <li data-section="cv">CV</li>
+    </ul>
+    <div class="socials">
+      socials → <span>IG</span> <span>PHONE</span> <span>E-MAIL</span>
+    </div>
+  </div>
+
+  <!-- 🧰 TOOLBAR: solo per funzioni speciali -->
   <div id="toolbar">
-    <a class="tool" data-section="cv" title="CV">
-      <img src="icons/cv.svg" alt="CV">
-    </a>
-    <a class="tool" data-section="progetti" title="Projects">
-      <img src="icons/projects.svg" alt="Projects">
-    </a>
-    <a class="tool" data-section="bio" title="Biography">
-      <img src="icons/bio.svg" alt="Biography">
-    </a>
     <a class="tool" id="fight-mode-btn" title="Toggle Fight Mode">
       <img src="icons/fight.svg" alt="Fight Mode">
     </a>
     <a class="tool" id="backflip-btn" title="Backflip">
-      <img src="icons/fight.svg" alt="Backflip">
+      <img src="icons/projects.svg" alt="Backflip">
     </a>
   </div>
 
 
-  <!-- BOTTONE PER APRIRE FILTRI -->
-  <button id="open-filter">⚙︎</button>
-
-  <!-- Contenitore per il modello 3D -->
+  <!-- VIEWPORT 3D -->
   <div id="viewport-container"></div>
 
   <!-- CONTENUTO CV -->
@@ -108,10 +132,8 @@
   </div>
 
   <!-- CONTENUTO PROGETTI -->
-
-
   <div class="projects-grid">
-    <!-- Card template -->
+
     <div class="project-card"><img src="images/test.jpg" alt="">
       <h3>Project 1</h3>
     </div>
@@ -150,8 +172,8 @@
     </div>
   </div>
 
-  </div>
-
+  <!-- SCRIPT JS -->
+  <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
   <script type="module" src="./funziona.js"></script>
 </body>
 
