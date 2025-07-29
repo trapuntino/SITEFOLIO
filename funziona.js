@@ -72,8 +72,8 @@ window.addEventListener('load', () => {
     tempCtx.drawImage(logoImg, 0, 0);
     const imageData = tempCtx.getImageData(0, 0, logoImg.width, logoImg.height);
 
-    for (let y = 0; y < logoImg.height; y += 2) {
-      for (let x = 0; x < logoImg.width; x += 2) {
+    for (let y = 0; y < logoImg.height; y += 1) {
+      for (let x = 0; x < logoImg.width; x += 1) {
         const i = (y * logoImg.width + x) * 4;
         const alpha = imageData.data[i + 3];
         if (alpha > 128) {
@@ -87,15 +87,34 @@ window.addEventListener('load', () => {
 
     for (let i = 0; i < targetPoints.length; i++) {
       const tp = targetPoints[i];
-      formingPixels.push({
-        x: Math.random() * loaderCanvas.width,
-        y: Math.random() * loaderCanvas.height,
-        tx: tp.tx,
-        ty: tp.ty,
-        size: 2,
-        vx: 0,
-        vy: 0
-      });
+
+      const isMover = Math.random() < 0.5;
+
+      if (isMover) {
+        formingPixels.push({
+          x: Math.random() * loaderCanvas.width,
+          y: Math.random() * loaderCanvas.height,
+          tx: tp.tx,
+          ty: tp.ty,
+          size: 2,
+          vx: 0,
+          vy: 0,
+          type: 'mover'
+        });
+      } else {
+        formingPixels.push({
+          x: tp.tx,
+          y: tp.ty,
+          tx: tp.tx,
+          ty: tp.ty,
+          size: 2,
+          vx: 0,
+          vy: 0,
+          type: 'static'
+        });
+      }
+
+
     }
 
     for (let i = 0; i < 150; i++) {
@@ -162,17 +181,31 @@ window.addEventListener('load', () => {
     });
 
     formingPixels.forEach(p => {
-      const dx = p.tx - p.x;
-      const dy = p.ty - p.y;
-      p.vx += dx * 0.01;
-      p.vy += dy * 0.01;
-      p.vx *= 0.9;
-      p.vy *= 0.9;
-      p.x += p.vx;
-      p.y += p.vy;
+      if (p.type === 'mover') {
+        const dx = p.tx - p.x;
+        const dy = p.ty - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const attraction = 0.01 + (percent / 100) * 0.04;
+        const wander = (1 - percent / 100) * 0.5;
+
+        p.vx += dx * attraction + (Math.random() - 0.5) * wander;
+        p.vy += dy * attraction + (Math.random() - 0.5) * wander;
+
+        p.vx *= 0.9;
+        p.vy *= 0.9;
+
+        p.x += p.vx;
+        p.y += p.vy;
+      }
 
       loaderCtx.fillRect(p.x, p.y, p.size, p.size);
     });
+
+
+
+
+
 
     if (!isLoaded) requestAnimationFrame(animateLoader);
   }
@@ -192,19 +225,19 @@ window.addEventListener('load', () => {
     }
 
     if (percent === 100) {
-  clearInterval(interval);
-  isLoaded = true;
+      clearInterval(interval);
+      isLoaded = true;
 
-  Promise.all([modelPromise, window.animationPreloadPromise]).then(() => {
-    setTimeout(() => {
-      loader.style.opacity = '0';
-      loader.style.transition = 'opacity 0.6s ease';
-      logo.remove();
-      loader.remove();
-      playSequence(['standing_up', 'stretch', 'point']);
-    }, 600);
-  });
-}
+      Promise.all([modelPromise, window.animationPreloadPromise]).then(() => {
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          loader.style.transition = 'opacity 0.6s ease';
+          logo.remove();
+          loader.remove();
+          playSequence(['standing_up', 'stretch', 'point']);
+        }, 600);
+      });
+    }
 
   }, 100);
 });
@@ -243,8 +276,6 @@ let isInFightMode = false;
 let hitCount = 0;
 let isPlayingAnimation = false;
 
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
 
 const loader = new GLTFLoader();
 
@@ -259,6 +290,7 @@ const modelPromise = new Promise((resolve, reject) => {
     mixer = new THREE.AnimationMixer(trackedModel);
     const animLoader = new GLTFLoader();
     const animations = {};
+    let currentAction;
 
     function loadClip(name) {
       return new Promise((resolve, reject) => {
@@ -271,7 +303,46 @@ const modelPromise = new Promise((resolve, reject) => {
       });
     }
 
-    // ✅ PRELOAD ANIMAZIONI COME PROMISE COMBINATA
+    playSequence = function (names, onEnd) {
+      if (!names.length) {
+        isPlayingAnimation = false;
+        if (onEnd) onEnd();
+        return;
+      }
+
+      const [current, ...rest] = names;
+
+      loadClip(current).then(clip => {
+        animations[current] = clip;
+        const newAction = mixer.clipAction(clip);
+
+        if (currentAction && currentAction !== newAction) {
+          currentAction.crossFadeTo(newAction, 0.5, false);
+        }
+
+        newAction.reset();
+        newAction.setLoop(THREE.LoopOnce);
+        newAction.clampWhenFinished = true;
+        isPlayingAnimation = true;
+        newAction.play();
+        currentAction = newAction;
+
+        const onEndClip = (e) => {
+          if (e.action !== newAction) return; // 🛡️ ignora eventi di altre animazioni
+          mixer.removeEventListener('finished', onEndClip);
+
+          if (rest.length > 0) {
+            playSequence(rest, onEnd);
+          } else {
+            isPlayingAnimation = false;
+            if (onEnd) onEnd();
+          }
+        };
+        mixer.addEventListener('finished', onEndClip);
+
+      });
+    };
+
     const preloadAnimations = [
       'standing_up',
       'stretch',
@@ -284,44 +355,16 @@ const modelPromise = new Promise((resolve, reject) => {
       'punch_2',
       'ko',
       'getting_up',
-      'backflip'
+      'backflip',
+      'uprock',
+      'flair_in',
+      'flair',
+      'flair_out'
     ];
 
-    // Promise per precaricare tutte le animazioni
     window.animationPreloadPromise = Promise.all(
       preloadAnimations.map(name => loadClip(name))
     ).then(() => resolve());
-
-    // 🔁 PLAYSEQUENCE GLOBALE
-    playSequence = function (names, onEnd) {
-      if (!names.length) {
-        isPlayingAnimation = false;
-        if (onEnd) onEnd();
-        return;
-      }
-
-      const [current, ...rest] = names;
-
-      loadClip(current).then(clip => {
-        mixer.stopAllAction();
-        const action = mixer.clipAction(clip);
-        action.reset();
-        action.setLoop(THREE.LoopOnce);
-        action.clampWhenFinished = true;
-        isPlayingAnimation = true;
-        action.play();
-
-        mixer.addEventListener('finished', function onEndClip() {
-          mixer.removeEventListener('finished', onEndClip);
-          if (rest.length > 0) {
-            playSequence(rest, onEnd);
-          } else {
-            isPlayingAnimation = false;
-            if (onEnd) onEnd();
-          }
-        });
-      });
-    }
 
     function enterFightMode() {
       if (isPlayingAnimation) return;
@@ -373,7 +416,6 @@ const modelPromise = new Promise((resolve, reject) => {
       if (isInFightMode) registerHit();
     });
 
-    // 🥊 Fight mode
     const fightBtn = document.getElementById('fight-mode-btn');
     if (fightBtn) {
       fightBtn.addEventListener('click', () => {
@@ -382,7 +424,6 @@ const modelPromise = new Promise((resolve, reject) => {
       });
     }
 
-    // 🌀 Backflip
     const backflipBtn = document.getElementById('backflip-btn');
     if (backflipBtn) {
       backflipBtn.addEventListener('click', () => {
@@ -390,8 +431,26 @@ const modelPromise = new Promise((resolve, reject) => {
         playSequence(['backflip']);
       });
     }
+
+    const danceBtn = document.getElementById('dance-btn');
+    if (danceBtn) {
+      danceBtn.addEventListener('click', () => {
+        if (isPlayingAnimation) return;
+        playSequence([
+          'uprock',
+          'flair_in',
+          'flair',
+          'flair_out'
+        ], () => {
+          playSequence(['point']);
+        });
+
+      });
+    }
+
   }, undefined, reject);
 });
+
 
 
 function animate() {
@@ -421,14 +480,6 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-// ✅ Navigazione sezioni da toolbar
-document.querySelectorAll('#toolbar .tool[data-section]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const section = link.dataset.section;
-    switchSection(section);
-  });
-});
 
 // ✅ Navigazione da menu principale
 const menuToggle = document.getElementById('menu-toggle');
@@ -455,7 +506,16 @@ menuItems.forEach(item => {
 let allowRotation = false;
 
 function switchSection(section) {
-  // Reset visibilità scena 3D
+
+  document.querySelectorAll('.section-text').forEach(el => {
+    el.classList.remove('active');
+  });
+
+
+  const projectGrid = document.querySelector('.projects-grid');
+  projectGrid.classList.add('hidden');
+
+
   container.classList.remove('compact', 'hidden');
 
   if (section === 'cv') {
@@ -466,9 +526,11 @@ function switchSection(section) {
     fovTarget = 30;
     scene.background = new THREE.Color(0xffffff);
   } else if (section === 'progetti') {
+    allowRotation = false;
     container.classList.add('hidden');
 
-    const cards = document.querySelectorAll('.project-card');
+    projectGrid.classList.remove('hidden');
+    const cards = projectGrid.querySelectorAll('.project-card');
     cards.forEach(card => card.classList.remove('visible'));
     setTimeout(() => {
       cards.forEach((card, i) => {
@@ -480,33 +542,12 @@ function switchSection(section) {
   } else {
     allowRotation = false;
     cameraTarget.set(0, 4, 6);
-    lookTarget.set(0, 1.5, 0);
+    lookTarget.set(0, 2, 0);
     fovTarget = 75;
-    scene.background = new THREE.Color(0x0000ff);
+    scene.background = null;
   }
 
-  document.querySelectorAll('.section-text').forEach(el => el.classList.remove('active'));
+  // Attiva la sezione testuale corrispondente
   const current = document.querySelector(`.${section}-text`);
   if (current) current.classList.add('active');
 }
-
-// 🔍 Filtro progetti
-const filterButtons = document.querySelectorAll('.filter-box button');
-const projectCards = document.querySelectorAll('.project-card');
-
-filterButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.getAttribute('data-filter');
-
-    filterButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    projectCards.forEach(card => {
-      if (filter === 'all' || card.classList.contains(filter)) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
-    });
-  });
-});

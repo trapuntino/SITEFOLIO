@@ -2,6 +2,8 @@ body {
   background-color: #DE3163;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -42,6 +44,7 @@ canvas {
 /* CANVAS SFONDO SEMPRE ATTIVO */
 #background-canvas {
   position: fixed;
+  background-color: transparent;
   top: 0;
   left: 0;
   width: 100vw;
@@ -155,17 +158,22 @@ canvas {
   right: 20px;
   width: 30%;
   height: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  color: #0000ff;
+  background: rgba(255, 255, 255, 0.1); /* più trasparente */
+  color: #ffffff;
   font-family: monospace;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 40px;
   z-index: 1000;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px); /* più potente */
+  -webkit-backdrop-filter: blur(20px); /* per Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
   transition: opacity 0.3s ease;
 }
+
 
 .menu.hidden {
   display: none;
@@ -312,8 +320,10 @@ canvas {
 /* PROGETTI */
 
 .project-card:hover {
-  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.03);
 }
+
 
 .project-card.hidden {
   display: none;
@@ -335,22 +345,22 @@ canvas {
 
 /* Card stile verticale */
 .project-card {
-  width: 300px;
-  height: 350px;
-  margin: 20px;
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 2%;
-  aspect-ratio: 4 / 5;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.5),
+              inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 10px;
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
+
 
 .project-card img {
   width: 100%;
@@ -371,3 +381,8 @@ canvas {
   opacity: 1;
   transform: translateY(0);
 }
+
+.projects-grid.hidden {
+  display: none;
+}
+
