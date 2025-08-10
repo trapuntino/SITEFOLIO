@@ -47,8 +47,11 @@ window.addEventListener('load', () => {
     mouse.y = e.clientY;
   });
 
-  // CREA PARTICELLE SFONDO (permanenti)
-  const freeCount = 200;
+  // CREA PARTICELLE SFONDO (permanenti - responsive)
+  const screenArea = window.innerWidth * window.innerHeight;
+  const density = 8000;
+  const freeCount = Math.min(500, Math.max(30, Math.floor(screenArea / density)));
+
   for (let i = 0; i < freeCount; i++) {
     backgroundFreePixels.push({
       x: Math.random() * backgroundCanvas.width,
@@ -58,6 +61,7 @@ window.addEventListener('load', () => {
       speedY: (Math.random() - 0.5) * 0.4
     });
   }
+
 
   // CREA PARTICELLE DEL LOADER
   const logoImg = new Image();
@@ -87,7 +91,6 @@ window.addEventListener('load', () => {
 
     for (let i = 0; i < targetPoints.length; i++) {
       const tp = targetPoints[i];
-
       const isMover = Math.random() < 0.5;
 
       if (isMover) {
@@ -113,8 +116,6 @@ window.addEventListener('load', () => {
           type: 'static'
         });
       }
-
-
     }
 
     for (let i = 0; i < 150; i++) {
@@ -197,10 +198,17 @@ window.addEventListener('load', () => {
 
         p.x += p.vx;
         p.y += p.vy;
-      }
 
-      loaderCtx.fillRect(p.x, p.y, p.size, p.size);
+        loaderCtx.fillStyle = 'rgba(0,0,0,1)';
+        loaderCtx.fillRect(p.x, p.y, p.size, p.size);
+
+      } else if (p.type === 'static') {
+        const alpha = percent / 100;
+        loaderCtx.fillStyle = `rgba(0,0,0,${alpha})`;
+        loaderCtx.fillRect(p.x, p.y, p.size, p.size);
+      }
     });
+
 
 
 
@@ -210,9 +218,18 @@ window.addEventListener('load', () => {
     if (!isLoaded) requestAnimationFrame(animateLoader);
   }
 
-  const interval = setInterval(() => {
-    percent += Math.random() * 5;
-    if (percent > 100) percent = 100;
+  const loaderDuration = 4000; // durata totale del loader in ms
+  let startTime = null;
+
+  function animateProgress(timestamp) {
+    if (!startTime) startTime = timestamp;
+
+    const elapsed = timestamp - startTime;
+
+    const rawProgress = Math.min(1, elapsed / loaderDuration);
+    const eased = 1 - Math.pow(1 - rawProgress, 3); // ease-out
+    percent = eased * 100;
+
     progressBar.style.width = percent + '%';
 
     if (percent < 25) loadingText.textContent = texts[0];
@@ -234,12 +251,35 @@ window.addEventListener('load', () => {
           loader.style.transition = 'opacity 0.6s ease';
           logo.remove();
           loader.remove();
+
+          handleSectionChange('home'); // <-- qui fai partire l'home
+          typeWriter(
+            "Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.",
+            'typewriter-text'
+          );
+
           playSequence(['standing_up', 'stretch', 'point']);
         }, 600);
       });
     }
+    else {
+      isLoaded = true;
 
-  }, 100);
+      Promise.all([modelPromise, window.animationPreloadPromise]).then(() => {
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          loader.style.transition = 'opacity 0.6s ease';
+          logo.remove();
+          loader.remove();
+          playSequence(['standing_up', 'stretch', 'point']);
+        }, 600);
+      });
+    }
+  }
+
+  requestAnimationFrame(animateProgress);
+
+
 });
 
 
@@ -256,6 +296,8 @@ container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = null;
+const clock = new THREE.Clock();
+
 
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 camera.position.set(0, 4, 6);
@@ -264,7 +306,7 @@ const cameraTarget = new THREE.Vector3(0, 4, 6);
 const lookTarget = new THREE.Vector3(0, 2, 0);
 let fovTarget = 75;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 4);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
 scene.add(light);
 
 let trackedModel;
@@ -317,8 +359,11 @@ const modelPromise = new Promise((resolve, reject) => {
         const newAction = mixer.clipAction(clip);
 
         if (currentAction && currentAction !== newAction) {
-          currentAction.crossFadeTo(newAction, 0.5, false);
+          currentAction.crossFadeTo(newAction, 0.4, false);
+        } else {
+          newAction.fadeIn(0.4);
         }
+
 
         newAction.reset();
         newAction.setLoop(THREE.LoopOnce);
@@ -407,7 +452,10 @@ const modelPromise = new Promise((resolve, reject) => {
         playSequence(['hit_2', 'punch_2']);
       } else {
         playSequence(['ko'], () => {
-          playSequence(['getting_up']);
+          playSequence(['getting_up'], () => {
+            toggleFightMode();
+            playSequence(['point']);
+          });
         });
       }
     }
@@ -428,7 +476,10 @@ const modelPromise = new Promise((resolve, reject) => {
     if (backflipBtn) {
       backflipBtn.addEventListener('click', () => {
         if (isPlayingAnimation) return;
-        playSequence(['backflip']);
+        playSequence(['backflip'
+        ], () => {
+          playSequence(['point']);
+        });
       });
     }
 
@@ -456,7 +507,9 @@ const modelPromise = new Promise((resolve, reject) => {
 function animate() {
   requestAnimationFrame(animate);
 
-  if (mixer) mixer.update(0.016);
+  const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
+
 
   camera.position.lerp(cameraTarget, 0.05);
   camera.fov += (fovTarget - camera.fov) * 0.05;
@@ -481,73 +534,97 @@ window.addEventListener('resize', () => {
 });
 
 
-// ✅ Navigazione da menu principale
-const menuToggle = document.getElementById('menu-toggle');
-const menu = document.getElementById('main-menu');
-const menuClose = document.querySelector('.menu-close');
-const menuItems = document.querySelectorAll('.menu-list li');
-
-menuToggle.addEventListener('click', () => {
-  menu.classList.remove('hidden');
-});
-
-menuClose.addEventListener('click', () => {
-  menu.classList.add('hidden');
-});
-
-menuItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const section = item.dataset.section;
-    switchSection(section);
-    menu.classList.add('hidden');
-  });
-});
-
-let allowRotation = false;
-
-function switchSection(section) {
-
-  document.querySelectorAll('.section-text').forEach(el => {
-    el.classList.remove('active');
-  });
+// GESTIONE NAVIGAZIONE DA NAVBAR IN BASSO
+const sectionTextEls = document.querySelectorAll('.section-text');
+const projectsGrid = document.querySelector('.projects-grid');
+const viewport = document.getElementById('viewport-container');
+const toolbar = document.getElementById('toolbar');
 
 
-  const projectGrid = document.querySelector('.projects-grid');
-  projectGrid.classList.add('hidden');
+function handleSectionChange(section) {
+  // RESET GENERALE
+  sectionTextEls.forEach(el => el.classList.remove('active'));
+  projectsGrid.classList.add('hidden');
+  viewport.classList.remove('compact');
+  viewport.classList.remove('hidden');
+  toolbar.classList.add('hidden');
+
+  // Nascondi i testi extra
+  document.getElementById('about-text')?.classList.add('hidden');
+  document.getElementById('home-text')?.classList.remove('active');
+
+  // HOME: viewport normale + toolbar visibile
+  if (section === 'home') {
+    toolbar.classList.remove('hidden');
+    cameraTarget.set(0, 4, 6);
+    lookTarget.set(0, 2, 0);
+    scene.background = null;
+    fovTarget = 75;
+
+    const homeTextEl = document.getElementById('home-text');
+    homeTextEl?.classList.add('active');
+    typeWriter("Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.", 'typewriter-text');
 
 
-  container.classList.remove('compact', 'hidden');
+    // PROJECTS: griglia progetti visibile, tutto il resto no
+  } else if (section === 'progetti' || section === 'video' || section === 'works') {
+    projectsGrid.classList.remove('hidden');
+    viewport.classList.remove('compact');
+    viewport.classList.add('hidden');
 
-  if (section === 'cv') {
-    allowRotation = true;
+    // ABOUT: testo segnaposto visibile
+  } else if (section === 'about') {
+    document.getElementById('about-text')?.classList.remove('hidden');
+    cameraTarget.set(0, 4, 6);
+    lookTarget.set(0, 2, 0);
+    scene.background = null;
+    fovTarget = 75;
+
+    // CV / CONTACTS: testo + viewport compatto
+  } else if (section === 'cv' || section === 'contacts') {
+    document.querySelector('.cv-text')?.classList.add('active');
     container.classList.add('compact');
     cameraTarget.set(0, 5, 3);
     lookTarget.set(0, 5, 0);
     fovTarget = 30;
     scene.background = new THREE.Color(0xffffff);
-  } else if (section === 'progetti') {
-    allowRotation = false;
-    container.classList.add('hidden');
+  }
+}
 
-    projectGrid.classList.remove('hidden');
-    const cards = projectGrid.querySelectorAll('.project-card');
-    cards.forEach(card => card.classList.remove('visible'));
-    setTimeout(() => {
-      cards.forEach((card, i) => {
-        setTimeout(() => {
-          card.classList.add('visible');
-        }, i * 100);
-      });
-    }, 300);
-  } else {
-    allowRotation = false;
-    cameraTarget.set(0, 4, 6);
-    lookTarget.set(0, 2, 0);
-    fovTarget = 75;
-    scene.background = null;
+
+
+// Listener per i pulsanti del menu in basso
+document.querySelectorAll('#bottom-navbar li').forEach(item => {
+  item.addEventListener('click', () => {
+    const section = item.getAttribute('data-section');
+    handleSectionChange(section);
+  });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  handleSectionChange('home');
+});
+
+
+
+function typeWriter(text, elementId, speed = 40) {
+  const el = document.getElementById(elementId);
+  if (!el) {
+    console.warn(`Elemento con id "${elementId}" non trovato.`);
+    return;
   }
 
-  // Attiva la sezione testuale corrispondente
-  const current = document.querySelector(`.${section}-text`);
-  if (current) current.classList.add('active');
+  el.textContent = '';
+  let i = 0;
+
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+
+  type();
 }
+
