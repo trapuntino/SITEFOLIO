@@ -39,11 +39,6 @@
       <li data-section="cv">CV / Contacts</li>
     </ul>
   </nav>
-
-<!-- HOME TEXT -->
-<div id="home-text" class="section-text">
-  <p class="typewriter-text">Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.</p>
-</div>
   
   <!-- TOOLBAR: solo per funzioni speciali -->
   <div id="toolbar">
@@ -62,46 +57,59 @@
   <!-- VIEWPORT 3D -->
   <div id="viewport-container"></div>
 
-  <!-- CONTENUTO PROGETTI -->
-  <div class="projects-grid hidden">
+  <!-- HOME TEXT -->
+<div id="home-text" class="section-text">
+  <p class="typewriter-text">Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.</p>
+</div>
 
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 1</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 2</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 3</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 4</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 5</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 6</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 7</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 8</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 9</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 10</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 11</h3>
-    </div>
-    <div class="project-card"><img src="images/test.jpg" alt="">
-      <h3>Project 12</h3>
-    </div>
+  <!-- CONTENUTO PROGETTI (WORKS) -->
+<section id="works-section" class="hidden" aria-label="Works">
+  <!-- FILTRI -->
+  <div id="works-filters" class="works-filters">
+    <select id="filter-role">
+      <option value="">Tutti i ruoli</option>
+      <option>Art Director</option>
+      <option>Graphic Designer</option>
+      <option>Producer</option>
+      <option>Communication Designer</option>
+    </select>
+    <select id="filter-year">
+      <option value="">Tutti gli anni</option>
+      <option>2025</option>
+      <option>2024</option>
+    </select>
+    <select id="filter-field">
+      <option value="">Tutti gli ambiti</option>
+      <option>Branding</option>
+      <option>Web Design</option>
+      <option>Eventi</option>
+      <option>Editoriale</option>
+    </select>
   </div>
+
+  <!-- GALLERIA ORIZZONTALE (DESKTOP) -->
+  <div class="works-pin" id="works-pin" aria-hidden="true">
+    <div class="works-track" id="works-track" role="list"></div>
+  </div>
+
+  <!-- LISTA MOBILE -->
+  <div class="works-list" id="works-list" role="list"></div>
+</section>
+
+<!-- MODAL PROGETTO -->
+<div id="project-modal" class="project-modal" aria-hidden="true">
+  <div class="project-modal__backdrop" id="project-modal-backdrop"></div>
+  <div class="project-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+    <button class="project-modal__close" id="project-modal-close" aria-label="Chiudi">×</button>
+    <h2 id="project-modal-title"></h2>
+    <p class="project-meta">
+      <span id="project-meta-year"></span> · <span id="project-meta-field"></span>
+    </p>
+    <div id="project-modal-media"></div>
+    <div id="project-modal-desc" class="project-desc"></div>
+  </div>
+</div>
+
 
   <!-- CONTENUTO ABOUT -->
   <div id="about-text" class="section-text hidden">

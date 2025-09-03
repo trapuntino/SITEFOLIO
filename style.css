@@ -33,8 +33,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: visible;
 }
 
 canvas {
@@ -161,8 +160,8 @@ canvas {
   left: 0;
   width: 100%;
   height: 5rem;
-  background: #0000ff;
-  color: white;
+  background: #ff4800;
+  color: #000000;
   z-index: 999;
   font-family: 'PPSupplyMono', monospace;
   font-weight: 400;
@@ -249,11 +248,11 @@ canvas {
 #typewriter-text {
   font-family: 'PPSupplyMono', monospace;
   font-size: 1.4rem;
-  font-weight: 200;
-  color: #0000ff;
+  font-weight: 400;
+  color: #ff4800;
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid #0000ff;
+  border-right: 2px solid #ff4800;
   animation: blink 0.7s step-end infinite;
 }
 
@@ -291,7 +290,7 @@ canvas {
   font-family: sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #0000ff
+  color: #ff4800
 }
 
 .cv-text h2 {
@@ -325,79 +324,216 @@ canvas {
 
 /* PROGETTI */
 
-.project-card:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.03);
+/* ============ WORKS (nastro orizzontale scrollato verticalmente) ============ */
+
+:root{
+  --navH: 5rem;      /* altezza navbar in basso */
+  --workW: 360px;    /* fallback: larghezza comune delle card (JS la sovrascrive) */
+  --gapX: 24px;      /* spazio tra card */
 }
 
-
-.project-card.hidden {
-  display: none;
+/* wrapper sezione: nessun padding-top, altezza la decide JS */
+#works-section{
+  position: relative;
+  z-index: 5;
+  width: 100vw;
+  padding-top: 0;            /* importante: niente offset che abbassa il pin */
 }
 
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  /* massimo 4 per riga */
-  gap: 30px;
-  margin: 60px 40px 100px 80px;
-  /* top, right, bottom, left */
-}
-
-@media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: repeat(1, 1fr);
-    margin: 40px 40px 100px 50px;
-  }
-}
-
-/* Card stile verticale */
-.project-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+/* filtri */
+.works-filters{
+  position: sticky;
+  top: 16px;
+  z-index: 7;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 10px;
-  transition: transform 0.3s ease, background 0.3s ease;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+}
+.works-filters select{
+  padding: 6px 10px;
+  font-family: 'PPSupplyMono', monospace;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
 }
 
+/* pin: blocca la vista mentre scorre il nastro */
+.works-pin{
+  height: calc(100dvh - var(--navH));
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  display: block;
+}
 
-.project-card img {
+@supports not (height: 100dvh){
+  .works-pin{ height: calc(100vh - var(--navH)); }
+}
+
+.works-track{
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 10vw 12px;
+  will-change: transform;
+  transform: translate3d(0,0,0);
+}
+
+.works-pin, .works-track{
+  contain: none !important;
+}
+
+/* “spacer” di coda: forza overflow anche con poche card */
+.works-track::after{
+  content: "";
+  flex: 0 0 40vw;
+}
+
+/* card: tutte con la stessa larghezza (decisa dal JS), altezza variabile */
+.work-card{
+  position: relative;
+  width: var(--workW);
+  flex: 0 0 auto;          /* niente grow/shrink */
+  align-self: flex-end;    /* resta appoggiata in basso */
+  display: inline-block;   /* shrink-wrap dei contenuti */
+  overflow: visible;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+/* media a proporzioni native, nessun crop */
+.work-card img,
+.work-card video{
+  display: block;     /* elimina spaziature inline */
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  flex: 1;
-  margin-bottom: 10px;
+  height: auto;
+  object-fit: contain;
 }
 
-.project-card h3 {
-  font-family: sans-serif;
-  font-size: 16px;
-  text-align: left;
-  margin: 0;
-}
-
-.project-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.projects-grid.hidden {
-  display: none;
-}
-
-
-/* ABOUT */
-
-#about-text.hidden {
-  display: none;
+/* overlay pieno (arancione menu) */
+:root { --menu-orange: #ff4800; }
+.work-card .work-overlay{
+  position: absolute;
+  inset: 0;
+  background: var(--menu-orange);
+  color: #000;
   opacity: 0;
+  transition: opacity .18s ease;
+  display: flex;
+  flex-direction: column;   
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  pointer-events: none;
+  font-family: 'PPSupplyMono', monospace;
+  line-height: 1.25;
 }
+
+.work-overlay .title{
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: .01em;
+  margin: 0 8px 4px;
+}
+
+.work-overlay .subtitle{
+  font-size: 1rem;
+  opacity: .85;
+  margin: 0 8px;
+}
+
+.work-card:hover .work-overlay{ opacity: 1; }
+
+/* lista mobile (testuale) */
+.works-list{
+  display: none;
+  padding: 16px;
+}
+.works-list .work-row{
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  cursor: pointer;
+}
+.works-list .work-row .row-title{
+  font-family: 'PPSupplyMono', monospace;
+  font-size: 1.1rem;
+}
+.works-list .work-row .row-sub{
+  font-size: .9rem;
+  opacity: .7;
+}
+
+/* modal progetto (come avevi già) */
+
+.work-modal__body{
+  max-height: calc(100dvh - var(--modalHeaderH, 64px));
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.project-modal { position: fixed; inset: 0; display: none; z-index: 1100; }
+.project-modal.open { display: block; }
+.project-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.project-modal__dialog {
+  position: absolute;
+  inset: 6vh 6vw auto 6vw;
+  background: #fff;
+  border-radius: 0;
+  padding: 16px;
+  max-height: 88vh;
+  overflow: auto;
+  box-shadow: 0 20px 60px #FF6A00;
+}
+.project-modal__close{
+  position: absolute; top: 8px; right: 12px;
+  font-size: 24px; background: none; border: 0; cursor: pointer;
+}
+.project-meta{ opacity: .7; margin-bottom: 12px; }
+.project-desc{ margin-top: 12px; }
+
+/* responsive */
+@media (min-width: 769px){
+  /* niente padding-top sulla sezione! */
+  .works-pin{ display: block; }
+  .works-list{ display: none; }
+}
+@media (max-width: 768px){
+  .works-filters{ position: static; padding: 8px 12px; }
+  .works-pin{ display: none; }
+  .works-list{ display: block; }
+}
+
+/* WORKS — forza il paint anche fuori dalla viewport iniziale */
+#works-track,
+#works-track > * {
+  content-visibility: visible !important;  /* disattiva c-v:auto */
+  contain: none !important;                 /* disattiva contain: paint/layout */
+}
+
+/* il nastro non deve clipparsi: lascia clip solo al pin */
+#works-track{
+  overflow: visible !important;
+  will-change: transform;
+}
+
+/* sicurezza: media sempre visibili */
+#works-track img,
+#works-track video{
+  visibility: visible !important;
+}
+
+/* Quando la sezione Works è in lock, rimuovi del tutto lo scroll verticale */
+html.is-locking-works,
+html.is-locking-works body{
+  overflow-y: hidden !important;
+  height: 100%;                /* evita micro shift del layout */
+  overscroll-behavior-y: none; /* niente bounce/inerzia verticale */
+}
+
+/* opzionale ma utile: evita shift quando le barre compaiono/scompaiono */
+html{ scrollbar-gutter: stable both-edges; }
+
+/* ============ FINE WORKS ============ */

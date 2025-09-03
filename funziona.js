@@ -542,46 +542,58 @@ const toolbar = document.getElementById('toolbar');
 
 
 function handleSectionChange(section) {
-  // RESET GENERALE
+  // --- RESET GENERALE ---
   sectionTextEls.forEach(el => el.classList.remove('active'));
-  projectsGrid.classList.add('hidden');
-  viewport.classList.remove('compact');
-  viewport.classList.remove('hidden');
-  toolbar.classList.add('hidden');
+  projectsGrid?.classList.add('hidden');
+  viewport?.classList.remove('compact');
+  viewport?.classList.remove('hidden');
+  toolbar?.classList.add('hidden');
 
-  // Nascondi i testi extra
   document.getElementById('about-text')?.classList.add('hidden');
   document.getElementById('home-text')?.classList.remove('active');
+  document.getElementById('works-section')?.classList.add('hidden'); // nascondi sempre i Works
 
-  // HOME: viewport normale + toolbar visibile
+  // --- HOME ---
   if (section === 'home') {
-    toolbar.classList.remove('hidden');
+    toolbar?.classList.remove('hidden');
     cameraTarget.set(0, 4, 6);
     lookTarget.set(0, 2, 0);
     scene.background = null;
     fovTarget = 75;
 
-    const homeTextEl = document.getElementById('home-text');
-    homeTextEl?.classList.add('active');
-    typeWriter("Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.", 'typewriter-text');
+    document.getElementById('home-text')?.classList.add('active');
+    typeWriter(
+      "Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.",
+      'typewriter-text'
+    );
+    return;
+  }
 
+  // --- WORKS ---
+  if (section === 'progetti' || section === 'works') {
+    viewport?.classList.add('hidden');
+    const ws = document.getElementById('works-section');
+    if (ws) {
+      ws.classList.remove('hidden');
+      renderWorksTrack(projects);
+      renderWorksList(projects);
+      setupWorksPin(); // <— niente recalcWorksLayout / updateTrackTransform
+    }
+    return;
+  }
 
-    // PROJECTS: griglia progetti visibile, tutto il resto no
-  } else if (section === 'progetti' || section === 'video' || section === 'works') {
-    projectsGrid.classList.remove('hidden');
-    viewport.classList.remove('compact');
-    viewport.classList.add('hidden');
-
-    // ABOUT: testo segnaposto visibile
-  } else if (section === 'about') {
+  // --- ABOUT ---
+  if (section === 'about') {
     document.getElementById('about-text')?.classList.remove('hidden');
     cameraTarget.set(0, 4, 6);
     lookTarget.set(0, 2, 0);
     scene.background = null;
     fovTarget = 75;
+    return;
+  }
 
-    // CV / CONTACTS: testo + viewport compatto
-  } else if (section === 'cv' || section === 'contacts') {
+  // --- CV / CONTACTS ---
+  if (section === 'cv' || section === 'contacts') {
     document.querySelector('.cv-text')?.classList.add('active');
     container.classList.add('compact');
     cameraTarget.set(0, 5, 3);
@@ -590,6 +602,8 @@ function handleSectionChange(section) {
     scene.background = new THREE.Color(0xffffff);
   }
 }
+
+
 
 
 
@@ -628,3 +642,600 @@ function typeWriter(text, elementId, speed = 40) {
   type();
 }
 
+
+/* ===================== WORKS: dati, render, scroll orizzontale ===================== */
+
+// opzionale ma consigliato con Vite/GH Pages
+const BASE = (import.meta?.env?.BASE_URL) || '/';
+
+const projects = [
+  {
+    id: "befest",
+    titolo: "Befest",
+    anno: 2025,
+    ambito: "Branding",
+    ruoli: ["Art Director", "Graphic Designer"],
+    cover: { type: "image", src: `${BASE}portfolio/befest/cover.jpg`, alt: "Befest – identità visiva e applicazioni" },
+    descrizione: "Identità e sistema visivo per Befest."
+  },
+  {
+    id: "retrogusto",
+    titolo: "Retrogusto",
+    anno: 2024,
+    ambito: "Web Design",
+    ruoli: ["Graphic Designer", "Producer"],
+    cover: {
+      type: "video",
+      src: `${BASE}portfolio/retrogusto/cover.mp4`,
+      poster: `${BASE}portfolio/retrogusto/poster.jpg`
+    },
+    descrizione: "Sito vetrina con storytelling visivo."
+  },
+  {
+    id: "sugo2025",
+    titolo: "Sūgo 2025 – Event Identity",
+    anno: 2025,
+    ambito: "Eventi",
+    ruoli: ["Art Director", "Producer"],
+    cover: { type: "image", src: `${BASE}portfolio/sugo2025/cover.jpg`, alt: "Sūgo 2025 – identità evento" },
+    descrizione: "Identità e materiali per l’evento freestyle."
+  },
+
+  {
+    id: "summershred",
+    titolo: "Sūgo 2025 – Event Identity",
+    anno: 2025,
+    ambito: "Branding",
+    ruoli: ["Illustrazione", "Graphic Designer"],
+    cover: { type: "image", src: `${BASE}portfolio/summer-shred/cover.jpg`, alt: "Summer Shred - Illustrazione" },
+    descrizione: "Illustrazione e logotipo"
+  },
+
+  {
+    id: "stelviopaddock",
+    titolo: "Stelvio Paddock",
+    anno: 2025,
+    ambito: "Branding",
+    ruoli: ["Art Director", "Producer"],
+    cover: { type: "image", src: `${BASE}portfolio/stelvio-paddock/cover.jpg`, alt: "Stelvio Paddock - Branding" },
+    descrizione: "Identità e materiali per l’evento freestyle."
+  },
+
+  {
+    id: "sugo2025",
+    titolo: "Sūgo 2025 – Event Identity",
+    anno: 2025,
+    ambito: "Eventi",
+    ruoli: ["Art Director", "Producer"],
+    cover: { type: "image", src: `${BASE}portfolio/sugo2025/cover.jpg`, alt: "Sūgo 2025 – identità evento" },
+    descrizione: "Identità e materiali per l’evento freestyle."
+  },
+];
+
+
+// Elementi base
+const worksSection = document.getElementById('works-section');
+const worksTrack = document.getElementById('works-track');
+const worksList = document.getElementById('works-list');
+
+// Render card orizzontali (desktop)
+function renderWorksTrack(list) {
+  worksTrack.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'work-card';
+    card.dataset.id = p.id;
+
+    let mediaEl;
+    if (p.cover.type === 'video') {
+      mediaEl = document.createElement('video');
+      mediaEl.src = p.cover.src;
+      mediaEl.poster = p.cover.poster || '';
+      mediaEl.muted = true;           // requisito per autoplay mobile
+      mediaEl.playsInline = true;     // iOS Safari
+      mediaEl.loop = true;            // loop continuo
+      mediaEl.autoplay = true;        // tenta autoplay subito
+      mediaEl.preload = 'auto';       // carica per partire al volo
+      mediaEl.controls = false;
+
+      // appena abbiamo i metadata, forziamo play (iOS/Android)
+      mediaEl.addEventListener('loadedmetadata', () => {
+        const tryPlay = () => mediaEl.play().catch(() => { });
+        // doppio tentativo: subito e al prossimo frame (alcuni browser gradiscono)
+        tryPlay();
+        requestAnimationFrame(tryPlay);
+      });
+
+      // NIENTE hover play/pause: deve partire da sola e restare in loop
+    } else {
+      mediaEl = document.createElement('img');
+      mediaEl.src = p.cover.src;
+      mediaEl.alt = p.cover.alt || p.titolo;
+      mediaEl.loading = 'lazy';
+    }
+
+
+
+    const overlay = document.createElement('div');
+    overlay.className = 'work-overlay';
+    overlay.innerHTML = `<div class="title">${p.titolo}</div><div class="subtitle">${p.anno}</div>`;
+
+    card.appendChild(mediaEl);
+    card.appendChild(overlay);
+    card.addEventListener('click', () => openProjectModal(p.id));
+    worksTrack.appendChild(card);
+  });
+}
+
+// Render lista mobile
+function renderWorksList(list) {
+  worksList.innerHTML = '';
+  list.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'work-row';
+    row.dataset.id = p.id;
+    row.innerHTML = `<div class="row-title">${p.titolo}</div><div class="row-sub">${p.anno} · ${p.ambito}</div>`;
+    row.addEventListener('click', () => openProjectModal(p.id));
+    worksList.appendChild(row);
+  });
+}
+
+// Modal
+const modal = document.getElementById('project-modal');
+const modalClose = document.getElementById('project-modal-close');
+const modalBack = document.getElementById('project-modal-backdrop');
+
+function openProjectModal(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('project-modal-title').textContent = p.titolo;
+  document.getElementById('project-meta-year').textContent = p.anno;
+  document.getElementById('project-meta-field').textContent = p.ambito;
+
+  const mediaWrap = document.getElementById('project-modal-media');
+  mediaWrap.innerHTML = '';
+  if (p.cover.type === 'video') {
+    const v = document.createElement('video');
+    v.src = p.cover.src;
+    v.poster = p.cover.poster || '';
+    v.controls = true;
+    v.playsInline = true;
+    mediaWrap.appendChild(v);
+  } else {
+    const img = document.createElement('img');
+    img.src = p.cover.src;
+    img.alt = p.cover.alt || p.titolo;
+    img.style.maxWidth = '100%';
+    mediaWrap.appendChild(img);
+  }
+
+  document.getElementById('project-modal-desc').textContent = p.descrizione || '';
+  modal.classList.add('open');
+}
+function closeProjectModal() { modal.classList.remove('open'); }
+[modalClose, modalBack].forEach(el => el && el.addEventListener('click', closeProjectModal));
+
+// Filtri AND
+const roleSel = document.getElementById('filter-role');
+const yearSel = document.getElementById('filter-year');
+const fieldSel = document.getElementById('filter-field');
+
+function applyFilters() {
+  const role = roleSel?.value || '';
+  const year = yearSel?.value || '';
+  const field = fieldSel?.value || '';
+
+  const filtered = projects.filter(p => {
+    const matchRole = !role || p.ruoli.includes(role);
+    const matchYear = !year || String(p.anno) === String(year);
+    const matchField = !field || p.ambito === field;
+    return matchRole && matchYear && matchField;
+  });
+
+  renderWorksTrack(filtered);
+  renderWorksList(filtered);
+  setupWorksPin();                 // <— ricalcola dopo i filtri
+}
+
+
+[roleSel, yearSel, fieldSel].forEach(sel => sel && sel.addEventListener('change', applyFilters));
+
+
+function activateWorks() {
+  worksSection.classList.remove('hidden');
+  renderWorksTrack(projects);
+  renderWorksList(projects);
+  setupWorksPin(); // <— basta questo
+}
+
+
+const navWorks = document.querySelector('#bottom-navbar [data-section="progetti"]');
+if (navWorks) {
+  navWorks.addEventListener('click', () => {
+    document.getElementById('viewport-container')?.classList.add('hidden');
+    document.getElementById('home-text')?.classList.remove('active');
+    activateWorks();
+    const y = worksSection.getBoundingClientRect().top + window.scrollY - 40;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  });
+}
+
+if (location.hash === '#works') {
+  activateWorks();
+  setTimeout(() => {
+    const y = worksSection.getBoundingClientRect().top + window.scrollY - 40;
+    window.scrollTo({ top: y, behavior: 'instant' });
+  }, 0);
+}
+
+// ===== WORKS: stessa larghezza per tutti, altezza massima per il 9:16,
+// niente crop, overflow a destra + scroll verticale -> orizzontale =====
+
+/*async function setUniformWorkWidth() {
+  const section = document.getElementById('works-section');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
+  const navbar = document.getElementById('bottom-navbar');
+  const filters = document.getElementById('works-filters');
+  if (!section || !pin || !track) return;
+
+  // 1) Calcolo altezza utile per il pin (tra filtri e navbar)
+  const viewportH = window.innerHeight;
+  const navbarH = navbar ? navbar.offsetHeight : 0;
+  const filtersH = filters ? filters.offsetHeight : 0;
+  const verticalGap = 24; // respiro sopra e sotto
+  const pinH = Math.max(240, viewportH - navbarH - filtersH - verticalGap * 2);
+  pin.style.height = pinH + 'px';
+
+  // 2) Altezza effettiva del track (leggermente più bassa per margine visivo)
+  const trackH = Math.round(pinH * 0.86);
+  track.style.height = trackH + 'px';
+
+  // 3) Attendo caricamento immagini e video
+  const imgs = Array.from(track.querySelectorAll('img'));
+  const vids = Array.from(track.querySelectorAll('video'));
+
+  await Promise.all([
+    ...imgs.map(img =>
+      img.complete ? Promise.resolve() :
+        new Promise(res => img.addEventListener('load', res, { once: true }))
+    ),
+    ...vids.map(v =>
+      (v.readyState >= 1) ? Promise.resolve() :
+        new Promise(res => v.addEventListener('loadedmetadata', res, { once: true }))
+    )
+  ]);
+
+  // 4) Trovo il rapporto h/w massimo (es. 9:16)
+  let maxHW = 0;
+  imgs.forEach(img => {
+    const w = img.naturalWidth || img.width || 1;
+    const h = img.naturalHeight || img.height || 1;
+    maxHW = Math.max(maxHW, h / w);
+  });
+  vids.forEach(v => {
+    const w = v.videoWidth || v.clientWidth || 1;
+    const h = v.videoHeight || v.clientHeight || 1;
+    maxHW = Math.max(maxHW, h / w);
+  });
+  if (maxHW === 0) maxHW = 16 / 9; // fallback
+
+  // 5) Larghezza comune delle card
+  const cardW = Math.floor(trackH / maxHW);
+  document.documentElement.style.setProperty('--workW', cardW + 'px');
+
+  // 6) Larghezza totale naturale della track
+  const totalWidth = track.scrollWidth;
+
+  // 7) Overflow orizzontale reale
+  const overflowX = totalWidth - window.innerWidth;
+
+  // 8) Altezza sezione = altezza pin + overflow
+  section.style.height = (pinH + overflowX) + 'px';
+
+  // Salvo dati per lo scroll
+  track.dataset.totalWidth = String(totalWidth);
+  pin.dataset.pinH = String(pinH);
+}
+
+
+
+function setupWorksPin() {
+  const section = document.getElementById('works-section');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
+  if (!section || !pin || !track) return;
+
+  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
+
+  async function recalc() {
+    await setUniformWorkWidth();
+    onScroll(); // aggiorno posizione subito
+  }
+
+  function onScroll() {
+    const pinH = parseFloat(pin.dataset.pinH || '0');
+    const totalWidth = parseFloat(track.dataset.totalWidth || '0');
+    if (!pinH || !totalWidth) return;
+
+    const overflowX = Math.max(0, totalWidth - window.innerWidth);
+
+    // progress di scroll dentro la sezione (0..1)
+    const secTop = section.offsetTop;
+    const secEnd = secTop + section.offsetHeight - pinH;
+    const y = clamp(window.scrollY, secTop, secEnd);
+    const t = (secEnd === secTop) ? 0 : (y - secTop) / (secEnd - secTop);
+
+    // muovo il nastro a sinistra man mano che scendi
+    const tx = -Math.round(t * overflowX);
+    track.style.transform = `translate3d(${tx}px,0,0)`;
+  }
+
+  // init
+  recalc();
+  window.addEventListener('load', recalc, { passive: true });
+  window.addEventListener('resize', recalc);
+  window.addEventListener('orientationchange', recalc);
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+// ===== CHIAMA QUESTA DOPO AVER CREATO LE .work-card =====
+// setupWorksPin();
+
+
+/* ===== WORKS: stessa larghezza (dalla più alta) + overflow a destra + pin ===== */
+async function setUniformWorkWidth() {
+  const section = document.getElementById('works-section');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
+  const navbar = document.getElementById('bottom-navbar');
+  const filters = document.getElementById('works-filters');
+  if (!section || !pin || !track) return;
+
+  const viewportH = window.innerHeight;
+  const navH = navbar ? navbar.offsetHeight : 0;
+  const filH = filters ? filters.offsetHeight : 0;
+
+  // Altezza pin e track
+  const pinH = Math.max(320, viewportH - navH - filH - 16);
+  pin.style.height = pinH + 'px';
+  const trackH = Math.max(280, pinH - 16);
+  track.style.height = trackH + 'px';
+
+  // ---- PRELOAD media (evita “vuoti” fuori viewport) ----
+  const imgs = Array.from(track.querySelectorAll('img'));
+  const vids = Array.from(track.querySelectorAll('video'));
+
+  const preloadImg = (img) => new Promise((resolve) => {
+    try { img.loading = 'eager'; } catch { }
+    try { img.decoding = 'sync'; } catch { }
+    try { img.fetchPriority = 'low'; } catch { }
+    const src = img.currentSrc || img.src;
+    if (!src || (img.complete && img.naturalWidth)) return resolve();
+    const ghost = new Image();
+    ghost.decoding = 'async';
+    ghost.src = src;
+    if (ghost.decode) ghost.decode().then(resolve).catch(() => ghost.addEventListener('load', resolve, { once: true }));
+    else {
+      ghost.addEventListener('load', resolve, { once: true });
+      ghost.addEventListener('error', resolve, { once: true });
+    }
+  });
+
+  const preloadVideoMeta = (v) => new Promise((resolve) => {
+    try { v.preload = 'metadata'; } catch { }
+    if (v.readyState >= 1 && v.videoWidth) return resolve();
+    const done = () => { v.removeEventListener('loadedmetadata', done); resolve(); };
+    v.addEventListener('loadedmetadata', done, { once: true });
+    try { v.load(); } catch { }
+  });
+
+  await Promise.all([...imgs.map(preloadImg), ...vids.map(preloadVideoMeta)]);
+  // ---- FINE PRELOAD ----
+
+  // Rapporto h/w massimo (la più "alta")
+  let maxHW = 0;
+  imgs.forEach(img => {
+    const w = img.naturalWidth || img.width || 1;
+    const h = img.naturalHeight || img.height || 1;
+    maxHW = Math.max(maxHW, h / w);
+  });
+  vids.forEach(v => {
+    const w = v.videoWidth || v.clientWidth || 1;
+    const h = v.videoHeight || v.clientHeight || 1;
+    maxHW = Math.max(maxHW, h / w);
+  });
+  if (!maxHW || !isFinite(maxHW)) maxHW = 16 / 9;
+
+  // Larghezza card comune
+  const cardW = Math.floor(trackH / maxHW);
+  document.documentElement.style.setProperty('--workW', cardW + 'px');
+
+  // Altezza sezione in base all’overflow orizzontale reale
+  const totalWidth = track.scrollWidth;
+  const overflowX = Math.max(0, totalWidth - window.innerWidth);
+  section.style.height = Math.ceil(pinH + overflowX) + 'px';
+}
+
+
+/* ===== WORKS: gestione scroll — Desktop blocco Y in sezione, Mobile libero ===== */
+/* ===== WORKS: gestione scroll — Desktop blocco Y in sezione, Mobile libero ===== */
+function setupWorksPin() {
+  const section = document.getElementById('works-section');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
+  if (!section || !pin || !track) return;
+
+  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
+  const mqMobile = window.matchMedia('(max-width: 768px)');
+
+  let lockActive = false;      // true quando (desktop) siamo in sezione e Y è bloccata
+  let progress01 = 0;          // 0..1 posizione orizzontale
+  let lastTouchY = 0;
+
+  // isteresi anti-glitch agli estremi
+  const EPS = 1e-4;
+  const RELEASE_DELTA = 8;          // soglia “insistenza” per uscire dalla sezione
+  let unlockCooldownUntil = 0;      // ms
+
+  const ranges = () => {
+    const pinH = pin.clientHeight;
+    const totalWidth = track.scrollWidth;
+    const overflowX = Math.max(0, totalWidth - window.innerWidth);
+    const secTop = section.offsetTop;
+    const secEnd = secTop + section.offsetHeight - pinH;
+    const totalY = Math.max(1, secEnd - secTop);
+    return { pinH, overflowX, secTop, secEnd, totalY };
+  };
+
+  // trova l'antenato più vicino che può scorrere in verticale
+const getScrollableAncestorY = (node) => {
+  while (node && node !== document && node !== document.documentElement) {
+    const s = window.getComputedStyle(node);
+    const canScroll = /(auto|scroll|overlay)/.test(s.overflowY);
+    if (canScroll && node.scrollHeight > node.clientHeight) return node;
+    node = node.parentNode;
+  }
+  return null;
+};
+
+
+  const applyProgress = (ox = ranges().overflowX) => {
+    progress01 = Math.max(0, Math.min(1, progress01));
+    const x = -Math.round(progress01 * ox);
+    track.style.transform = `translate3d(${x}px,0,0)`;
+  };
+
+  const enableLock = () => {
+    if (lockActive || mqMobile.matches) return;
+    lockActive = true;
+
+    // blocca Y su root + body
+    document.documentElement.classList.add('is-locking-works');
+    document.documentElement.style.overflowY = 'hidden';
+    document.body.style.overflowY = 'hidden';
+
+    // inizializza progress in base alla Y attuale
+    const { secTop, totalY } = ranges();
+    const y = clamp(window.scrollY, secTop, secTop + totalY);
+    progress01 = (y - secTop) / totalY;
+
+    // ancora viewport per evitare jitter
+    window.scrollTo(0, secTop);
+    applyProgress();
+  };
+
+  const disableLock = () => {
+    if (!lockActive) return;
+    const { secTop, totalY } = ranges();
+    lockActive = false;
+
+    // sblocca Y su root + body
+    document.documentElement.classList.remove('is-locking-works');
+    document.documentElement.style.overflowY = '';
+    document.body.style.overflowY = '';
+
+    unlockCooldownUntil = Date.now() + 250; // cooldown per non rientrare subito
+
+    // riallinea la Y alla progress orizzontale raggiunta
+    const y = secTop + progress01 * totalY;
+    window.scrollTo(0, y);
+  };
+
+  // Wheel → X con sblocco controllato agli estremi
+  const onWheel = (e) => {
+    const scroller = getScrollableAncestorY(e.target);
+    if (scroller) return;                 // lascia scorrere il modale/inner scroller
+    if (!lockActive) return;
+    const { overflowX } = ranges();
+    if (!overflowX) return;
+    e.preventDefault();                   // blocca Y sul documento
+    const delta = e.deltaY || e.wheelDelta || 0;
+    progress01 = Math.max(0, Math.min(1, progress01 + (delta / overflowX)));
+    applyProgress(overflowX);
+  };
+
+
+
+  // Touch (tablet/desktop touch)
+  let touchScrollTarget = null;
+
+  const onTouchStart = (e) => {
+    touchScrollTarget = getScrollableAncestorY(e.target);
+    if (touchScrollTarget) return;        // sarà lo scroller interno a gestire la Y
+    if (!lockActive || mqMobile.matches) return;
+    lastTouchY = e.touches[0].clientY;
+  };
+
+  const onTouchMove = (e) => {
+    if (touchScrollTarget) return;        // lascia scorrere il modale
+    if (!lockActive || mqMobile.matches) return;
+    const { overflowX } = ranges();
+    if (!overflowX) return;
+    e.preventDefault();                   // blocca Y sul documento
+    const y = e.touches[0].clientY;
+    const dy = lastTouchY - y;
+    lastTouchY = y;
+    progress01 = Math.max(0, Math.min(1, progress01 + (dy / overflowX)));
+    applyProgress(overflowX);
+  };
+
+  const onTouchEnd = () => { touchScrollTarget = null; };
+
+
+
+  // Tastiera
+  const onKeydown = (e) => {
+    if (!lockActive) return;
+    const { overflowX } = ranges();
+    if (!overflowX) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const step = 40 / overflowX;
+      progress01 = clamp(progress01 + (e.key === 'ArrowRight' ? step : -step), 0, 1);
+      applyProgress(overflowX);
+    }
+    if (e.key === 'Escape') disableLock();
+  };
+
+  // Attiva/disattiva lock quando entri/esci dalla sezione (solo desktop)
+  const updateLockByScroll = () => {
+    if (mqMobile.matches) { disableLock(); return; }
+    if (Date.now() < unlockCooldownUntil) return; // isteresi
+    const { secTop, secEnd } = ranges();
+    const y = window.scrollY;
+    const inSection = y >= (secTop - 1) && y <= (secEnd + 1);
+    if (inSection) enableLock(); else disableLock();
+  };
+
+  async function recalc() {
+    await setUniformWorkWidth();
+    if (mqMobile.matches) {
+      // mobile: nessun lock, nessun movimento orizzontale forzato
+      disableLock();
+      return;
+    }
+    if (lockActive) applyProgress();
+    updateLockByScroll();
+  }
+
+  // Eventi
+  window.addEventListener('resize', recalc);
+  window.addEventListener('orientationchange', recalc);
+  window.addEventListener('scroll', updateLockByScroll, { passive: true });
+  window.addEventListener('wheel', onWheel, { passive: false });
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('touchend', onTouchEnd, { passive: true });
+  window.addEventListener('keydown', onKeydown);
+  mqMobile.addEventListener?.('change', recalc);
+
+  // Prima misura
+  recalc();
+
+  // Hook pubblico per ricalcolo quando rigeneri le card
+  window.reflowWorksScroller = recalc;
+}
+
+// (chiama dove preferisci; se già lo fai altrove, lascia commentata la riga sotto)
+setupWorksPin();
