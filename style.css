@@ -326,40 +326,112 @@ canvas {
 
 /* ============ WORKS (nastro orizzontale scrollato verticalmente) ============ */
 
-:root{
-  --navH: 5rem;      /* altezza navbar in basso */
-  --workW: 360px;    /* fallback: larghezza comune delle card (JS la sovrascrive) */
-  --gapX: 24px;      /* spazio tra card */
+:root {
+  --navH: 5rem;
+  /* altezza navbar in basso */
+  --workW: 360px;
+  /* fallback: larghezza comune delle card (JS la sovrascrive) */
+  --gapX: 24px;
+  /* spazio tra card */
 }
 
 /* wrapper sezione: nessun padding-top, altezza la decide JS */
-#works-section{
+#works-section {
   position: relative;
   z-index: 5;
   width: 100vw;
-  padding-top: 0;            /* importante: niente offset che abbassa il pin */
+  padding-top: 0;
+  /* importante: niente offset che abbassa il pin */
 }
 
-/* filtri */
+/* ================== WORKS FILTERS (responsive) ================== */
+
 .works-filters{
   position: sticky;
   top: 16px;
   z-index: 7;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 12px 16px;
   background: transparent;
 }
+
 .works-filters select{
-  padding: 6px 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 10px 12px;
+  min-height: 44px;
   font-family: 'PPSupplyMono', monospace;
+  font-size: 16px;
+  line-height: 1.2;
   border: 1px solid #000;
   background: #fff;
   color: #000;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .06s ease;
+}
+.works-filters select:focus-visible{
+  border-color: #ff4800;
+  box-shadow: 0 0 0 3px rgba(255,72,0,.2);
+}
+.works-filters select:active{ transform: scale(0.995); }
+
+/* ---- Mobile: barra fissa in fondo ---- */
+@media (max-width: 768px){
+  .works-filters{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* due select affiancati */
+    gap: 8px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(0,0,0,.08);
+    box-shadow: 0 -4px 12px rgba(0,0,0,.08);
+  }
+  .works-filters select{
+    width: 100%;
+  }
+  body{ padding-bottom: 80px; } /* spazio per non coprire la lista */
 }
 
+/* ---- Tablet ---- */
+@media (min-width: 769px) and (max-width: 1024px){
+  .works-filters{
+    position: sticky;
+    top: 16px;
+    gap: 10px;
+  }
+  .works-filters select{
+    flex: 1 1 240px;
+  }
+}
+
+/* ---- Desktop ---- */
+@media (min-width: 1025px){
+  .works-filters{
+    background: transparent;
+    backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+    position: sticky;
+    top: 16px;
+  }
+  .works-filters select{
+    flex: 0 0 auto;
+  }
+}
+/* ================== FINE WORKS FILTERS ================== */
+
+
 /* pin: blocca la vista mentre scorre il nastro */
-.works-pin{
+.works-pin {
   height: calc(100dvh - var(--navH));
   position: sticky;
   top: 0;
@@ -367,53 +439,63 @@ canvas {
   display: block;
 }
 
-@supports not (height: 100dvh){
-  .works-pin{ height: calc(100vh - var(--navH)); }
+@supports not (height: 100dvh) {
+  .works-pin {
+    height: calc(100vh - var(--navH));
+  }
 }
 
-.works-track{
+.works-track {
   display: flex;
   align-items: flex-end;
   gap: 24px;
   padding: 0 10vw 12px;
   will-change: transform;
-  transform: translate3d(0,0,0);
+  transform: translate3d(0, 0, 0);
 }
 
-.works-pin, .works-track{
+.works-pin,
+.works-track {
   contain: none !important;
 }
 
 /* “spacer” di coda: forza overflow anche con poche card */
-.works-track::after{
+.works-track::after {
   content: "";
   flex: 0 0 40vw;
 }
 
 /* card: tutte con la stessa larghezza (decisa dal JS), altezza variabile */
-.work-card{
+.work-card {
   position: relative;
   width: var(--workW);
-  flex: 0 0 auto;          /* niente grow/shrink */
-  align-self: flex-end;    /* resta appoggiata in basso */
-  display: inline-block;   /* shrink-wrap dei contenuti */
+  flex: 0 0 auto;
+  /* niente grow/shrink */
+  align-self: flex-end;
+  /* resta appoggiata in basso */
+  display: inline-block;
+  /* shrink-wrap dei contenuti */
   overflow: visible;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
 }
 
 /* media a proporzioni native, nessun crop */
 .work-card img,
-.work-card video{
-  display: block;     /* elimina spaziature inline */
+.work-card video {
+  display: block;
+  /* elimina spaziature inline */
   width: 100%;
   height: auto;
   object-fit: contain;
 }
 
 /* overlay pieno (arancione menu) */
-:root { --menu-orange: #ff4800; }
-.work-card .work-overlay{
+:root {
+  --menu-orange: #ff4800;
+}
+
+.work-card .work-overlay {
   position: absolute;
   inset: 0;
   background: var(--menu-orange);
@@ -421,7 +503,7 @@ canvas {
   opacity: 0;
   transition: opacity .18s ease;
   display: flex;
-  flex-direction: column;   
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -431,109 +513,294 @@ canvas {
   line-height: 1.25;
 }
 
-.work-overlay .title{
+.work-overlay .title {
   font-size: 2rem;
   font-weight: 400;
   letter-spacing: .01em;
   margin: 0 8px 4px;
 }
 
-.work-overlay .subtitle{
+.work-overlay .subtitle {
   font-size: 1rem;
   opacity: .85;
   margin: 0 8px;
 }
 
-.work-card:hover .work-overlay{ opacity: 1; }
+/* mostra overlay sia su hover che su .is-hover */
+.work-card:is(:hover, .is-hover) .work-overlay {
+  opacity: 1;
+}
+
 
 /* lista mobile (testuale) */
-.works-list{
+.works-list {
   display: none;
   padding: 16px;
 }
-.works-list .work-row{
+
+.works-list .work-row {
   padding: 14px 10px;
-  border-bottom: 1px solid rgba(0,0,0,.12);
+  border-bottom: 2px solid #000000;
   cursor: pointer;
 }
-.works-list .work-row .row-title{
+
+.works-list .work-row .row-title {
   font-family: 'PPSupplyMono', monospace;
   font-size: 1.1rem;
 }
-.works-list .work-row .row-sub{
+
+.works-list .work-row .row-sub {
+  font-family: 'PPSupplyMono', monospace;
   font-size: .9rem;
   opacity: .7;
 }
 
-/* modal progetto (come avevi già) */
+/* ================= MODAL PROGETTO ================= */
 
-.work-modal__body{
-  max-height: calc(100dvh - var(--modalHeaderH, 64px));
+.project-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  /* .open => flex */
+  z-index: 1100;
+}
+
+.project-modal.open {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 6vh 6vw;
+}
+
+.project-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(2px);
+}
+
+.project-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1120px;
+  background: #fff;
+  box-shadow: 0 30px 80px rgba(255, 106, 0, .35);
+  overflow: hidden;
+  /* per header sticky + border-radius */
+}
+
+/* Header */
+.project-modal__header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: #fff;
+  border-bottom: 3px solid #000000;
+  z-index: 2;
+}
+
+.project-modal__header h2 {
+  font-family: 'PPSupplyMono', monospace;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.2;
+  margin-right: auto;
+}
+
+.project-modal__close {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  line-height: 1;
+  background: #ff4800;
+  color: #000000;
+  border: 0;
+  cursor: pointer;
+  transition: transform .12s ease, opacity .12s ease;
+}
+
+.project-modal__close:hover {
+  opacity: .9;
+  transform: scale(0.98);
+}
+
+/* Body: layout a colonne su desktop, stack su mobile */
+.project-modal__body {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(16px, 2.5vw, 28px);
+  padding: clamp(14px, 2.5vw, 22px);
+  max-height: calc(88vh - 56px);
+  /* 56px ~ header */
   overflow: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-.project-modal { position: fixed; inset: 0; display: none; z-index: 1100; }
-.project-modal.open { display: block; }
-.project-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
-.project-modal__dialog {
-  position: absolute;
-  inset: 6vh 6vw auto 6vw;
-  background: #fff;
-  border-radius: 0;
-  padding: 16px;
-  max-height: 88vh;
-  overflow: auto;
-  box-shadow: 0 20px 60px #FF6A00;
+/* Colonna media */
+.project-modal__media {
+  min-height: 240px;
+  display: grid;
+  align-content: start;
+  gap: 12px;
 }
-.project-modal__close{
-  position: absolute; top: 8px; right: 12px;
-  font-size: 24px; background: none; border: 0; cursor: pointer;
+
+.project-modal__media img,
+.project-modal__media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
 }
-.project-meta{ opacity: .7; margin-bottom: 12px; }
-.project-desc{ margin-top: 12px; }
+
+/* Colonna testo */
+.project-modal__content {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.project-meta {
+  font-family: 'PPSupplyMono', monospace;
+  color: #333;
+  opacity: .85;
+  margin: 0 0 4px 0;
+}
+
+.project-desc {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: #111;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 1024px) {
+  .project-modal__body {
+    grid-template-columns: 1fr;
+    /* stack */
+    max-height: calc(88vh - 56px);
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* NON tocchiamo .works-list: regole solo per il modal */
+  .project-modal.open {
+    padding: 4vh 4vw;
+  }
+
+  .project-modal__dialog {
+    border-radius: 0px;
+  }
+
+  .project-modal__header {
+    padding: 12px 14px;
+  }
+
+  .project-modal__body {
+    padding: 12px;
+    gap: 14px;
+  }
+}
+
+/* Accessibilità focus */
+.project-modal__close:focus-visible {
+  outline: 2px solid #ff4800;
+  outline-offset: 2px;
+}
+
+/* Evita scroll del body quando il modal è aperto */
+html.has-open-modal,
+body.has-open-modal {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ================= FINE MODAL PROGETTO ================= */
 
 /* responsive */
-@media (min-width: 769px){
+@media (min-width: 769px) {
+
   /* niente padding-top sulla sezione! */
-  .works-pin{ display: block; }
-  .works-list{ display: none; }
+  .works-pin {
+    display: block;
+  }
+
+  .works-list {
+    display: none;
+  }
 }
-@media (max-width: 768px){
-  .works-filters{ position: static; padding: 8px 12px; }
-  .works-pin{ display: none; }
-  .works-list{ display: block; }
+
+@media (max-width: 768px) {
+  .works-filters {
+    position: static;
+    padding: 8px 12px;
+  }
+
+  .works-pin {
+    display: none;
+  }
+
+  .works-list {
+    display: block;
+  }
 }
 
 /* WORKS — forza il paint anche fuori dalla viewport iniziale */
 #works-track,
-#works-track > * {
-  content-visibility: visible !important;  /* disattiva c-v:auto */
-  contain: none !important;                 /* disattiva contain: paint/layout */
+#works-track>* {
+  content-visibility: visible !important;
+  /* disattiva c-v:auto */
+  contain: none !important;
+  /* disattiva contain: paint/layout */
 }
 
 /* il nastro non deve clipparsi: lascia clip solo al pin */
-#works-track{
+#works-track {
   overflow: visible !important;
   will-change: transform;
 }
 
 /* sicurezza: media sempre visibili */
 #works-track img,
-#works-track video{
+#works-track video {
   visibility: visible !important;
 }
 
 /* Quando la sezione Works è in lock, rimuovi del tutto lo scroll verticale */
 html.is-locking-works,
-html.is-locking-works body{
+html.is-locking-works body {
   overflow-y: hidden !important;
-  height: 100%;                /* evita micro shift del layout */
-  overscroll-behavior-y: none; /* niente bounce/inerzia verticale */
+  height: 100%;
+  /* evita micro shift del layout */
+  overscroll-behavior-y: none;
+  /* niente bounce/inerzia verticale */
 }
 
 /* opzionale ma utile: evita shift quando le barre compaiono/scompaiono */
-html{ scrollbar-gutter: stable both-edges; }
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* Canvas overlay per i pixel effervescenti */
+#edge-fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1050;
+  /* sopra il track e sotto eventuali tooltip */
+  mix-blend-mode: normal;
+  /* cambia in 'multiply' se ti piace di più */
+}
 
 /* ============ FINE WORKS ============ */

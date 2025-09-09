@@ -683,9 +683,9 @@ const projects = [
 
   {
     id: "summershred",
-    titolo: "Sūgo 2025 – Event Identity",
+    titolo: "Summer Shred",
     anno: 2025,
-    ambito: "Branding",
+    ambito: "Graphic Design",
     ruoli: ["Illustrazione", "Graphic Designer"],
     cover: { type: "image", src: `${BASE}portfolio/summer-shred/cover.jpg`, alt: "Summer Shred - Illustrazione" },
     descrizione: "Illustrazione e logotipo"
@@ -868,120 +868,6 @@ if (location.hash === '#works') {
   }, 0);
 }
 
-// ===== WORKS: stessa larghezza per tutti, altezza massima per il 9:16,
-// niente crop, overflow a destra + scroll verticale -> orizzontale =====
-
-/*async function setUniformWorkWidth() {
-  const section = document.getElementById('works-section');
-  const pin = document.getElementById('works-pin');
-  const track = document.getElementById('works-track');
-  const navbar = document.getElementById('bottom-navbar');
-  const filters = document.getElementById('works-filters');
-  if (!section || !pin || !track) return;
-
-  // 1) Calcolo altezza utile per il pin (tra filtri e navbar)
-  const viewportH = window.innerHeight;
-  const navbarH = navbar ? navbar.offsetHeight : 0;
-  const filtersH = filters ? filters.offsetHeight : 0;
-  const verticalGap = 24; // respiro sopra e sotto
-  const pinH = Math.max(240, viewportH - navbarH - filtersH - verticalGap * 2);
-  pin.style.height = pinH + 'px';
-
-  // 2) Altezza effettiva del track (leggermente più bassa per margine visivo)
-  const trackH = Math.round(pinH * 0.86);
-  track.style.height = trackH + 'px';
-
-  // 3) Attendo caricamento immagini e video
-  const imgs = Array.from(track.querySelectorAll('img'));
-  const vids = Array.from(track.querySelectorAll('video'));
-
-  await Promise.all([
-    ...imgs.map(img =>
-      img.complete ? Promise.resolve() :
-        new Promise(res => img.addEventListener('load', res, { once: true }))
-    ),
-    ...vids.map(v =>
-      (v.readyState >= 1) ? Promise.resolve() :
-        new Promise(res => v.addEventListener('loadedmetadata', res, { once: true }))
-    )
-  ]);
-
-  // 4) Trovo il rapporto h/w massimo (es. 9:16)
-  let maxHW = 0;
-  imgs.forEach(img => {
-    const w = img.naturalWidth || img.width || 1;
-    const h = img.naturalHeight || img.height || 1;
-    maxHW = Math.max(maxHW, h / w);
-  });
-  vids.forEach(v => {
-    const w = v.videoWidth || v.clientWidth || 1;
-    const h = v.videoHeight || v.clientHeight || 1;
-    maxHW = Math.max(maxHW, h / w);
-  });
-  if (maxHW === 0) maxHW = 16 / 9; // fallback
-
-  // 5) Larghezza comune delle card
-  const cardW = Math.floor(trackH / maxHW);
-  document.documentElement.style.setProperty('--workW', cardW + 'px');
-
-  // 6) Larghezza totale naturale della track
-  const totalWidth = track.scrollWidth;
-
-  // 7) Overflow orizzontale reale
-  const overflowX = totalWidth - window.innerWidth;
-
-  // 8) Altezza sezione = altezza pin + overflow
-  section.style.height = (pinH + overflowX) + 'px';
-
-  // Salvo dati per lo scroll
-  track.dataset.totalWidth = String(totalWidth);
-  pin.dataset.pinH = String(pinH);
-}
-
-
-
-function setupWorksPin() {
-  const section = document.getElementById('works-section');
-  const pin = document.getElementById('works-pin');
-  const track = document.getElementById('works-track');
-  if (!section || !pin || !track) return;
-
-  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
-
-  async function recalc() {
-    await setUniformWorkWidth();
-    onScroll(); // aggiorno posizione subito
-  }
-
-  function onScroll() {
-    const pinH = parseFloat(pin.dataset.pinH || '0');
-    const totalWidth = parseFloat(track.dataset.totalWidth || '0');
-    if (!pinH || !totalWidth) return;
-
-    const overflowX = Math.max(0, totalWidth - window.innerWidth);
-
-    // progress di scroll dentro la sezione (0..1)
-    const secTop = section.offsetTop;
-    const secEnd = secTop + section.offsetHeight - pinH;
-    const y = clamp(window.scrollY, secTop, secEnd);
-    const t = (secEnd === secTop) ? 0 : (y - secTop) / (secEnd - secTop);
-
-    // muovo il nastro a sinistra man mano che scendi
-    const tx = -Math.round(t * overflowX);
-    track.style.transform = `translate3d(${tx}px,0,0)`;
-  }
-
-  // init
-  recalc();
-  window.addEventListener('load', recalc, { passive: true });
-  window.addEventListener('resize', recalc);
-  window.addEventListener('orientationchange', recalc);
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
-
-// ===== CHIAMA QUESTA DOPO AVER CREATO LE .work-card =====
-// setupWorksPin();
-
 
 /* ===== WORKS: stessa larghezza (dalla più alta) + overflow a destra + pin ===== */
 async function setUniformWorkWidth() {
@@ -1089,15 +975,15 @@ function setupWorksPin() {
   };
 
   // trova l'antenato più vicino che può scorrere in verticale
-const getScrollableAncestorY = (node) => {
-  while (node && node !== document && node !== document.documentElement) {
-    const s = window.getComputedStyle(node);
-    const canScroll = /(auto|scroll|overlay)/.test(s.overflowY);
-    if (canScroll && node.scrollHeight > node.clientHeight) return node;
-    node = node.parentNode;
-  }
-  return null;
-};
+  const getScrollableAncestorY = (node) => {
+    while (node && node !== document && node !== document.documentElement) {
+      const s = window.getComputedStyle(node);
+      const canScroll = /(auto|scroll|overlay)/.test(s.overflowY);
+      if (canScroll && node.scrollHeight > node.clientHeight) return node;
+      node = node.parentNode;
+    }
+    return null;
+  };
 
 
   const applyProgress = (ox = ranges().overflowX) => {
@@ -1153,6 +1039,7 @@ const getScrollableAncestorY = (node) => {
     const delta = e.deltaY || e.wheelDelta || 0;
     progress01 = Math.max(0, Math.min(1, progress01 + (delta / overflowX)));
     applyProgress(overflowX);
+    hoverDirty = true;
   };
 
 
@@ -1165,6 +1052,7 @@ const getScrollableAncestorY = (node) => {
     if (touchScrollTarget) return;        // sarà lo scroller interno a gestire la Y
     if (!lockActive || mqMobile.matches) return;
     lastTouchY = e.touches[0].clientY;
+    hoverDirty = true;
   };
 
   const onTouchMove = (e) => {
@@ -1178,6 +1066,7 @@ const getScrollableAncestorY = (node) => {
     lastTouchY = y;
     progress01 = Math.max(0, Math.min(1, progress01 + (dy / overflowX)));
     applyProgress(overflowX);
+    hoverDirty = true;
   };
 
   const onTouchEnd = () => { touchScrollTarget = null; };
@@ -1233,9 +1122,216 @@ const getScrollableAncestorY = (node) => {
   // Prima misura
   recalc();
 
-  // Hook pubblico per ricalcolo quando rigeneri le card
+
   window.reflowWorksScroller = recalc;
 }
 
-// (chiama dove preferisci; se già lo fai altrove, lascia commentata la riga sotto)
 setupWorksPin();
+
+
+// =============== EDGE PIXEL EFFERVESCENTI ================= //
+(() => {
+  // ---- Canvas setup
+  const cvs = document.createElement('canvas');
+  cvs.id = 'edge-fx-canvas';
+  document.body.appendChild(cvs);
+  const ctx = cvs.getContext('2d');
+  let DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+  const resize = () => {
+    const { innerWidth: w, innerHeight: h } = window;
+    cvs.width = Math.ceil(w * DPR);
+    cvs.height = Math.ceil(h * DPR);
+    cvs.style.width = w + 'px';
+    cvs.style.height = h + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ---- Particelle
+  const THEME_COLORS = ['#000000']; // palette
+  const EDGE_FX_DENSITY = 3.0;
+  const particles = [];
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = arr => arr[(Math.random() * arr.length) | 0];
+
+  function spawnPixel(x, y, nx, ny, opts) {
+    const speed = rand(opts.vMin, opts.vMax);
+    particles.push({
+      x, y,
+      vx: nx * speed + rand(-opts.jitter, opts.jitter),
+      vy: ny * speed + rand(-opts.jitter, opts.jitter),
+      life: rand(opts.lifeMin, opts.lifeMax),
+      age: 0,
+      size: rand(opts.sizeMin, opts.sizeMax),
+      color: pick(opts.colors),
+      gravity: opts.gravity || 0
+    });
+  }
+
+  // ---- Emitter sui bordi
+  function makeEdgeEmitter(getRect, options = {}) {
+    const opts = {
+      rate: 1500,              // densità
+      pulseBoost: 3.0,
+      sizeMin: 5, sizeMax: 10,
+      vMin: 80, vMax: 160,
+      lifeMin: 0.5, lifeMax: 0.9,
+      jitter: 20,
+      colors: THEME_COLORS,
+      gravity: 0,
+      active: true,
+      ...options
+    };
+    opts.rate *= EDGE_FX_DENSITY;   // <— scala la densità per tutti gli emettitori
+    let boost = 1.0;
+
+    return {
+      boostUp() { boost = opts.pulseBoost; setTimeout(() => (boost = 1), 150); },
+      setActive(v) { opts.active = !!v; },
+      tick(dt) {
+        if (!opts.active) return;
+        const r = getRect();
+        if (!r) return;
+
+        const P = 2 * (r.width + r.height);           // perimetro
+        const want = (opts.rate * boost) * dt;        // quante spawnare in questo frame
+        for (let i = 0; i < want; i += 1) {
+          const p = Math.random() * P;
+          let x, y, nx, ny;
+          if (p < r.width) {                           // top
+            x = r.left + p; y = r.top; nx = 0; ny = -1;
+          } else if (p < r.width + r.height) {         // right
+            x = r.right; y = r.top + (p - r.width); nx = 1; ny = 0;
+          } else if (p < r.width * 2 + r.height) {     // bottom
+            x = r.right - (p - (r.width + r.height)); y = r.bottom; nx = 0; ny = 1;
+          } else {                                      // left
+            x = r.left; y = r.bottom - (p - (r.width * 2 + r.height)); nx = -1; ny = 0;
+          }
+          const OUT = 2; x += nx * OUT; y += ny * OUT; // verso l’esterno
+          spawnPixel(x, y, nx, ny, opts);
+        }
+      }
+    };
+  }
+
+  // ---- Utility rect (in viewport)
+  const rectOfEl = (el) => {
+    if (!el || !el.isConnected) return null;
+    const r = el.getBoundingClientRect();
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+  };
+
+  // ---- Emitter: hover sulle card
+  const cardEmitters = new Map();
+  function attachCardHoverEmitters() {
+    const cards = document.querySelectorAll('.work-card');
+    cards.forEach(card => {
+      if (cardEmitters.has(card)) return;
+      const em = makeEdgeEmitter(() => rectOfEl(card), { rate: 180, sizeMin: 2, sizeMax: 3 });
+      cardEmitters.set(card, em);
+      card.addEventListener('mouseenter', () => em.setActive(true));
+      card.addEventListener('mouseleave', () => em.setActive(false));
+      em.setActive(false); // on-hover only
+    });
+  }
+
+  // --- Hover robusto con hit-test (quando il nastro si muove)
+  let mouseX = 0, mouseY = 0, activeCard = null, hoverDirty = true;
+  window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; hoverDirty = true; });
+
+  function ensureCardEmitter(card) {
+    if (!cardEmitters.has(card)) {
+      const em = makeEdgeEmitter(() => rectOfEl(card), { rate: 180, sizeMin: 2, sizeMax: 3 });
+      cardEmitters.set(card, em);
+      em.setActive(false);
+    }
+  }
+
+  function setActiveCard(card) {
+    if (card === activeCard) return;
+    const prev = activeCard;
+    if (prev) {
+      cardEmitters.get(prev)?.setActive(false);
+      prev.classList.remove('is-hover');   // << togli hover visivo dalla precedente
+    }
+    activeCard = card || null;
+    if (activeCard) {
+      ensureCardEmitter(activeCard);
+      cardEmitters.get(activeCard)?.setActive(true);
+      activeCard.classList.add('is-hover'); // << applica hover visivo alla nuova
+    }
+  }
+
+  function syncHoverByHitTest() {
+    const el = document.elementFromPoint(mouseX, mouseY);
+    const card = el && el.closest ? el.closest('.work-card') : null;
+    setActiveCard(card);
+  }
+
+  // Inizializza una volta e aggiorna solo se il track cambia
+  attachCardHoverEmitters();
+  const worksTrack = document.getElementById('works-track');
+  if (worksTrack) {
+    const mo = new MutationObserver(() => attachCardHoverEmitters());
+    mo.observe(worksTrack, { childList: true, subtree: true });
+  }
+
+  // ---- Emitter: perimetro del track (DISATTIVATO)
+  const trackEl = document.getElementById('works-track');
+  const trackEm = null; // placeholder
+
+  // ---- Emitter: perimetro del modale (attivo quando aperto)
+  const modalDlg = document.querySelector('#project-modal .project-modal__dialog');
+  const modalEm = modalDlg ? makeEdgeEmitter(() => rectOfEl(modalDlg), {
+    rate: 120, sizeMin: 2, sizeMax: 4, vMin: 70, vMax: 140, colors: ['#000000']
+  }) : null;
+
+  // Attiva/disattiva in base allo stato del modale
+  const modalRoot = document.getElementById('project-modal');
+  if (modalRoot && modalEm) {
+    const syncModal = () => modalEm.setActive(modalRoot.classList.contains('open'));
+    syncModal();
+    new MutationObserver(syncModal).observe(modalRoot, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  // ---- Main loop
+  let lastT = performance.now();
+  function loop(t) {
+    const dt = Math.min(0.033, (t - lastT) / 1000); // max 33ms
+    lastT = t;
+
+    // hover hit-test (se il contenuto si è mosso o il mouse si è spostato)
+    if (hoverDirty) { syncHoverByHitTest(); hoverDirty = false; }
+
+    // tick emitters
+    trackEm && trackEm.tick(dt);
+    modalEm && modalEm.tick(dt);
+    cardEmitters.forEach(em => em.tick(dt));
+
+    // draw
+    ctx.clearRect(0, 0, cvs.width / DPR, cvs.height / DPR);
+    for (let i = particles.length - 1; i >= 0; --i) {
+      const p = particles[i];
+      p.age += dt;
+      if (p.age >= p.life) { particles.splice(i, 1); continue; }
+      p.vy += p.gravity * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      const k = 1 - (p.age / p.life);
+      ctx.globalAlpha = Math.max(0, Math.min(1, k));
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    }
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // Segnala al sistema hover che il contenuto sotto il mouse è cambiato (chiamalo quando muovi il nastro)
+  window.__edgeFx_markHoverDirty = () => { hoverDirty = true; };
+})();
+
