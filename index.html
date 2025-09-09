@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fabrizio Confortola</title>
-  <script type="module" crossorigin src="/SITEFOLIO/assets/index-yA5Vrg-M.js"></script>
-  <link rel="stylesheet" crossorigin href="/SITEFOLIO/assets/index-D_dixNvS.css">
+  <script type="module" crossorigin src="/SITEFOLIO/assets/index-DH9A9qxe.js"></script>
+  <link rel="stylesheet" crossorigin href="/SITEFOLIO/assets/index-Cley_EEB.css">
 </head>
 
 <body>
@@ -109,21 +109,25 @@
         <button class="project-modal__close" id="project-modal-close" aria-label="Chiudi modale">×</button>
       </header>
 
-      <div class="project-modal__body">
-        <aside class="project-modal__media" id="project-modal-media"></aside>
-
-        <section class="project-modal__content">
+      <div class="project-modal__body" id="project-modal-body">
+        <!-- COLONNE STANDARD (fallback) -->
+        <aside class="project-modal__media" id="project-modal-media" aria-hidden="false"></aside>
+        <section class="project-modal__content" aria-hidden="false">
           <p class="project-meta">
             <span id="project-meta-year"></span> · <span id="project-meta-field"></span>
           </p>
           <div id="project-modal-desc" class="project-desc"></div>
         </section>
+
+        <!-- PAGINA PROGETTO (attiva solo in page-mode) -->
+        <div id="project-modal-page" class="project-page" hidden aria-hidden="true"></div>
       </div>
     </div>
 
-    <!-- live region per feedback (es. “Modale aperto/chiuso”) -->
+    <!-- live region per feedback -->
     <div class="sr-only" aria-live="polite" aria-atomic="true" id="modal-aria-live"></div>
   </div>
+  ƒ
 
 
 
