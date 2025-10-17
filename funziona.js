@@ -218,66 +218,67 @@ window.addEventListener('load', () => {
     if (!isLoaded) requestAnimationFrame(animateLoader);
   }
 
-  const loaderDuration = 4000; // durata totale del loader in ms
+   const loaderDuration = 4000; // ms
   let startTime = null;
+  let rafId = null;
 
   function animateProgress(timestamp) {
-    if (!startTime) startTime = timestamp;
+    if (startTime === null) startTime = timestamp;
 
     const elapsed = timestamp - startTime;
-
     const rawProgress = Math.min(1, elapsed / loaderDuration);
     const eased = 1 - Math.pow(1 - rawProgress, 3); // ease-out
+
     percent = eased * 100;
 
-    progressBar.style.width = percent + '%';
+    // UI progress
+    if (progressBar) progressBar.style.width = percent + '%';
+    if (percent < 25)       loadingText.textContent = texts[0];
+    else if (percent < 50)  loadingText.textContent = texts[1];
+    else if (percent < 75)  loadingText.textContent = texts[2];
+    else                    loadingText.textContent = texts[3];
 
-    if (percent < 25) loadingText.textContent = texts[0];
-    else if (percent < 50) loadingText.textContent = texts[1];
-    else if (percent < 75) loadingText.textContent = texts[2];
-    else loadingText.textContent = texts[3];
-
-    if (percent > 25 && !logo.classList.contains('visible')) {
+    if (percent > 25 && logo && !logo.classList.contains('visible')) {
       logo.classList.add('visible');
     }
 
-    if (percent === 100) {
-      clearInterval(interval);
-      isLoaded = true;
-
-      Promise.all([modelPromise, window.animationPreloadPromise]).then(() => {
-        setTimeout(() => {
-          loader.style.opacity = '0';
-          loader.style.transition = 'opacity 0.6s ease';
-          logo.remove();
-          loader.remove();
-
-          handleSectionChange('home'); // <-- qui fai partire l'home
-          typeWriter(
-            "Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.",
-            'typewriter-text'
-          );
-
-          playSequence(['standing_up', 'stretch', 'point']);
-        }, 600);
-      });
+    if (rawProgress < 1) {
+      // continua a richiamare il loop finché non abbiamo finito
+      rafId = requestAnimationFrame(animateProgress);
+      return;
     }
-    else {
-      isLoaded = true;
 
-      Promise.all([modelPromise, window.animationPreloadPromise]).then(() => {
+    // === FINE LOADER ===
+    if (rafId) cancelAnimationFrame(rafId);
+    isLoaded = true; // ferma animateLoader()
+
+    // aspetta che i modelli/animazioni siano pronti, poi rimuovi il loader
+    Promise.all([modelPromise, window.animationPreloadPromise])
+      .catch(() => {}) // anche in caso di errore, proseguiamo
+      .then(() => {
         setTimeout(() => {
-          loader.style.opacity = '0';
-          loader.style.transition = 'opacity 0.6s ease';
-          logo.remove();
-          loader.remove();
-          playSequence(['standing_up', 'stretch', 'point']);
-        }, 600);
+          if (loader) {
+            loader.style.transition = 'opacity 0.6s ease';
+            loader.style.opacity = '0';
+          }
+          // rimuovi dopo il fade
+          setTimeout(() => {
+            logo?.remove();
+            loader?.remove();
+
+            showSection('home');
+            typeWriter(
+              "Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.",
+              'typewriter-text'
+            );
+            playSequence(['standing_up', 'stretch', 'point']);
+          }, 600);
+        }, 0);
       });
-    }
   }
 
-  requestAnimationFrame(animateProgress);
+  // avvio del loop di avanzamento
+  rafId = requestAnimationFrame(animateProgress);
 
 
 });
@@ -534,89 +535,18 @@ window.addEventListener('resize', () => {
 });
 
 
-// GESTIONE NAVIGAZIONE DA NAVBAR IN BASSO
-const sectionTextEls = document.querySelectorAll('.section-text');
-const projectsGrid = document.querySelector('.projects-grid');
-const viewport = document.getElementById('viewport-container');
-const toolbar = document.getElementById('toolbar');
-
-
-function handleSectionChange(section) {
-  // --- RESET GENERALE ---
-  sectionTextEls.forEach(el => el.classList.remove('active'));
-  projectsGrid?.classList.add('hidden');
-  viewport?.classList.remove('compact');
-  viewport?.classList.remove('hidden');
-  toolbar?.classList.add('hidden');
-
-  document.getElementById('about-text')?.classList.add('hidden');
-  document.getElementById('home-text')?.classList.remove('active');
-  document.getElementById('works-section')?.classList.add('hidden'); // nascondi sempre i Works
-
-  // --- HOME ---
-  if (section === 'home') {
-    toolbar?.classList.remove('hidden');
-    cameraTarget.set(0, 4, 6);
-    lookTarget.set(0, 2, 0);
-    scene.background = null;
-    fovTarget = 75;
-
-    document.getElementById('home-text')?.classList.add('active');
-    typeWriter(
-      "Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough chaos.",
-      'typewriter-text'
-    );
-    return;
-  }
-
-  // --- WORKS ---
-  if (section === 'progetti' || section === 'works') {
-    viewport?.classList.add('hidden');
-    const ws = document.getElementById('works-section');
-    if (ws) {
-      ws.classList.remove('hidden');
-      renderWorksTrack(projects);
-      renderWorksList(projects);
-      setupWorksPin(); // <— niente recalcWorksLayout / updateTrackTransform
-    }
-    return;
-  }
-
-  // --- ABOUT ---
-  if (section === 'about') {
-    document.getElementById('about-text')?.classList.remove('hidden');
-    cameraTarget.set(0, 4, 6);
-    lookTarget.set(0, 2, 0);
-    scene.background = null;
-    fovTarget = 75;
-    return;
-  }
-
-  // --- CV / CONTACTS ---
-  if (section === 'cv' || section === 'contacts') {
-    document.querySelector('.cv-text')?.classList.add('active');
-    container.classList.add('compact');
-    cameraTarget.set(0, 5, 3);
-    lookTarget.set(0, 5, 0);
-    fovTarget = 30;
-    scene.background = new THREE.Color(0xffffff);
-  }
-}
-
-
-
-
-
-// Listener per i pulsanti del menu in basso
-document.querySelectorAll('#bottom-navbar li').forEach(item => {
-  item.addEventListener('click', () => {
-    const section = item.getAttribute('data-section');
-    handleSectionChange(section);
+// NAV BAR → click sui <button class="nav-item" data-nav="...">
+document.querySelectorAll('#bottom-navbar .nav-item[data-nav]')
+  .forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSection(btn.dataset.nav);
+    });
   });
-});
 
-window.addEventListener('DOMContentLoaded', () => {
-  handleSectionChange('home');
+// stato iniziale: mostra subito la home (testo visibile)
+document.addEventListener('DOMContentLoaded', () => {
+  showSection('home');
 });
 
 
@@ -643,6 +573,180 @@ function typeWriter(text, elementId, speed = 40) {
 }
 
 
+// ===== SEZIONI — solo i contenuti, NON la navbar =====
+const sections = Array.from(document.querySelectorAll('[data-section]'))
+  .filter(el => !el.closest('#bottom-navbar')); // evita di includere la nav
+
+const sectionByName = Object.fromEntries(sections.map(el => [el.dataset.section, el]));
+let currentSection = null;
+
+function showSection(name) {
+  if (currentSection === name) return;
+
+  const target = sectionByName[name];
+  if (!target) return;
+
+  // 1) Nascondi tutte le sezioni
+  sections.forEach(el => {
+    el.classList.remove('section-visible', 'active');
+    el.classList.add('section-hidden');
+    el.setAttribute('aria-hidden', 'true');
+    el.inert = true;
+  });
+
+  window.hideHoverVideo?.();
+
+  // 2) Mostra la sezione target
+  target.classList.remove('section-hidden', 'hidden'); // rimuove eventuale legacy
+  target.classList.add('section-visible', 'active');
+  target.setAttribute('aria-hidden', 'false');
+  target.inert = false;
+
+  // 3) Stato globale (utile per CSS condizionale)
+  document.body.dataset.section = name;
+  currentSection = name;
+
+  // 4) Viewport 3D: inquadra in base alla sezione
+  if (name === 'cv') {
+    // fototessera: fov stretto + camera ravvicinata
+    fovTarget = 35;
+    cameraTarget.set(0, 5, 2.6);
+    lookTarget.set(0, 5, 0);
+  } else {
+    // vista default (home/bio/works)
+    fovTarget = 75;
+    cameraTarget.set(0, 4, 6);
+    lookTarget.set(0, 2, 0);
+  }
+
+  // 5) Works: init on-demand + scroll al blocco dopo layout
+  if (name === 'progetti') {
+    initWorks?.();
+    requestAnimationFrame(() => {
+      const works = document.getElementById('works-section');
+      if (!works) return;
+      const y = works.getBoundingClientRect().top + window.scrollY - 40;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      window.reflowWorksScroller?.();
+    });
+  }
+}
+
+
+// opzionale: debug
+window.showSection = showSection;
+
+/* ================= Hover video su parole (.hotword) ================= */
+(function setupHoverWordVideo() {
+  // crea il contenitore popup (una sola volta)
+  const pop = document.createElement('div');
+  pop.id = 'hover-video-pop';
+  pop.setAttribute('aria-hidden', 'true');
+  pop.style.display = 'none';
+  pop.innerHTML = `
+    <video muted playsinline loop preload="auto"></video>
+  `;
+  document.body.appendChild(pop);
+
+  const video = pop.querySelector('video');
+  let activeWord = null;
+  let hideTimer = null;
+
+  // posiziona vicino al mouse, con clamp ai bordi
+  function positionPop(pageX, pageY) {
+    const margin = 16;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rect = pop.getBoundingClientRect();
+    let x = pageX;
+    let y = pageY - 20; // un filo sopra al cursore
+
+    // clamp per non uscire dallo schermo
+    x = Math.max(margin + rect.width/2, Math.min(vw - margin - rect.width/2, x));
+    y = Math.max(margin + rect.height/2, Math.min(vh - margin - rect.height/2, y));
+
+    pop.style.left = x + 'px';
+    pop.style.top  = y + 'px';
+  }
+
+  async function showPop(wordEl, pageX, pageY) {
+    if (!wordEl) return;
+    const src = wordEl.getAttribute('data-video');
+    if (!src) return;
+
+    clearTimeout(hideTimer);
+
+    if (activeWord !== wordEl || video.src !== src) {
+      // cambia sorgente solo se necessario
+      video.pause();
+      video.src = src;
+      try { await video.play(); } catch { /* safari/iOS ci riprova sotto */ }
+      // doppio tentativo (alcuni browser richiedono un frame)
+      requestAnimationFrame(() => video.play().catch(() => {}));
+    }
+
+    activeWord = wordEl;
+    pop.style.display = 'block';
+    positionPop(pageX, pageY);
+    // fade-in
+    requestAnimationFrame(() => { pop.style.opacity = '1'; });
+  }
+
+  function hidePop(immediate = false) {
+    clearTimeout(hideTimer);
+    const doHide = () => {
+      pop.style.opacity = '0';
+      // stop video e nascondi dopo la transizione
+      setTimeout(() => {
+        video.pause();
+        video.currentTime = 0;
+        pop.style.display = 'none';
+        activeWord = null;
+      }, 120);
+    };
+    if (immediate) doHide();
+    else hideTimer = setTimeout(doHide, 40);
+  }
+
+  // Event delegation per hover
+  document.addEventListener('mousemove', (e) => {
+    const el = e.target.closest('.hotword');
+    if (el) {
+      showPop(el, e.clientX, e.clientY);
+    } else if (!pop.contains(e.target)) {
+      hidePop();
+    }
+  }, { passive: true });
+
+  // se il mouse si muove mentre è visibile, segui il cursore
+  document.addEventListener('mousemove', (e) => {
+    if (pop.style.display === 'block') positionPop(e.clientX, e.clientY);
+  }, { passive: true });
+
+  // touch support: tap per mostrare, tap fuori per chiudere
+  let touchOpen = false;
+  document.addEventListener('touchstart', (e) => {
+    const el = e.target.closest('.hotword');
+    if (el) {
+      const t = e.touches[0];
+      showPop(el, t.clientX, t.clientY);
+      touchOpen = true;
+    } else if (touchOpen) {
+      hidePop(true);
+      touchOpen = false;
+    }
+  }, { passive: true });
+
+  // se apri un modal/section change, chiudi il popup
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') hidePop(true); });
+  // opzionale: se cambi sezione nel tuo showSection, puoi fare: window.hideHoverVideo?.();
+  window.hideHoverVideo = () => hidePop(true);
+})();
+
+
+
+
+
 /* ===================== WORKS: dati, render, scroll orizzontale ===================== */
 
 // opzionale ma consigliato con Vite/GH Pages
@@ -656,8 +760,45 @@ const projects = [
     ambito: "Branding",
     ruoli: ["Art Director", "Graphic Designer"],
     cover: { type: "image", src: `${BASE}portfolio/befest/cover.jpg`, alt: "Befest – identità visiva e applicazioni" },
-    descrizione: "Identità e sistema visivo per Befest."
+
+    // >>> CONTENUTO PAGINA INTERNA (HTML + CSS) <<<
+    pageHTML: `
+    <section class="hero">
+      <div class="eyebrow">Brand System</div>
+      <h1>Befest — identità e applicazioni</h1>
+      <div class="meta">2025 · Branding · Art Direction</div>
+    </section>
+
+    <section class="section">
+      <div class="grid cols-2">
+        <figure class="figure">
+          <img src="${BASE}portfolio/befest/brandbook-spread.jpg" alt="Brandbook spread">
+          <figcaption class="caption">Estratto dal brandbook</figcaption>
+        </figure>
+        <div>
+          <p>Obiettivo: costruire un sistema visivo modulare, flessibile e riconoscibile.</p>
+          <div class="callout">Deliverable: logo, sistema tipografico, palette, layout kit, mockup social.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section">
+      <div class="grid cols-3">
+        <img src="${BASE}portfolio/befest/post-1.jpg" alt="">
+        <img src="${BASE}portfolio/befest/post-2.jpg" alt="">
+        <img src="${BASE}portfolio/befest/post-3.jpg" alt="">
+      </div>
+    </section>
+  `,
+    // CSS opzionale per questa sola pagina (scopato dentro .project-page)
+    pageCSS: `
+    .project-page .hero { background: #fff; }
+    .project-page .callout { background: #fff0e8; }
+  `
   },
+
   {
     id: "retrogusto",
     titolo: "Retrogusto",
@@ -669,8 +810,44 @@ const projects = [
       src: `${BASE}portfolio/retrogusto/cover.mp4`,
       poster: `${BASE}portfolio/retrogusto/poster.jpg`
     },
-    descrizione: "Sito vetrina con storytelling visivo."
+    // >>> CONTENUTO PAGINA INTERNA (HTML + CSS) <<<
+    pageHTML: `
+    <section class="hero">
+      <div class="eyebrow">Brand System</div>
+      <h1>Befest — identità e applicazioni</h1>
+      <div class="meta">2025 · Branding · Art Direction</div>
+    </section>
+
+    <section class="section">
+      <div class="grid cols-2">
+        <figure class="figure">
+          <img src="${BASE}portfolio/befest/brandbook-spread.jpg" alt="Brandbook spread">
+          <figcaption class="caption">Estratto dal brandbook</figcaption>
+        </figure>
+        <div>
+          <p>Obiettivo: costruire un sistema visivo modulare, flessibile e riconoscibile.</p>
+          <div class="callout">Deliverable: logo, sistema tipografico, palette, layout kit, mockup social.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section">
+      <div class="grid cols-3">
+        <video src="${BASE}portfolio/befest/clip-1.mp4" autoplay loop muted playsinline></video>
+        <video src="${BASE}portfolio/befest/clip-2.mp4" controls></video>
+        <video src="${BASE}portfolio/befest/clip-3.mp4" autoplay loop muted playsinline></video>
+      </div>
+    </section>
+  `,
+    // CSS opzionale per questa sola pagina (scopato dentro .project-page)
+    pageCSS: `
+    .project-page .hero { background: #fff; }
+    .project-page .callout { background: #fff0e8; }
+  `
   },
+
   {
     id: "sugo2025",
     titolo: "Sūgo 2025 – Event Identity",
@@ -699,24 +876,30 @@ const projects = [
     ruoli: ["Art Director", "Producer"],
     cover: { type: "image", src: `${BASE}portfolio/stelvio-paddock/cover.jpg`, alt: "Stelvio Paddock - Branding" },
     descrizione: "Identità e materiali per l’evento freestyle."
-  },
-
-  {
-    id: "sugo2025",
-    titolo: "Sūgo 2025 – Event Identity",
-    anno: 2025,
-    ambito: "Eventi",
-    ruoli: ["Art Director", "Producer"],
-    cover: { type: "image", src: `${BASE}portfolio/sugo2025/cover.jpg`, alt: "Sūgo 2025 – identità evento" },
-    descrizione: "Identità e materiali per l’evento freestyle."
-  },
+  }
 ];
 
 
 // Elementi base
 const worksSection = document.getElementById('works-section');
 const worksTrack = document.getElementById('works-track');
-const worksList = document.getElementById('works-list');
+const worksList  = document.getElementById('works-list');
+
+let worksInited = false;
+function initWorks() {
+  // Render sempre (così al rientro aggiorni eventuali cambi)
+  renderWorksTrack(projects);
+  renderWorksList(projects);
+
+  if (!worksInited) {
+    setupWorksPin();        // registra listener una sola volta
+    worksInited = true;
+  } else {
+    // solo reflow quando rientri
+    window.reflowWorksScroller?.();
+  }
+}
+
 
 // Render card orizzontali (desktop)
 function renderWorksTrack(list) {
@@ -740,21 +923,16 @@ function renderWorksTrack(list) {
 
       // appena abbiamo i metadata, forziamo play (iOS/Android)
       mediaEl.addEventListener('loadedmetadata', () => {
-        const tryPlay = () => mediaEl.play().catch(() => { });
-        // doppio tentativo: subito e al prossimo frame (alcuni browser gradiscono)
+        const tryPlay = () => mediaEl.play().catch(() => {});
         tryPlay();
         requestAnimationFrame(tryPlay);
       });
-
-      // NIENTE hover play/pause: deve partire da sola e restare in loop
     } else {
       mediaEl = document.createElement('img');
       mediaEl.src = p.cover.src;
       mediaEl.alt = p.cover.alt || p.titolo;
       mediaEl.loading = 'lazy';
     }
-
-
 
     const overlay = document.createElement('div');
     overlay.className = 'work-overlay';
@@ -781,100 +959,112 @@ function renderWorksList(list) {
 }
 
 // Modal
-const modal = document.getElementById('project-modal');
+const modal      = document.getElementById('project-modal');
 const modalClose = document.getElementById('project-modal-close');
-const modalBack = document.getElementById('project-modal-backdrop');
+const modalBack  = document.getElementById('project-modal-backdrop');
+const modalPage  = document.getElementById('project-modal-page');
+const modalMedia = document.getElementById('project-modal-media');
+const modalText  = document.querySelector('.project-modal__content');
 
 function openProjectModal(id) {
   const p = projects.find(x => x.id === id);
   if (!p) return;
-  document.getElementById('project-modal-title').textContent = p.titolo;
-  document.getElementById('project-meta-year').textContent = p.anno;
-  document.getElementById('project-meta-field').textContent = p.ambito;
 
-  const mediaWrap = document.getElementById('project-modal-media');
-  mediaWrap.innerHTML = '';
-  if (p.cover.type === 'video') {
-    const v = document.createElement('video');
-    v.src = p.cover.src;
-    v.poster = p.cover.poster || '';
-    v.controls = true;
-    v.playsInline = true;
-    mediaWrap.appendChild(v);
+  // Header
+  document.getElementById('project-modal-title').textContent = p.titolo || '';
+  document.getElementById('project-meta-year').textContent   = p.anno ?? '';
+  document.getElementById('project-meta-field').textContent  = p.ambito || '';
+
+  // Reset stato
+  modal.classList.remove('is-page');
+  modalPage.hidden = true;
+  modalPage.setAttribute('aria-hidden', 'true');
+  modalPage.innerHTML = '';
+  modalMedia.innerHTML = '';
+  modalText.querySelector('#project-modal-desc').innerHTML = '';
+  modalMedia.setAttribute('aria-hidden', 'false');
+  modalText.setAttribute('aria-hidden', 'false');
+
+  // --- PAGE MODE: se il progetto fornisce HTML "proprio" ---
+  if (p.pageHTML) {
+    modal.classList.add('is-page');
+    modalMedia.setAttribute('aria-hidden', 'true');
+    modalText.setAttribute('aria-hidden', 'true');
+
+    const css = p.pageCSS ? `<style>${p.pageCSS}</style>` : '';
+    modalPage.innerHTML = `
+      <div class="container">
+        ${p.pageHTML}
+      </div>
+      ${css}
+    `;
+    modalPage.hidden = false;
+    modalPage.setAttribute('aria-hidden', 'false');
   } else {
-    const img = document.createElement('img');
-    img.src = p.cover.src;
-    img.alt = p.cover.alt || p.titolo;
-    img.style.maxWidth = '100%';
-    mediaWrap.appendChild(img);
+    // --- FALLBACK "colonne" (media + testo) ---
+    const mediaWrap = modalMedia;
+
+    if (p.cover?.type === 'video') {
+      const v = document.createElement('video');
+      v.src = p.cover.src;
+      v.controls = true;
+      v.muted = true;
+      v.playsInline = true;
+      mediaWrap.appendChild(v);
+    } else {
+      const img = document.createElement('img');
+      img.src = p.cover?.src || '';
+      img.alt = p.cover?.alt || p.titolo || '';
+      img.style.maxWidth = '100%';
+      mediaWrap.appendChild(img);
+    }
+
+    const descEl = document.getElementById('project-modal-desc');
+    if (p.descrizioneHTML) {
+      descEl.innerHTML = p.descrizioneHTML;
+    } else {
+      descEl.textContent = p.descrizione || '';
+    }
   }
 
-  document.getElementById('project-modal-desc').textContent = p.descrizione || '';
   modal.classList.add('open');
+  document.getElementById('project-modal-close').focus({ preventScroll: true });
 }
+
 function closeProjectModal() { modal.classList.remove('open'); }
 [modalClose, modalBack].forEach(el => el && el.addEventListener('click', closeProjectModal));
 
 // Filtri AND
-const roleSel = document.getElementById('filter-role');
-const yearSel = document.getElementById('filter-year');
+const roleSel  = document.getElementById('filter-role');
+const yearSel  = document.getElementById('filter-year');
 const fieldSel = document.getElementById('filter-field');
 
 function applyFilters() {
-  const role = roleSel?.value || '';
-  const year = yearSel?.value || '';
+  const role  = roleSel?.value || '';
+  const year  = yearSel?.value || '';
   const field = fieldSel?.value || '';
 
   const filtered = projects.filter(p => {
-    const matchRole = !role || p.ruoli.includes(role);
-    const matchYear = !year || String(p.anno) === String(year);
+    const matchRole  = !role  || p.ruoli.includes(role);
+    const matchYear  = !year  || String(p.anno) === String(year);
     const matchField = !field || p.ambito === field;
     return matchRole && matchYear && matchField;
   });
 
   renderWorksTrack(filtered);
   renderWorksList(filtered);
-  setupWorksPin();                 // <— ricalcola dopo i filtri
+  // ricalcola layout senza ri-attaccare i listener
+  window.reflowWorksScroller?.();
 }
-
-
 [roleSel, yearSel, fieldSel].forEach(sel => sel && sel.addEventListener('change', applyFilters));
-
-
-function activateWorks() {
-  worksSection.classList.remove('hidden');
-  renderWorksTrack(projects);
-  renderWorksList(projects);
-  setupWorksPin(); // <— basta questo
-}
-
-
-const navWorks = document.querySelector('#bottom-navbar [data-section="progetti"]');
-if (navWorks) {
-  navWorks.addEventListener('click', () => {
-    document.getElementById('viewport-container')?.classList.add('hidden');
-    document.getElementById('home-text')?.classList.remove('active');
-    activateWorks();
-    const y = worksSection.getBoundingClientRect().top + window.scrollY - 40;
-    window.scrollTo({ top: y, behavior: 'smooth' });
-  });
-}
-
-if (location.hash === '#works') {
-  activateWorks();
-  setTimeout(() => {
-    const y = worksSection.getBoundingClientRect().top + window.scrollY - 40;
-    window.scrollTo({ top: y, behavior: 'instant' });
-  }, 0);
-}
 
 
 /* ===== WORKS: stessa larghezza (dalla più alta) + overflow a destra + pin ===== */
 async function setUniformWorkWidth() {
   const section = document.getElementById('works-section');
-  const pin = document.getElementById('works-pin');
-  const track = document.getElementById('works-track');
-  const navbar = document.getElementById('bottom-navbar');
+  const pin     = document.getElementById('works-pin');
+  const track   = document.getElementById('works-track');
+  const navbar  = document.getElementById('bottom-navbar');
   const filters = document.getElementById('works-filters');
   if (!section || !pin || !track) return;
 
@@ -883,8 +1073,8 @@ async function setUniformWorkWidth() {
   const filH = filters ? filters.offsetHeight : 0;
 
   // Altezza pin e track
-  const pinH = Math.max(320, viewportH - navH - filH - 16);
-  pin.style.height = pinH + 'px';
+  const pinH   = Math.max(320, viewportH - navH - filH - 16);
+  pin.style.height   = pinH + 'px';
   const trackH = Math.max(280, pinH - 16);
   track.style.height = trackH + 'px';
 
@@ -893,9 +1083,9 @@ async function setUniformWorkWidth() {
   const vids = Array.from(track.querySelectorAll('video'));
 
   const preloadImg = (img) => new Promise((resolve) => {
-    try { img.loading = 'eager'; } catch { }
-    try { img.decoding = 'sync'; } catch { }
-    try { img.fetchPriority = 'low'; } catch { }
+    try { img.loading = 'eager'; } catch {}
+    try { img.decoding = 'sync'; } catch {}
+    try { img.fetchPriority = 'low'; } catch {}
     const src = img.currentSrc || img.src;
     if (!src || (img.complete && img.naturalWidth)) return resolve();
     const ghost = new Image();
@@ -903,17 +1093,17 @@ async function setUniformWorkWidth() {
     ghost.src = src;
     if (ghost.decode) ghost.decode().then(resolve).catch(() => ghost.addEventListener('load', resolve, { once: true }));
     else {
-      ghost.addEventListener('load', resolve, { once: true });
+      ghost.addEventListener('load', resolve,  { once: true });
       ghost.addEventListener('error', resolve, { once: true });
     }
   });
 
   const preloadVideoMeta = (v) => new Promise((resolve) => {
-    try { v.preload = 'metadata'; } catch { }
+    try { v.preload = 'metadata'; } catch {}
     if (v.readyState >= 1 && v.videoWidth) return resolve();
     const done = () => { v.removeEventListener('loadedmetadata', done); resolve(); };
     v.addEventListener('loadedmetadata', done, { once: true });
-    try { v.load(); } catch { }
+    try { v.load(); } catch {}
   });
 
   await Promise.all([...imgs.map(preloadImg), ...vids.map(preloadVideoMeta)]);
@@ -939,42 +1129,38 @@ async function setUniformWorkWidth() {
 
   // Altezza sezione in base all’overflow orizzontale reale
   const totalWidth = track.scrollWidth;
-  const overflowX = Math.max(0, totalWidth - window.innerWidth);
+  const overflowX  = Math.max(0, totalWidth - window.innerWidth);
   section.style.height = Math.ceil(pinH + overflowX) + 'px';
 }
 
 
 /* ===== WORKS: gestione scroll — Desktop blocco Y in sezione, Mobile libero ===== */
-/* ===== WORKS: gestione scroll — Desktop blocco Y in sezione, Mobile libero ===== */
 function setupWorksPin() {
   const section = document.getElementById('works-section');
-  const pin = document.getElementById('works-pin');
-  const track = document.getElementById('works-track');
+  const pin     = document.getElementById('works-pin');
+  const track   = document.getElementById('works-track');
   if (!section || !pin || !track) return;
 
-  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
+  const clamp    = (x, min, max) => Math.max(min, Math.min(max, x));
   const mqMobile = window.matchMedia('(max-width: 768px)');
 
-  let lockActive = false;      // true quando (desktop) siamo in sezione e Y è bloccata
-  let progress01 = 0;          // 0..1 posizione orizzontale
-  let lastTouchY = 0;
-
-  // isteresi anti-glitch agli estremi
-  const EPS = 1e-4;
-  const RELEASE_DELTA = 8;          // soglia “insistenza” per uscire dalla sezione
-  let unlockCooldownUntil = 0;      // ms
+  let lockActive   = false; // true quando (desktop) siamo in sezione e Y è bloccata
+  let progress01   = 0;     // 0..1 posizione orizzontale
+  let lastTouchY   = 0;
+  const EPS        = 1e-4;
+  const RELEASE_DELTA = 8;
+  let unlockCooldownUntil = 0;
 
   const ranges = () => {
     const pinH = pin.clientHeight;
     const totalWidth = track.scrollWidth;
-    const overflowX = Math.max(0, totalWidth - window.innerWidth);
+    const overflowX  = Math.max(0, totalWidth - window.innerWidth);
     const secTop = section.offsetTop;
     const secEnd = secTop + section.offsetHeight - pinH;
     const totalY = Math.max(1, secEnd - secTop);
     return { pinH, overflowX, secTop, secEnd, totalY };
   };
 
-  // trova l'antenato più vicino che può scorrere in verticale
   const getScrollableAncestorY = (node) => {
     while (node && node !== document && node !== document.documentElement) {
       const s = window.getComputedStyle(node);
@@ -985,28 +1171,26 @@ function setupWorksPin() {
     return null;
   };
 
-
   const applyProgress = (ox = ranges().overflowX) => {
-    progress01 = Math.max(0, Math.min(1, progress01));
+    progress01 = clamp(progress01, 0, 1);
     const x = -Math.round(progress01 * ox);
     track.style.transform = `translate3d(${x}px,0,0)`;
+    // notifica l'effetto bordo che il contenuto si è mosso
+    window.__edgeFx_markHoverDirty?.();
   };
 
   const enableLock = () => {
     if (lockActive || mqMobile.matches) return;
     lockActive = true;
 
-    // blocca Y su root + body
     document.documentElement.classList.add('is-locking-works');
     document.documentElement.style.overflowY = 'hidden';
     document.body.style.overflowY = 'hidden';
 
-    // inizializza progress in base alla Y attuale
     const { secTop, totalY } = ranges();
     const y = clamp(window.scrollY, secTop, secTop + totalY);
     progress01 = (y - secTop) / totalY;
 
-    // ancora viewport per evitare jitter
     window.scrollTo(0, secTop);
     applyProgress();
   };
@@ -1016,64 +1200,53 @@ function setupWorksPin() {
     const { secTop, totalY } = ranges();
     lockActive = false;
 
-    // sblocca Y su root + body
     document.documentElement.classList.remove('is-locking-works');
     document.documentElement.style.overflowY = '';
     document.body.style.overflowY = '';
 
-    unlockCooldownUntil = Date.now() + 250; // cooldown per non rientrare subito
-
-    // riallinea la Y alla progress orizzontale raggiunta
+    unlockCooldownUntil = Date.now() + 250;
     const y = secTop + progress01 * totalY;
     window.scrollTo(0, y);
   };
 
-  // Wheel → X con sblocco controllato agli estremi
   const onWheel = (e) => {
     const scroller = getScrollableAncestorY(e.target);
-    if (scroller) return;                 // lascia scorrere il modale/inner scroller
+    if (scroller) return;
     if (!lockActive) return;
     const { overflowX } = ranges();
     if (!overflowX) return;
-    e.preventDefault();                   // blocca Y sul documento
+    e.preventDefault();
     const delta = e.deltaY || e.wheelDelta || 0;
-    progress01 = Math.max(0, Math.min(1, progress01 + (delta / overflowX)));
+    progress01 = clamp(progress01 + (delta / overflowX), 0, 1);
     applyProgress(overflowX);
-    hoverDirty = true;
   };
-
-
 
   // Touch (tablet/desktop touch)
   let touchScrollTarget = null;
 
   const onTouchStart = (e) => {
     touchScrollTarget = getScrollableAncestorY(e.target);
-    if (touchScrollTarget) return;        // sarà lo scroller interno a gestire la Y
+    if (touchScrollTarget) return;
     if (!lockActive || mqMobile.matches) return;
     lastTouchY = e.touches[0].clientY;
-    hoverDirty = true;
+    window.__edgeFx_markHoverDirty?.();
   };
 
   const onTouchMove = (e) => {
-    if (touchScrollTarget) return;        // lascia scorrere il modale
+    if (touchScrollTarget) return;
     if (!lockActive || mqMobile.matches) return;
     const { overflowX } = ranges();
     if (!overflowX) return;
-    e.preventDefault();                   // blocca Y sul documento
+    e.preventDefault();
     const y = e.touches[0].clientY;
     const dy = lastTouchY - y;
     lastTouchY = y;
-    progress01 = Math.max(0, Math.min(1, progress01 + (dy / overflowX)));
+    progress01 = clamp(progress01 + (dy / overflowX), 0, 1);
     applyProgress(overflowX);
-    hoverDirty = true;
   };
 
   const onTouchEnd = () => { touchScrollTarget = null; };
 
-
-
-  // Tastiera
   const onKeydown = (e) => {
     if (!lockActive) return;
     const { overflowX } = ranges();
@@ -1087,10 +1260,9 @@ function setupWorksPin() {
     if (e.key === 'Escape') disableLock();
   };
 
-  // Attiva/disattiva lock quando entri/esci dalla sezione (solo desktop)
   const updateLockByScroll = () => {
     if (mqMobile.matches) { disableLock(); return; }
-    if (Date.now() < unlockCooldownUntil) return; // isteresi
+    if (Date.now() < unlockCooldownUntil) return;
     const { secTop, secEnd } = ranges();
     const y = window.scrollY;
     const inSection = y >= (secTop - 1) && y <= (secEnd + 1);
@@ -1100,7 +1272,6 @@ function setupWorksPin() {
   async function recalc() {
     await setUniformWorkWidth();
     if (mqMobile.matches) {
-      // mobile: nessun lock, nessun movimento orizzontale forzato
       disableLock();
       return;
     }
@@ -1109,24 +1280,23 @@ function setupWorksPin() {
   }
 
   // Eventi
-  window.addEventListener('resize', recalc);
+  window.addEventListener('resize',            recalc);
   window.addEventListener('orientationchange', recalc);
-  window.addEventListener('scroll', updateLockByScroll, { passive: true });
-  window.addEventListener('wheel', onWheel, { passive: false });
-  window.addEventListener('touchstart', onTouchStart, { passive: false });
-  window.addEventListener('touchmove', onTouchMove, { passive: false });
-  window.addEventListener('touchend', onTouchEnd, { passive: true });
-  window.addEventListener('keydown', onKeydown);
-  mqMobile.addEventListener?.('change', recalc);
+  window.addEventListener('scroll',            updateLockByScroll, { passive: true  });
+  window.addEventListener('wheel',             onWheel,            { passive: false });
+  window.addEventListener('touchstart',        onTouchStart,       { passive: false });
+  window.addEventListener('touchmove',         onTouchMove,        { passive: false });
+  window.addEventListener('touchend',          onTouchEnd,         { passive: true  });
+  window.addEventListener('keydown',           onKeydown);
+  mqMobile.addEventListener?.('change',        recalc);
 
   // Prima misura
   recalc();
 
-
+  // Espone utility globali per showSection()/applyFilters()
   window.reflowWorksScroller = recalc;
+  window.disableWorksLock    = disableLock;
 }
-
-setupWorksPin();
 
 
 // =============== EDGE PIXEL EFFERVESCENTI ================= //
@@ -1184,7 +1354,7 @@ setupWorksPin();
       active: true,
       ...options
     };
-    opts.rate *= EDGE_FX_DENSITY;   // <— scala la densità per tutti gli emettitori
+    opts.rate *= EDGE_FX_DENSITY;
     let boost = 1.0;
 
     return {
@@ -1195,8 +1365,8 @@ setupWorksPin();
         const r = getRect();
         if (!r) return;
 
-        const P = 2 * (r.width + r.height);           // perimetro
-        const want = (opts.rate * boost) * dt;        // quante spawnare in questo frame
+        const P = 2 * (r.width + r.height);
+        const want = (opts.rate * boost) * dt;
         for (let i = 0; i < want; i += 1) {
           const p = Math.random() * P;
           let x, y, nx, ny;
@@ -1225,6 +1395,7 @@ setupWorksPin();
 
   // ---- Emitter: hover sulle card
   const cardEmitters = new Map();
+
   function attachCardHoverEmitters() {
     const cards = document.querySelectorAll('.work-card');
     cards.forEach(card => {
@@ -1254,13 +1425,13 @@ setupWorksPin();
     const prev = activeCard;
     if (prev) {
       cardEmitters.get(prev)?.setActive(false);
-      prev.classList.remove('is-hover');   // << togli hover visivo dalla precedente
+      prev.classList.remove('is-hover');
     }
     activeCard = card || null;
     if (activeCard) {
       ensureCardEmitter(activeCard);
       cardEmitters.get(activeCard)?.setActive(true);
-      activeCard.classList.add('is-hover'); // << applica hover visivo alla nuova
+      activeCard.classList.add('is-hover');
     }
   }
 
@@ -1277,10 +1448,6 @@ setupWorksPin();
     const mo = new MutationObserver(() => attachCardHoverEmitters());
     mo.observe(worksTrack, { childList: true, subtree: true });
   }
-
-  // ---- Emitter: perimetro del track (DISATTIVATO)
-  const trackEl = document.getElementById('works-track');
-  const trackEm = null; // placeholder
 
   // ---- Emitter: perimetro del modale (attivo quando aperto)
   const modalDlg = document.querySelector('#project-modal .project-modal__dialog');
@@ -1302,15 +1469,11 @@ setupWorksPin();
     const dt = Math.min(0.033, (t - lastT) / 1000); // max 33ms
     lastT = t;
 
-    // hover hit-test (se il contenuto si è mosso o il mouse si è spostato)
     if (hoverDirty) { syncHoverByHitTest(); hoverDirty = false; }
 
-    // tick emitters
-    trackEm && trackEm.tick(dt);
     modalEm && modalEm.tick(dt);
     cardEmitters.forEach(em => em.tick(dt));
 
-    // draw
     ctx.clearRect(0, 0, cvs.width / DPR, cvs.height / DPR);
     for (let i = particles.length - 1; i >= 0; --i) {
       const p = particles[i];
@@ -1331,7 +1494,8 @@ setupWorksPin();
   }
   requestAnimationFrame(loop);
 
-  // Segnala al sistema hover che il contenuto sotto il mouse è cambiato (chiamalo quando muovi il nastro)
+  // API globale: segnala che il contenuto sotto il mouse è cambiato
   window.__edgeFx_markHoverDirty = () => { hoverDirty = true; };
 })();
+
 

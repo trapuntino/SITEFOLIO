@@ -27,18 +27,16 @@
     <div id="loading-text">Sto accendendo i pixel...</div>
   </div>
 
-  <!-- BOTTONE APERTURA MENU PRINCIPALE -->
-  <div id="menu-toggle" class="menu-icon">+</div>
-
   <!-- MENU PRINCIPALE -->
-  <nav id="bottom-navbar">
+  <nav id="bottom-navbar" aria-label="Main">
     <ul>
-      <li data-section="home">Home</li>
-      <li data-section="progetti">Works</li>
-      <li data-section="bio">About</li>
-      <li data-section="cv">CV / Contacts</li>
+      <li><button type="button" class="nav-item" data-nav="home">Home</button></li>
+      <li><button type="button" class="nav-item" data-nav="progetti">Works</button></li>
+      <li><button type="button" class="nav-item" data-nav="bio">About</button></li>
+      <li><button type="button" class="nav-item" data-nav="cv">CV / Contacts</button></li>
     </ul>
   </nav>
+
 
   <!-- TOOLBAR: solo per funzioni speciali -->
   <div id="toolbar">
@@ -53,18 +51,19 @@
     </a>
   </div>
 
-
   <!-- VIEWPORT 3D -->
   <div id="viewport-container"></div>
 
   <!-- HOME TEXT -->
-  <div id="home-text" class="section-text">
-    <p class="typewriter-text">Hi! I'm Fabrizio, a communication designer blending clarity, visuals and just enough
-      chaos.</p>
+  <div id="home-text" class="section-text section-visible" data-section="home">
+    <p>Hi, I’m Fabrizio Confortola<br>(or so my mother says).</p>
+
+    <p>A communication designer from Northern Italy,
+      crafting raw projects with just enough chaos, so they're hard to forget.</p>
   </div>
 
   <!-- CONTENUTO PROGETTI (WORKS) -->
-  <section id="works-section" class="hidden" aria-label="Works">
+  <section id="works-section" class="section-hidden" aria-label="Works" data-section="progetti">
     <!-- FILTRI -->
     <div id="works-filters" class="works-filters">
       <select id="filter-role">
@@ -108,19 +107,22 @@
         <button class="project-modal__close" id="project-modal-close" aria-label="Chiudi modale">×</button>
       </header>
 
-      <div class="project-modal__body">
-        <aside class="project-modal__media" id="project-modal-media"></aside>
-
-        <section class="project-modal__content">
+      <div class="project-modal__body" id="project-modal-body">
+        <!-- COLONNE STANDARD (fallback) -->
+        <aside class="project-modal__media" id="project-modal-media" aria-hidden="false"></aside>
+        <section class="project-modal__content" aria-hidden="false">
           <p class="project-meta">
             <span id="project-meta-year"></span> · <span id="project-meta-field"></span>
           </p>
           <div id="project-modal-desc" class="project-desc"></div>
         </section>
+
+        <!-- PAGINA PROGETTO (attiva solo in page-mode) -->
+        <div id="project-modal-page" class="project-page" hidden aria-hidden="true"></div>
       </div>
     </div>
 
-    <!-- live region per feedback (es. “Modale aperto/chiuso”) -->
+    <!-- live region per feedback -->
     <div class="sr-only" aria-live="polite" aria-atomic="true" id="modal-aria-live"></div>
   </div>
 
@@ -128,14 +130,34 @@
 
 
 
+
+
   <!-- CONTENUTO ABOUT -->
-  <div id="about-text" class="section-text hidden">
-    <p>[Segnaposto testo per la sezione ABOUT – da completare]</p>
+  <div id="about-text" class="section-text section-hidden" data-section="bio">
+    <p>Born in ’98 in Bormio, a small village between the Alps, I grew up surrounded by snow, steep slopes and twisty
+      roads that shaped my childhood.</p>
+
+    <p>Full-time <span class="hotword" data-video="media/snowboard.mp4">snowboarder</span>, part-time <span
+        class="hotword" data-video="media/skateboard.mp4">skateboarder</span>, and avid traveller with a big love
+      for car racing and music — better if mixed together. </p>
+
+    <p>After high school that curiosity led me to Milan, where I studied Communication Design at <a
+        href="https://www.polimi.it" class="hotword" target="_blank" rel="noopener">
+        Politecnico di Milano</a>, with six months at <a
+        href="https://centro.edu.mx" class="hotword" target="_blank" rel="noopener">
+        Centro.</a> in CDMX, Mexico in between.</p>
+
+    <p>Since 2023 I’ve been running <a
+        href="https://www.instagram.com/purple.raw/" class="hotword" target="_blank" rel="noopener">
+        Purple Studio</a>, a collective I
+      co-founded with a fellow videographer, working on projects that range from events to visual direction — and simply
+      getting that work done.</p>
   </div>
+
 
   <!-- CONTENUTO CV -->
   <div id="content">
-    <div class="cv-text section-text">
+    <div class="cv-text section-text section-hidden" data-section="cv">
 
       <h2>PERCORSO ACCADEMICO</h2>
       <p><strong>2021</strong> – Laurea triennale in Design della comunicazione<br>@ Politecnico di Milano</p>
@@ -203,6 +225,8 @@
 
     </div>
   </div>
+
+  <span class="sr-only" id="sr-root"></span>
 
   <!-- SCRIPT JS -->
   <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
