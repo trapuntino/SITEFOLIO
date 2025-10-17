@@ -12,6 +12,9 @@
   font-style: normal;
 }
 
+:root {
+  --navH: 5rem;
+}
 
 body {
   background: #ffffff
@@ -341,6 +344,7 @@ body[data-section="cv"] #viewport-container {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease;
+  padding-bottom: var(--navH);
 }
 
 .section-text.active {
