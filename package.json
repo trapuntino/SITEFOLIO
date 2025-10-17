@@ -1,7 +1,7 @@
 {
   "name": "sitefolio",
   "version": "1.0.0",
-  "homepage": "https://trapuntino.github.io/SITEFOLIO",
+  "homepage": "https://fabrizioconfortola.com",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "sync": "npm run deploy && git add . && git commit -m 'Sync with deploy' && git push origin main",
