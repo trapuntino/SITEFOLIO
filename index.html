@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fabrizio Confortola</title>
-  <script type="module" crossorigin src="/assets/index-fzLu5C_H.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-ClXqde16.css">
+  <script type="module" crossorigin src="/assets/index-DoSUscD7.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BrbCeFaR.css">
 </head>
 
 <body>
@@ -70,28 +70,33 @@
 
   <!-- CONTENUTO PROGETTI (WORKS) -->
   <section id="works-section" class="section-hidden" aria-label="Works" data-section="progetti">
-    <!-- FILTRI -->
-    <div id="works-filters" class="works-filters">
-      <select id="filter-role">
-        <option value="">Tutti i ruoli</option>
-        <option>Art Director</option>
-        <option>Graphic Designer</option>
-        <option>Producer</option>
-        <option>Communication Designer</option>
-      </select>
-      <select id="filter-year">
-        <option value="">Tutti gli anni</option>
-        <option>2025</option>
-        <option>2024</option>
-      </select>
-      <select id="filter-field">
-        <option value="">Tutti gli ambiti</option>
-        <option>Branding</option>
-        <option>Web Design</option>
-        <option>Eventi</option>
-        <option>Editoriale</option>
-      </select>
-    </div>
+    <!-- FILTERS -->
+<div id="works-filters" class="works-filters">
+  <select id="filter-role">
+    <option value="">All roles</option>
+    <option>Art Director</option>
+    <option>Graphic Designer</option>
+    <option>Producer</option>
+    <option>Communication Designer</option>
+  </select>
+
+  <div class="year-switch">
+    <label class="switch">
+      <input type="checkbox" id="year-toggle" checked>
+      <span class="slider"></span>
+    </label>
+    <span id="year-label">Newest</span>
+  </div>
+
+  <select id="filter-field">
+    <option value="">All fields</option>
+    <option>Branding</option>
+    <option>Web Design</option>
+    <option>Events</option>
+    <option>Editorial</option>
+  </select>
+</div>
+
 
     <!-- GALLERIA ORIZZONTALE (DESKTOP) -->
     <div class="works-pin" id="works-pin" aria-hidden="true">
