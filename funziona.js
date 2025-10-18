@@ -608,12 +608,10 @@ function showSection(name) {
 
   // 4) Viewport 3D: inquadra in base alla sezione
   if (name === 'cv') {
-    // fototessera: fov stretto + camera ravvicinata
     fovTarget = 35;
     cameraTarget.set(0, 5, 2.6);
     lookTarget.set(0, 5, 0);
   } else {
-    // vista default (home/bio/works)
     fovTarget = 75;
     cameraTarget.set(0, 4, 6);
     lookTarget.set(0, 2, 0);
@@ -621,6 +619,7 @@ function showSection(name) {
 
   // 5) Works: init on-demand + scroll al blocco dopo layout
   if (name === 'progetti') {
+    document.documentElement.classList.add('is-locking-works'); // 🔒 blocco scroll
     initWorks?.();
     requestAnimationFrame(() => {
       const works = document.getElementById('works-section');
@@ -629,8 +628,26 @@ function showSection(name) {
       window.scrollTo({ top: y, behavior: 'smooth' });
       window.reflowWorksScroller?.();
     });
+  } else {
+    // 🧹 sblocca scroll in uscita da Works (Chrome fix)
+    const html = document.documentElement;
+    html.classList.remove('is-locking-works');
+    void html.offsetHeight; // forza reflow su Chrome
+    html.style.overflowY = 'auto';
+    document.body.style.overflowY = 'auto';
   }
 }
+
+// FIX SCROLL
+const _unlockWatcher = new MutationObserver(() => {
+  const html = document.documentElement;
+  if (!html.classList.contains('is-locking-works')) {
+    html.style.overflowY = 'auto';
+    document.body.style.overflowY = 'auto';
+  }
+});
+_unlockWatcher.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
 
 
 // opzionale: debug
@@ -1034,29 +1051,54 @@ function openProjectModal(id) {
 function closeProjectModal() { modal.classList.remove('open'); }
 [modalClose, modalBack].forEach(el => el && el.addEventListener('click', closeProjectModal));
 
-// Filtri AND
+// ================== WORKS FILTERS (aggiornato con switch anno) ==================
+
 const roleSel  = document.getElementById('filter-role');
-const yearSel  = document.getElementById('filter-year');
 const fieldSel = document.getElementById('filter-field');
+const yearToggle = document.getElementById('year-toggle');
+const yearLabel  = document.getElementById('year-label');
+
+// Stato corrente
+let sortDescending = true;
 
 function applyFilters() {
   const role  = roleSel?.value || '';
-  const year  = yearSel?.value || '';
   const field = fieldSel?.value || '';
 
+  // Filtra in base ai valori selezionati
   const filtered = projects.filter(p => {
     const matchRole  = !role  || p.ruoli.includes(role);
-    const matchYear  = !year  || String(p.anno) === String(year);
     const matchField = !field || p.ambito === field;
-    return matchRole && matchYear && matchField;
+    return matchRole && matchField;
   });
 
+  // Ordina in base all'anno
+  filtered.sort((a, b) => {
+    const yearA = parseInt(a.anno) || 0;
+    const yearB = parseInt(b.anno) || 0;
+    return sortDescending ? yearB - yearA : yearA - yearB;
+  });
+
+  // Render
   renderWorksTrack(filtered);
   renderWorksList(filtered);
-  // ricalcola layout senza ri-attaccare i listener
+
+  // Aggiorna layout senza riattaccare i listener
   window.reflowWorksScroller?.();
 }
-[roleSel, yearSel, fieldSel].forEach(sel => sel && sel.addEventListener('change', applyFilters));
+
+// Event listeners
+[roleSel, fieldSel].forEach(sel => sel && sel.addEventListener('change', applyFilters));
+
+yearToggle?.addEventListener('change', () => {
+  sortDescending = yearToggle.checked;
+  yearLabel.textContent = sortDescending ? 'Newest' : 'Oldest';
+  applyFilters();
+});
+
+// Esegui filtro iniziale all'avvio
+applyFilters();
+
 
 
 /* ===== WORKS: stessa larghezza (dalla più alta) + overflow a destra + pin ===== */
@@ -1498,4 +1540,87 @@ function setupWorksPin() {
   window.__edgeFx_markHoverDirty = () => { hoverDirty = true; };
 })();
 
+
+
+
+
+
+// === EFFERVESCENZA TOOLBAR (replica effetto galleria) ===
+let toolbarFXActive = false;
+let toolbarFXReq;
+
+function startToolbarFX() {
+  if (toolbarFXActive) return;
+  toolbarFXActive = true;
+
+  const canvas = document.getElementById('toolbar-fx-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  let particles = [];
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    w = canvas.offsetWidth;
+    h = canvas.offsetHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+  }
+
+  function initParticles() {
+    const num = 90; // densità simile a quella della galleria
+    particles = [];
+    for (let i = 0; i < num; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.4,
+        alpha: Math.random() * 0.5 + 0.3,
+        size: Math.random() * 1.2 + 0.6,
+      });
+    }
+  }
+
+  function animate() {
+    if (!toolbarFXActive) return;
+
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; // scia leggera
+    ctx.fillRect(0, 0, w, h);
+
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // bordi morbidi (ricompare dall'altro lato)
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      ctx.fillStyle = `rgba(0,0,0,${p.alpha})`;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+
+    toolbarFXReq = requestAnimationFrame(animate);
+  }
+
+  resize();
+  initParticles();
+  animate();
+  window.addEventListener('resize', () => {
+    resize();
+    initParticles();
+  });
+}
+
+function stopToolbarFX() {
+  toolbarFXActive = false;
+  cancelAnimationFrame(toolbarFXReq);
+  const canvas = document.getElementById('toolbar-fx-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
 

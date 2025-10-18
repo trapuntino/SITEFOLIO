@@ -12,8 +12,10 @@
   font-style: normal;
 }
 
+
 :root {
   --navH: 5rem;
+  --filtersH: 4.5rem;
 }
 
 body {
@@ -22,6 +24,12 @@ body {
 
 a {
   color: inherit;
+}
+
+em {
+  font-style: italic;
+  font-weight: 200;
+  text-decoration: overline;
 }
 
 .hidden {
@@ -124,15 +132,14 @@ canvas {
 /* TOOLBAR VERTICALE */
 #toolbar {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 30vh;
+  right: 15vw;
   transform: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background-color: #000000;
+  background-color: #ff4800;
   padding: 10px 6px;
-  border: 1px solid #505050;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   opacity: 0;
@@ -142,8 +149,8 @@ canvas {
 }
 
 .tool {
-  width: 50px;
-  height: 50px;
+  width: 4rem;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,24 +159,39 @@ canvas {
 }
 
 .tool:hover {
-  background-color: #ff4800;
-  border-radius: 4px;
+  background-color: #000000;
+}
+
+.tool:hover img {
+  filter: invert();
 }
 
 .tool img {
-  width: 24px;
-  height: 24px;
-  filter: invert(100%);
+  width: 2rem;
+  height: 2rem;
 }
 
-body[data-section="home"] #toolbar{
+body[data-section="home"] #toolbar {
   opacity: 1;
   pointer-events: auto;
   transform: none;
 }
 
+#toolbar-fx-canvas {
+  position: fixed;
+  top: 22vh;
+  right: 12vw;
+  width: calc(6rem + 40px);
+  height: calc((4rem + 12px) * 3 + 90px);
+  pointer-events: none;
+  z-index: 5; /* subito sotto la toolbar */
+  opacity: 0.9;
+}
 
-/* NAVBAR FISSA IN BASSO */
+
+
+
+
 #bottom-navbar {
   position: fixed;
   bottom: 0;
@@ -192,17 +214,17 @@ body[data-section="home"] #toolbar{
   margin: 0;
 }
 
-/* bottoni della nav */
+
 #bottom-navbar .nav-item {
-  all: unset;                /* reset stile browser */
+  all: unset;
   cursor: pointer;
-  font-size: 3rem;           /* grande come prima */
+  font-size: 3rem;
   letter-spacing: 1px;
   transition: opacity 0.2s ease;
-  font-family: inherit;      /* usa il font della nav */
+  font-family: inherit;
   font-weight: inherit;
   color: inherit;
-  user-select: none;         /* evita selezione testo */
+  user-select: none;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -211,7 +233,7 @@ body[data-section="home"] #toolbar{
 
 #bottom-navbar .nav-item:hover,
 #bottom-navbar .nav-item:focus-visible {
-  opacity: 0.7;
+  color: #ffffff;
   outline: none;
 }
 
@@ -238,12 +260,13 @@ body[data-section="home"] #toolbar{
     opacity .35s ease,
     transform .45s ease,
     border-radius .35s ease;
-  z-index: 5; /* sotto ai Works (che mettiamo a 6) */
+  z-index: 5;
+  /* sotto ai Works (che mettiamo a 6) */
 }
 
 /* HOME/BIO: viewport full-screen (come prima) */
 body[data-section="home"] #viewport-container,
-body[data-section="bio"]  #viewport-container {
+body[data-section="bio"] #viewport-container {
   width: 100vw;
   height: 100vh;
   top: 0;
@@ -264,10 +287,10 @@ body[data-section="progetti"] #viewport-container {
 body[data-section="cv"] #viewport-container {
   display: block;
   opacity: 1;
-  width: 320px;
-  height: 320px;
+  width: 25vw;
+  height: 25vw;
   top: 15vh;
-  right: 5vw;
+  right: 8vw;
   left: auto;
   transform: none;
   background: #ffffff;
@@ -287,20 +310,26 @@ body[data-section="cv"] #viewport-container {
 }
 
 
-/* TESTI-TESTI-TESTI */
+/* ============================TESTI-TESTI-TESTI============================ */
 
-/* ===== Stato sezioni ===== */
-.section-hidden  { display: none; }
-.section-visible { display: block; }
+.section-hidden {
+  display: none;
+}
+
+.section-visible {
+  display: block;
+}
 
 
-#home-text, #about-text, #cv-text {
+#home-text,
+#about-text,
+#cv-text {
   position: absolute;
   top: 15vh;
   left: 0;
-  padding-left: 5vw;
-  max-width: 50vw;
-  max-height: 60vh;
+  padding-left: 8vw;
+  padding-bottom: calc(var(--navH) + 2rem);
+  padding-bottom: calc(var(--navH) + env(safe-area-inset-bottom) + 2rem);
   text-align: left;
   font-family: 'PPSupplyMono', monospace;
   font-size: 3rem;
@@ -309,42 +338,15 @@ body[data-section="cv"] #viewport-container {
   z-index: 10;
 }
 
-
-
-#typewriter-text {
-  font-family: 'PPSupplyMono', monospace;
-  font-size: 1.4rem;
-  font-weight: 400;
-  color: #ff4800;
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 2px solid #ff4800;
-  animation: blink 0.7s step-end infinite;
-}
-
-@keyframes blink {
-  50% {
-    border-color: transparent;
-  }
-}
-
-
-/* CONTENUTO */
-
-#content {
-  position: absolute;
-  top: 100px;
-  left: 50px;
-  z-index: 5;
-  font-family: sans-serif;
-  max-width: 400px;
+#home-text,
+#about-text {
+  max-width: 60vw;
 }
 
 .section-text {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  padding-bottom: var(--navH);
 }
 
 .section-text.active {
@@ -352,11 +354,11 @@ body[data-section="cv"] #viewport-container {
   opacity: 1;
 }
 
-.section-text p + p {
+.section-text p+p {
   margin-top: 1.5rem;
 }
 
-/* parole interattive */
+
 .hotword {
   position: relative;
   text-decoration: underline;
@@ -366,22 +368,29 @@ body[data-section="cv"] #viewport-container {
   transition: color .15s ease, text-decoration-color .15s ease;
   text-decoration-color: currentColor;
 }
+
 .hotword:hover {
-  color: #ff4800;                /* arancione del brand */
+  color: #ff4800;
 }
 
-/* video popup che segue il mouse */
+.highlight {
+  background-color: #ff4800; 
+  color: #000000;               
+  padding: 0 0.2em;         
+}
+
 #hover-video-pop {
   position: fixed;
-  pointer-events: none;           /* non cattura click/hover */
+  pointer-events: none;
   z-index: 9999;
-  width: 360px;                   /* dimensione desktop */
+  width: 360px;
   aspect-ratio: 9 / 16;
   overflow: hidden;
-  transform: translate(-50%, -50%); /* centro sul puntatore */
+  transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity .12s ease;
 }
+
 #hover-video-pop video {
   width: 100%;
   height: 100%;
@@ -398,65 +407,109 @@ body[data-section="cv"] #viewport-container {
 }
 
 
-/* CURRICULUM */
+/* ======================================CURRICULUM====================================== */
 
 .cv-text {
-  font-family: sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #ff4800
+  position: absolute;
+  top: 15vh;
+  left: 0;
+  padding-left: 8vw;
+  padding-bottom: calc(var(--navH) + 16px);
+  padding-bottom: calc(var(--navH) + env(safe-area-inset-bottom) + 16px);
+  max-width: 80vw;
+  text-align: left;
+  font-family: 'PPSupplyMono', monospace;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #000000;
+  z-index: 10;
 }
 
 .cv-text h2 {
-  font-size: 16px;
-  margin-top: 1.2em;
-  font-family: 'Orbitron', sans-serif;
-  /* o il font che usi per il titolo */
-  text-transform: uppercase;
+  font-size: 3rem;
+  font-weight: 400;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.cv-text p {
+  margin-bottom: 2rem;
+}
+
+.cv-text strong {
+  font-weight: 400;
+  color: #ff4800;
 }
 
 .cv-text ul {
-  list-style-type: disc;
-  margin-left: 20px;
-}
-
-.cv-text .tags {
   list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  padding-left: 2rem;
+  margin: 0 0 1.5rem 0;
 }
 
-.cv-text .tags li {
-  border: 1px solid black;
-  padding: 4px 8px;
-  border-radius: 14px;
-  font-size: 12px;
+.cv-text li {
+  margin-bottom: 0.5rem;
 }
+
+.cv-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 3px;
+  transition: color .15s ease;
+}
+
+.cv-text a:hover {
+  color: #ff4800;
+}
+
+.cv-list {
+  list-style-type: '– ';
+  padding-left: 1.5rem;
+  margin: 1.2rem 0 2rem;
+}
+
+.cv-list li {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  text-indent: -0.5rem;
+}
+
+.cv-list strong {
+  color: #ff4800;
+  font-weight: 400;
+}
+
+
+/* Responsive: testo pieno su mobile */
+@media (max-width: 768px) {
+  .cv-text {
+    max-width: 90vw;
+    padding-left: 5vw;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+}
+
 
 
 /* ================= WORKS ================= */
 
 :root {
   --navH: 5rem;
-  /* altezza navbar in basso */
   --workW: 360px;
-  /* fallback: larghezza comune delle card (JS la sovrascrive) */
   --gapX: 24px;
-  /* spazio tra card */
 }
 
-/* wrapper sezione: nessun padding-top, altezza la decide JS */
 #works-section {
   position: relative;
   z-index: 5;
   width: 100vw;
   padding-top: 0;
-  /* importante: niente offset che abbassa il pin */
 }
 
-/* Works sopra al canvas 3D ed effetti */
 #works-section,
 #works-pin,
 #works-track,
@@ -467,9 +520,11 @@ body[data-section="cv"] #viewport-container {
 }
 
 
+
+
 /* ================== WORKS FILTERS (responsive) ================== */
 
-.works-filters{
+.works-filters {
   position: sticky;
   top: 16px;
   z-index: 7;
@@ -477,85 +532,149 @@ body[data-section="cv"] #viewport-container {
   flex-wrap: wrap;
   gap: 12px;
   padding: 12px 16px;
-  background: transparent;
+  background: #ff4800;
+  color: #000;
+  font-family: 'PPSupplyMono', monospace;
 }
 
-.works-filters select{
+.works-filters select {
   -webkit-appearance: none;
   appearance: none;
+  text-transform: uppercase;
   padding: 10px 12px;
   min-height: 44px;
-  font-family: 'PPSupplyMono', monospace;
+  font-family: inherit;
   font-size: 16px;
   line-height: 1.2;
-  border: 1px solid #000;
-  background: #fff;
-  color: #000;
+  border: none;
+  border-radius: 0px;
+  background: #000;
+  color: #fff;
   outline: none;
-  transition: box-shadow .15s ease, border-color .15s ease, transform .06s ease;
+  transition: transform .06s ease, opacity .15s ease;
+  cursor: pointer;
 }
-.works-filters select:focus-visible{
-  border-color: #ff4800;
-  box-shadow: 0 0 0 3px rgba(255,72,0,.2);
-}
-.works-filters select:active{ transform: scale(0.995); }
 
-/* ---- Mobile: barra fissa in fondo ---- */
-@media (max-width: 768px){
-  .works-filters{
+.works-filters select:hover,
+.works-filters select:focus-visible {
+  background-color: #000000;
+  color: #ff4800;
+}
+
+.year-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #000;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #000;
+  border-radius: 26px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+input:checked + .slider {
+  background-color: #fff;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
+  background-color: #000;
+}
+
+/* MOBILE VERSION */
+@media (max-width: 768px) {
+  .works-filters {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 1000;
     display: grid;
-    grid-template-columns: 1fr 1fr;  /* due select affiancati */
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-    background: rgba(255,255,255,.95);
-    backdrop-filter: blur(6px);
-    border-top: 1px solid rgba(0,0,0,.08);
-    box-shadow: 0 -4px 12px rgba(0,0,0,.08);
+    background: #ff4800;
+    backdrop-filter: none;
+    border: none;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
   }
-  .works-filters select{
+
+  .works-filters select {
     width: 100%;
   }
-  body{ padding-bottom: 80px; } /* spazio per non coprire la lista */
-}
 
-/* ---- Tablet ---- */
-@media (min-width: 769px) and (max-width: 1024px){
-  .works-filters{
-    position: sticky;
-    top: 16px;
-    gap: 10px;
-  }
-  .works-filters select{
-    flex: 1 1 240px;
+  body {
+    padding-bottom: 80px;
   }
 }
 
-/* ---- Desktop ---- */
-@media (min-width: 1025px){
-  .works-filters{
+/* TABLET + DESKTOP */
+
+@media (min-width: 769px) {
+  .works-filters {
     background: transparent;
-    backdrop-filter: none;
-    border: 0;
-    box-shadow: none;
-    border-radius: 0;
-    position: sticky;
-    top: 16px;
   }
-  .works-filters select{
-    flex: 0 0 auto;
+
+  .works-filters select {
+    background: #ff4800;
+    color: #000;
+  }
+
+  .slider {
+    background-color: #ff4800;
+  }
+
+  .slider::before {
+    background-color: #000;
+  }
+
+  input:checked + .slider {
+    background-color: #000;
+  }
+
+  input:checked + .slider::before {
+    background-color: #ff4800;
   }
 }
-/* ================== FINE WORKS FILTERS ================== */
 
 
-/* pin: blocca la vista mentre scorre il nastro */
+
+/* ================== WORKS TRACKING ================== */
+
+
 .works-pin {
-  height: calc(100dvh - var(--navH));
+  height: calc(100dvh - var(--navH) - var(--filtersH));
   position: sticky;
   top: 0;
   overflow: hidden;
@@ -564,7 +683,7 @@ body[data-section="cv"] #viewport-container {
 
 @supports not (height: 100dvh) {
   .works-pin {
-    height: calc(100vh - var(--navH));
+    height: calc(100vh - var(--navH) - var(--filtersH));
   }
 }
 
@@ -582,38 +701,30 @@ body[data-section="cv"] #viewport-container {
   contain: none !important;
 }
 
-/* “spacer” di coda: forza overflow anche con poche card */
 .works-track::after {
   content: "";
   flex: 0 0 40vw;
 }
 
-/* card: tutte con la stessa larghezza (decisa dal JS), altezza variabile */
 .work-card {
   position: relative;
   width: var(--workW);
   flex: 0 0 auto;
-  /* niente grow/shrink */
   align-self: flex-end;
-  /* resta appoggiata in basso */
   display: inline-block;
-  /* shrink-wrap dei contenuti */
   overflow: visible;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
 }
 
-/* media a proporzioni native, nessun crop */
 .work-card img,
 .work-card video {
   display: block;
-  /* elimina spaziature inline */
   width: 100%;
   height: auto;
   object-fit: contain;
 }
 
-/* overlay pieno (arancione menu) */
 :root {
   --menu-orange: #ff4800;
 }
@@ -649,13 +760,10 @@ body[data-section="cv"] #viewport-container {
   margin: 0 8px;
 }
 
-/* mostra overlay sia su hover che su .is-hover */
 .work-card:is(:hover, .is-hover) .work-overlay {
   opacity: 1;
 }
 
-
-/* lista mobile (testuale) */
 .works-list {
   display: none;
   padding: 16px;
@@ -806,20 +914,18 @@ body[data-section="cv"] #viewport-container {
 
 /* ================= MODAL PAGE MODE ================= */
 
-/* Quando il modale è in modalità 'pagina', nascondo le colonne standard */
 .project-modal.is-page .project-modal__media,
 .project-modal.is-page .project-modal__content {
   display: none !important;
 }
 
 .project-modal.is-page .project-modal__body {
-  display: block;            /* pagina singola che scorre */
+  display: block;
   max-height: calc(88vh - 56px);
   overflow: auto;
   padding: 0;
 }
 
-/* Contenitore della 'mini-pagina' */
 .project-page {
   --page-max: 1120px;
   --page-pad: clamp(16px, 4vw, 32px);
@@ -829,69 +935,141 @@ body[data-section="cv"] #viewport-container {
   line-height: 1.55;
 }
 
-/* Reset "soft" solo dentro la pagina */
-.project-page * { box-sizing: border-box; }
-.project-page h1, .project-page h2, .project-page h3,
-.project-page h4, .project-page h5, .project-page h6 {
+.project-page * {
+  box-sizing: border-box;
+}
+
+.project-page h1,
+.project-page h2,
+.project-page h3,
+.project-page h4,
+.project-page h5,
+.project-page h6 {
   font-family: 'PPSupplyMono', monospace;
   font-weight: 400;
   line-height: 1.2;
   margin: 1.2em 0 .6em;
 }
-.project-page p { margin: .8em 0; }
-.project-page a { color: #ff4800; text-decoration: underline; }
-.project-page img, .project-page video {
+
+.project-page p {
+  margin: .8em 0;
+}
+
+.project-page a {
+  color: #ff4800;
+  text-decoration: underline;
+}
+
+.project-page img,
+.project-page video {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* Layout base */
-.project-page .container { max-width: var(--page-max); margin: 0 auto; padding: var(--page-pad); }
-.project-page .hero { padding: clamp(24px, 6vw, 64px) 0; border-bottom: 3px solid #000; }
-.project-page .hero .eyebrow { font-family: 'PPSupplyMono', monospace; opacity: .7; }
-.project-page .hero h1 { font-size: clamp(1.8rem, 3.6vw, 3rem); margin: .25em 0 .4em; }
-.project-page .meta { font-family: 'PPSupplyMono', monospace; opacity: .8; }
-
-.project-page .section { padding: clamp(20px, 4vw, 40px) 0; }
-.project-page .grid { display: grid; gap: clamp(12px, 2vw, 20px); }
-@media (min-width: 900px){
-  .project-page .grid.cols-2 { grid-template-columns: 1fr 1fr; }
-  .project-page .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.project-page .container {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--page-pad);
 }
 
-.project-page .figure { margin: 0; }
+.project-page .hero {
+  padding: clamp(24px, 6vw, 64px) 0;
+  border-bottom: 3px solid #000;
+}
+
+.project-page .hero .eyebrow {
+  font-family: 'PPSupplyMono', monospace;
+  opacity: .7;
+}
+
+.project-page .hero h1 {
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  margin: .25em 0 .4em;
+}
+
+.project-page .meta {
+  font-family: 'PPSupplyMono', monospace;
+  opacity: .8;
+}
+
+.project-page .section {
+  padding: clamp(20px, 4vw, 40px) 0;
+}
+
+.project-page .grid {
+  display: grid;
+  gap: clamp(12px, 2vw, 20px);
+}
+
+@media (min-width: 900px) {
+  .project-page .grid.cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project-page .grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.project-page .figure {
+  margin: 0;
+}
+
 .project-page .caption {
-  font-family: 'PPSupplyMono', monospace; font-size: .9rem; opacity: .75; margin-top: 6px;
+  font-family: 'PPSupplyMono', monospace;
+  font-size: .9rem;
+  opacity: .75;
+  margin-top: 6px;
 }
+
 .project-page .callout {
-  border: 2px solid #000; padding: clamp(12px, 2.2vw, 18px); border-radius: 12px; background: #fff7f2;
+  border: 2px solid #000;
+  padding: clamp(12px, 2.2vw, 18px);
+  border-radius: 12px;
+  background: #fff7f2;
 }
 
-.project-page .divider { height: 3px; background: #000; margin: clamp(20px, 4vw, 40px) 0; }
+.project-page .divider {
+  height: 3px;
+  background: #000;
+  margin: clamp(20px, 4vw, 40px) 0;
+}
 
-/* Opzionale: sticky sub-nav interna alla pagina */
 .project-page .subnav {
-  position: sticky; top: 0; z-index: 1;
-  background: #fff; border-bottom: 2px solid #000; padding: 10px var(--page-pad);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+  border-bottom: 2px solid #000;
+  padding: 10px var(--page-pad);
 }
-.project-page .subnav ul { display: flex; gap: 16px; list-style: none; padding: 0; margin: 0; }
-.project-page .subnav a { text-decoration: none; border-bottom: 2px solid transparent; }
-.project-page .subnav a:hover { border-color: #ff4800; }
 
+.project-page .subnav ul {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-/* ====== Responsive ====== */
+.project-page .subnav a {
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.project-page .subnav a:hover {
+  border-color: #ff4800;
+}
+
 @media (max-width: 1024px) {
   .project-modal__body {
     grid-template-columns: 1fr;
-    /* stack */
     max-height: calc(88vh - 56px);
   }
 }
 
 @media (max-width: 768px) {
-
-  /* NON tocchiamo .works-list: regole solo per il modal */
   .project-modal.open {
     padding: 4vh 4vw;
   }
@@ -910,13 +1088,11 @@ body[data-section="cv"] #viewport-container {
   }
 }
 
-/* Accessibilità focus */
 .project-modal__close:focus-visible {
   outline: 2px solid #ff4800;
   outline-offset: 2px;
 }
 
-/* Evita scroll del body quando il modal è aperto */
 html.has-open-modal,
 body.has-open-modal {
   overflow: hidden;
@@ -954,42 +1130,34 @@ body.has-open-modal {
 }
 
 /* WORKS — forza il paint anche fuori dalla viewport iniziale */
+
 #works-track,
 #works-track>* {
   content-visibility: visible !important;
-  /* disattiva c-v:auto */
   contain: none !important;
-  /* disattiva contain: paint/layout */
 }
 
-/* il nastro non deve clipparsi: lascia clip solo al pin */
 #works-track {
   overflow: visible !important;
   will-change: transform;
 }
 
-/* sicurezza: media sempre visibili */
 #works-track img,
 #works-track video {
   visibility: visible !important;
 }
 
-/* Quando la sezione Works è in lock, rimuovi del tutto lo scroll verticale */
 html.is-locking-works,
 html.is-locking-works body {
   overflow-y: hidden !important;
   height: 100%;
-  /* evita micro shift del layout */
   overscroll-behavior-y: none;
-  /* niente bounce/inerzia verticale */
 }
 
-/* opzionale ma utile: evita shift quando le barre compaiono/scompaiono */
 html {
   scrollbar-gutter: stable both-edges;
 }
 
-/* Canvas overlay per i pixel effervescenti */
 #edge-fx-canvas {
   position: fixed;
   inset: 0;
@@ -997,9 +1165,7 @@ html {
   height: 100vh;
   pointer-events: none;
   z-index: 1050;
-  /* sopra il track e sotto eventuali tooltip */
   mix-blend-mode: normal;
-  /* cambia in 'multiply' se ti piace di più */
 }
 
 /* ============ FINE WORKS ============ */

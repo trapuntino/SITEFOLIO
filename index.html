@@ -51,6 +51,9 @@
     </a>
   </div>
 
+  <canvas id="toolbar-fx-canvas"></canvas>
+
+
   <!-- VIEWPORT 3D -->
   <div id="viewport-container"></div>
 
@@ -60,31 +63,43 @@
 
     <p>A communication designer from Northern Italy,
       crafting raw projects with just enough chaos, so they're hard to forget.</p>
+
+    <p><span class="highlight">Test me — click some buttons.</span></p>
   </div>
 
   <!-- CONTENUTO PROGETTI (WORKS) -->
   <section id="works-section" class="section-hidden" aria-label="Works" data-section="progetti">
-    <!-- FILTRI -->
+    
+    <!-- FILTERS -->
     <div id="works-filters" class="works-filters">
-      <select id="filter-role">
-        <option value="">Tutti i ruoli</option>
-        <option>Art Director</option>
-        <option>Graphic Designer</option>
-        <option>Producer</option>
-        <option>Communication Designer</option>
-      </select>
-      <select id="filter-year">
-        <option value="">Tutti gli anni</option>
-        <option>2025</option>
-        <option>2024</option>
-      </select>
       <select id="filter-field">
-        <option value="">Tutti gli ambiti</option>
+        <option value="">All fields</option>
         <option>Branding</option>
+        <option>3D & Motion Graphics</option>
+        <option>Events</option>
         <option>Web Design</option>
-        <option>Eventi</option>
-        <option>Editoriale</option>
+        <option>Editorial</option>
+        <option>Photography</option>
       </select>
+
+
+      <select id="filter-role">
+    <option value="">All roles</option>
+    <option>Art Director</option>
+    <option>Graphic Designer</option>
+    <option>Producer</option>
+    <option>Communication Designer</option>
+  </select>
+
+      <div class="year-switch">
+        <label class="switch">
+          <input type="checkbox" id="year-toggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span id="year-label">Newest</span>
+      </div>
+
+
     </div>
 
     <!-- GALLERIA ORIZZONTALE (DESKTOP) -->
@@ -143,88 +158,142 @@
 
     <p>After high school that curiosity led me to Milan, where I studied Communication Design at <a
         href="https://www.polimi.it" class="hotword" target="_blank" rel="noopener">
-        Politecnico di Milano</a>, with six months at <a
-        href="https://centro.edu.mx" class="hotword" target="_blank" rel="noopener">
+        Politecnico di Milano</a>, with six months at <a href="https://centro.edu.mx" class="hotword" target="_blank"
+        rel="noopener">
         Centro.</a> in CDMX, Mexico in between.</p>
 
-    <p>Since 2023 I’ve been running <a
-        href="https://www.instagram.com/purple.raw/" class="hotword" target="_blank" rel="noopener">
+    <p>Since 2023 I’ve been running <a href="https://www.instagram.com/purple.raw/" class="hotword" target="_blank"
+        rel="noopener">
         Purple Studio</a>, a collective I
-      co-founded with a fellow videographer, working on projects that range from events to visual direction — and simply
+      co-founded with a fellow videographer, working on projects that range from events to visual direction or simply
       getting that work done.</p>
   </div>
 
 
   <!-- CONTENUTO CV -->
-  <div id="content">
-    <div class="cv-text section-text section-hidden" data-section="cv">
 
-      <h2>PERCORSO ACCADEMICO</h2>
-      <p><strong>2021</strong> – Laurea triennale in Design della comunicazione<br>@ Politecnico di Milano</p>
-      <p><strong>2021 / in corso</strong> – Corso di laurea magistrale in Design della comunicazione (108 su 120 C.f.u.
-        ottenuti)<br>@ Politecnico di Milano</p>
-      <p><strong>2022</strong> – Comunicación visual, exchange student (1 semestre)<br>@ CENTRO | Diseño, Cine y
-        Televisión | México</p>
+  <div class="cv-text section-text section-hidden" data-section="cv">
 
-      <h2>ESPERIENZA</h2>
-      <p><strong>2020–2023</strong><br>Freelancer</p>
-      <p><strong>2023–present</strong><br>Co-fondatore di Purple Studio, hub creativo situato a Bormio (SO)</p>
+    <h2><span class="highlight">CURRICULUM VITAE</span></h2>
+    <h2><strong>Fabrizio Confortola</strong><br>Communication Designer</h2>
+    <p><em>Based in: Bormio, Italy — available in Milan</em></p>
 
-      <h2>LINGUE</h2>
-      <p><strong>Italiano / Inglese (C1) / Spagnolo (base)</strong></p>
+    <p><strong>Website:</strong> <a href="https://fabrizioconfortola.com" target="_blank"
+        rel="noopener">fabrizioconfortola.com</a><br>
+      <strong>Instagram:</strong> <a href="https://www.instagram.com/tvb_lostesso" target="_blank"
+        rel="noopener">@tvb_lostesso</a><br>
+      <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/fabrizioconfortola" target="_blank"
+        rel="noopener">linkedin.com/in/fabrizioconfortola</a><br>
+      <strong>Phone:</strong> +39 348 126 6939<br>
+      <strong>Email:</strong> <a href="mailto:fabrizio.confortola.98@gmail.com">fabrizio.confortola.98@gmail.com</a><br>
+      <strong>Email (collective):</strong> <a href="mailto:purplestudio.raw@gmail.com">purplestudio.raw@gmail.com</a>
+    </p>
 
-      <h2>SOFTWARE</h2>
-      <ul>
-        <li>Adobe Illustrator ★★★★★</li>
-        <li>Adobe InDesign ★★★★☆</li>
-        <li>Adobe Photoshop ★★★★☆</li>
-        <li>Adobe After Effects ★★★☆☆</li>
-      </ul>
+    <h2><span class="highlight">EXPERIENCE</span></h2>
 
-      <h2>HOBBY</h2>
-      <ul>
-        <li>Snowboard</li>
-        <li>Skateboard</li>
-        <li>Viaggiare</li>
-      </ul>
+    <h2><strong>Purple Studio</strong><br>Co-founder & Communication Designer</h2>
 
-      <h2>MUSICA</h2>
-      <ul>
-        <li>Skrillex</li>
-        <li>Fred Again..</li>
-        <li>Disclosure</li>
-        <li>Mac Miller</li>
-        <li>Kaytranada</li>
-        <li>The Blaze</li>
-      </ul>
+    <p><em>Jan 2023 – Present | Bormio (IT)</em><br>
+      Co-founded creative collective based in Bormio, combining communication design and videomaking to develop
+      identities, visuals, and narratives that connect culture, territory, and contemporary aesthetics.</p>
 
-      <h2>SKILLS</h2>
-      <ul class="tags">
-        <li>Branding</li>
-        <li>Editoriale</li>
-        <li>Manipolazione Foto</li>
-        <li>Identità Visive</li>
-        <li>Motion Graphics</li>
-        <li>Creazione Contenuti Social</li>
-        <li>Brainstorming</li>
-      </ul>
+    <p><em>Key projects include:</em></p>
+    <ul class="cv-list">
+      <li><strong>Sūgo</strong> — Founder and creative director of a snowboarding and music event held in Bormio;
+        developed the concept, visual identity, communication strategy, and coordinated on-site logistics and
+        partnerships.
+      </li>
+      <li><strong>Befest</strong> — Visual identity and event communication for two editions of the mountain music
+        festival.</li>
+      <li><strong>Bormio Ski&Bike</strong> — Social media campaign for Bormio Ski&Bike promoting end of season sales.
+      </li>
+      <li><strong>Carrozzeria Sosio</strong> — Website front-end design + development and 3D instagram reel for a local
+        body shop.</li>
+      <li><strong>Retrogusto</strong> — Visual concept and 3D animated 9:16 reel for a cultural event connecting
+        gastronomy and
+        music.</li>
+      <li><strong>Sertorelli Ski School</strong> — Production coordination for a photo and short film shooting in
+        Bormio, supporting creative direction and on-set organization.</li>
+      <li><strong>Level Gloves — Social Video Graphics</strong> — Design and creation of animated graphic content for
+        Level’s 2024 social media campaign.</li>
+      <li><strong>Logo design projects</strong> — Development of multiple brandmarks and symbols, including
+        one conceptually-driven identity exploring semantic visual synthesis.</li>
+    </ul>
 
-      <h2>SOFT SKILLS</h2>
-      <ul>
-        <li>Attenzione ai dettagli</li>
-        <li>Teamwork</li>
-        <li>Adattabilità</li>
-        <li>Organizzazione sotto pressione</li>
-      </ul>
+    <h2><strong>MR. Production Agency<br>(Paul & Shark Campaign)</strong><br>Production Assistant</h2>
+    <p><em>Oct 2023 | Passo dello Stelvio (IT)</em><br>
+      Two-day outdoor shoot supporting coordination and on-set logistics.</p>
 
-      <h2>CONTATTI</h2>
-      <p><strong>Telefono:</strong> +39 348 1266939</p>
-      <p><strong>E-mail:</strong> fabrizio.confortola.98@gmail.com</p>
-      <p><strong>Instagram personale:</strong> @tvb_lostesso</p>
-      <p><strong>Instagram studio:</strong> @purple.raw</p>
+    <h2><strong>Telesondrio News - TSN</strong><br>Camera Assistant</h2>
+    <p><em>Jun 2025 | Passo dello Stelvio (IT)</em><br>
+      Assisted the operator during coverage of the Bicentenary of the Stelvio Pass, a historical automotive event.</p>
 
-    </div>
+    <h2><strong>Bonazzi Grafica S.r.l.</strong><br>Freelance Graphic Assistant</h2>
+    <p><em>Sep – Nov 2024 | Sondrio (IT)</em><br>
+      Three-month collaboration focused on print production and pre-press workflow.</p>
+
+    <h2><span class="highlight">EDUCATION</span></h2>
+
+    <h2><strong>Politecnico di Milano</strong><br>M.Sc. in Communication Design<br>(coursework completed)</h2>
+    <p><em>Oct 2021 – Sep 2023 | Milan (IT)</em><br>
+      Completed 108 / 120 ECTS with a 29.5 / 30 GPA;<br>studies discontinued due to unforeseen external circumstances.
+    </p>
+
+    <h2><strong>Centro.</strong><br>Academic exchange program</h2>
+    <p><em>Jan – Jun 2023 | Mexico City (MX)</em><br>
+      Six-month study period focused on digital design, interactive projects, printmaking, bookbinding, screen
+      printing, illustration, and applied typography — a hands-on exploration of analog and digital processes within
+      the Latin American creative context.</p>
+
+    <h2><strong>Politecnico di Milano</strong><br>B.Sc. in Communication Design</h2>
+    <p><em>Sep 2018 – Sep 2021 | Milan (IT)</em><br>Focus: communication design, visual systems, branding, and
+      digital-analog processes.</p>
+
+    <h2><strong>I.S.S. Alberti</strong><br>High School Diploma in Enogastronomy</h2>
+    <p><em>Sep 2012 – Jun 2018 | Bormio (IT)</em></p>
+
+    <h2><span class="highlight">SKILLS & TOOLS</span></h2>
+
+    <h2><strong>Core Skills</strong></h2>
+    <ul class="cv-list">
+      <li>Brand identity & visuals</li>
+      <li>Creative and art direction</li>
+      <li>Event communication & visual storytelling</li>
+      <li>Web front-end design</li>
+      <li>Editorial & print design</li>
+      <li>Digital and analog production processes</li>
+      <li>Concept development and multidisciplinary collaboration</li>
+    </ul>
+
+    <h2><strong>Tools</strong></h2>
+    <ul class="cv-list">
+      <li>Adobe CC Suite</li>
+      <li>Figma</li>
+      <li>Blender - 3D motion graphics</li>
+      <li>VS Code - HTML/CSS</li>
+      <li>Analog tools — screen printing, bookbinding</li>
+    </ul>
+
+    <h2><strong>Soft Skills</strong></h2>
+    <ul class="cv-list">
+      <li>Independent and organized workflow</li>
+      <li>Adaptability and creative problem-solving</li>
+      <li>Collaborative mindset</li>
+      <li>Attention to conceptual and visual detail</li>
+    </ul>
+
+    <h2><span class="highlight">LANGUAGES</span></h2>
+    <p><strong>Italian:</strong> Native<br>
+      <strong>English:</strong> C1 (Cambridge English: First Certificate, CEFR C1 level)<br>
+      <strong>Spanish:</strong> Intermediate comprehension, basic writing and spoken ability
+    </p>
+
+    <h2><span class="highlight">AVAILABILITY</span></h2>
+    <p><strong>Open to work:</strong> both freelance and full-time.<br>
+      No relocation constraints; available to move abroad for professional opportunities.</p>
   </div>
+
+
 
   <span class="sr-only" id="sr-root"></span>
 
