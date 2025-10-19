@@ -3857,17 +3857,30 @@ void main() {
 
   <section class="section moodboard">
     <div class="grid cols-3">
-      <img src="\${BASE}portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual">
-      <img src="\${BASE}portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
-      <img src="\${BASE}portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
-      <img src="\${BASE}portfolio/befest/befest_3.webp" alt="BeFest Visual 3">
-      <img src="\${BASE}portfolio/befest/befest_4.webp" alt="BeFest Visual 4">
-      <img src="\${BASE}portfolio/befest/befest_5.webp" alt="BeFest Visual 5">
-      <img src="\${BASE}portfolio/befest/befest_6.webp" alt="BeFest Visual 6">
-      <img src="\${BASE}portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
-      <img src="\${BASE}portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
+      <img src="media/portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual">
+      <img src="media/portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
+      <img src="media/portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
 
-      <!-- Vimeo Embed -->
+      <!-- Vimeo Embed (video verticale) -->
+      <div class="vimeo-wrapper-vertical">
+        <iframe 
+          src="https://player.vimeo.com/video/1128542791?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          playsinline
+          title="BeFest – Bormio 2">
+        </iframe>
+      </div>
+
+      <img src="media/portfolio/befest/befest_3.webp" alt="BeFest Visual 3">
+      <img src="media/portfolio/befest/befest_4.webp" alt="BeFest Visual 4">
+      <img src="media/portfolio/befest/befest_5.webp" alt="BeFest Visual 5">
+      <img src="media/portfolio/befest/befest_6.webp" alt="BeFest Visual 6">
+      <img src="media/portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
+      <img src="media/portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
+
+      <!-- Vimeo Embed finale -->
       <div class="vimeo-wrapper">
         <iframe 
           src="https://player.vimeo.com/video/1128542861?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
@@ -3878,11 +3891,6 @@ void main() {
           title="BeFest Vimeo Clip">
         </iframe>
       </div>
-
-      <!-- Local Video Examples -->
-      <video src="\${BASE}portfolio/befest/clip-1.mp4" autoplay loop muted playsinline></video>
-      <video src="\${BASE}portfolio/befest/clip-2.mp4" autoplay loop muted playsinline></video>
-      <video src="\${BASE}portfolio/befest/clip-3.mp4" autoplay loop muted playsinline></video>
     </div>
   </section>
 `,pageCSS:`
@@ -3910,8 +3918,7 @@ void main() {
     gap: 1rem;
   }
 
-  .project-page .moodboard img,
-  .project-page .moodboard video {
+  .project-page .moodboard img {
     width: 100%;
     height: auto;
     display: block;
@@ -3919,15 +3926,24 @@ void main() {
     object-fit: cover;
   }
 
-  .vimeo-wrapper {
+  .vimeo-wrapper,
+  .vimeo-wrapper-vertical {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* 16:9 ratio */
     overflow: hidden;
     border-radius: 12px;
   }
 
-  .vimeo-wrapper iframe {
+  .vimeo-wrapper {
+    padding-top: 56.25%; /* 16:9 */
+  }
+
+  .vimeo-wrapper-vertical {
+    padding-top: 177.78%; /* 9:16 */
+  }
+
+  .vimeo-wrapper iframe,
+  .vimeo-wrapper-vertical iframe {
     position: absolute;
     top: 0;
     left: 0;
