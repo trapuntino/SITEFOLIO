@@ -3954,7 +3954,7 @@ void main() {
 `},{id:"retrogusto",titolo:"Retrogusto",anno:2024,ambito:"Web Design",ruoli:["Graphic Designer","Producer"],cover:{type:"video",src:`${yi}portfolio/retrogusto/cover.mp4`,poster:`${yi}portfolio/retrogusto/poster.jpg`},pageHTML:`
   <section class="hero">
     <div class="eyebrow">Brand System</div>
-    <h1>Befest — visual identity and production</h1>
+    <h1>Befest</h1>
     <div class="meta">2024 · Branding · Art Direction & Production</div>
   </section>
 
@@ -3962,7 +3962,7 @@ void main() {
     <div class="grid cols-2">
       <div>
         <h3>Objective</h3>
-        <p>Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.</p>
+        <p>Create a visual identity that could define the festival’s character: bold, playful, and instantly recognizable.</p>
       </div>
       <div>
         <h3>Deliverables</h3>
@@ -3972,9 +3972,9 @@ void main() {
 
     <div class="description">
       <p>BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
-      As Purple Studio, we handled the entire communication — from social strategy and content production to the brand identity and the visual setup of the event. 
+      As Purple Studio, we handled the entire communication: from social strategy and content production to the brand identity and the visual setup of the event. 
       The identity revolves around a mascot representing the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system. 
-      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, communication materials, and animated illustrations — while coordinating the video and photo production.</p>
+      I was responsible for the visual direction, social media management, and all graphic outputs: logo, signage, communication materials, and animated illustrations — while coordinating the video and photo production.</p>
     </div>
   </section>
 
