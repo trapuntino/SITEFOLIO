@@ -3953,8 +3953,8 @@ void main() {
   }
 `},{id:"retrogusto",titolo:"Retrogusto",anno:2024,ambito:"Web Design",ruoli:["Graphic Designer","Producer"],cover:{type:"video",src:`${yi}portfolio/retrogusto/cover.mp4`,poster:`${yi}portfolio/retrogusto/poster.jpg`},pageHTML:`
   <section class="hero">
-    <div class="eyebrow">Brand System</div>
-    <h1>Befest</h1>
+    <div class="eyebrow">Event</div>
+    <h1>Befest — visual identity and production</h1>
     <div class="meta">2024 · Branding · Art Direction & Production</div>
   </section>
 
@@ -3962,7 +3962,7 @@ void main() {
     <div class="grid cols-2">
       <div>
         <h3>Objective</h3>
-        <p>Create a visual identity that could define the festival’s character: bold, playful, and instantly recognizable.</p>
+        <p>Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable — and translate it consistently across all touchpoints.</p>
       </div>
       <div>
         <h3>Deliverables</h3>
@@ -3972,9 +3972,9 @@ void main() {
 
     <div class="description">
       <p>BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
-      As Purple Studio, we handled the entire communication: from social strategy and content production to the brand identity and the visual setup of the event. 
+      As Purple Studio, we handled the entire communication — from social strategy and content production to the brand identity and the visual setup of the event. 
       The identity revolves around a mascot representing the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system. 
-      I was responsible for the visual direction, social media management, and all graphic outputs: logo, signage, communication materials, and animated illustrations — while coordinating the video and photo production.</p>
+      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, communication materials, and animated illustrations — while coordinating the video and photo production.</p>
     </div>
   </section>
 
@@ -3982,21 +3982,88 @@ void main() {
 
   <section class="section moodboard">
     <div class="grid cols-3">
-      <figure>
-        <img src="\${BASE}portfolio/befest/hero.jpg" alt="Brandbook spread">
-      </figure>
-      <video src="\${BASE}portfolio/befest/clip-1.mp4" autoplay loop muted playsinline></video>
-      <video src="\${BASE}portfolio/befest/clip-2.mp4" controls></video>
-      <video src="\${BASE}portfolio/befest/clip-3.mp4" autoplay loop muted playsinline></video>
+      <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual">
+      <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
+      <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
+
+      <!-- Vimeo 1 -->
+      <div class="vimeo-wrapper-vertical">
+        <iframe 
+          src="https://player.vimeo.com/video/1128542791?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          playsinline
+          title="BeFest – Bormio 2">
+        </iframe>
+      </div>
+
+      <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3">
+      <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4">
+      <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5">
+      <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6">
+      <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
+      <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
+
+      <!-- Vimeo 2 -->
+      <div class="vimeo-wrapper-vertical">
+        <iframe 
+          src="https://player.vimeo.com/video/1128542861?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          playsinline
+          title="BeFest Vimeo Clip">
+        </iframe>
+      </div>
     </div>
   </section>
 `,pageCSS:`
-  .project-page .hero { background: #fff; }
-  .project-page .intro h3 { margin-bottom: .25em; }
-  .project-page .description { margin-top: 2rem; font-size: 1.05rem; line-height: 1.6; }
-  .project-page .moodboard { margin-top: 3rem; }
-  .project-page .moodboard img,
-  .project-page .moodboard video { border-radius: 12px; overflow: hidden; }
+  .project-page .hero {
+    background: #fff;
+  }
+
+  .project-page .intro h3 {
+    margin-bottom: .25em;
+  }
+
+  .project-page .description {
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .project-page .moodboard {
+    margin-top: 3rem;
+  }
+
+  .project-page .moodboard .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .project-page .moodboard img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Vimeo vertical video wrapper */
+  .project-page .moodboard .vimeo-wrapper-vertical {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .project-page .moodboard .vimeo-wrapper-vertical iframe {
+    aspect-ratio: 9 / 16;
+    width: 100%;
+    height: auto;
+    border: 0;
+    display: block;
+  }
 `},{id:"sugo2025",titolo:"Sūgo 2025 – Event Identity",anno:2025,ambito:"Eventi",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${yi}portfolio/sugo2025/cover.jpg`,alt:"Sūgo 2025 – identità evento"},descrizione:"Identità e materiali per l’evento freestyle."},{id:"summershred",titolo:"Summer Shred",anno:2025,ambito:"Graphic Design",ruoli:["Illustrazione","Graphic Designer"],cover:{type:"image",src:`${yi}portfolio/summer-shred/cover.jpg`,alt:"Summer Shred - Illustrazione"},descrizione:"Illustrazione e logotipo"},{id:"stelviopaddock",titolo:"Stelvio Paddock",anno:2025,ambito:"Branding",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${yi}portfolio/stelvio-paddock/cover.jpg`,alt:"Stelvio Paddock - Branding"},descrizione:"Identità e materiali per l’evento freestyle."}];document.getElementById("works-section");const jc=document.getElementById("works-track"),Kc=document.getElementById("works-list");let $c=!1;function iv(){Vl(ar),Gl(ar),$c?window.reflowWorksScroller?.():(lv(),$c=!0)}function Vl(s){jc.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-card",t.dataset.id=e.id;let n;e.cover.type==="video"?(n=document.createElement("video"),n.src=e.cover.src,n.poster=e.cover.poster||"",n.muted=!0,n.playsInline=!0,n.loop=!0,n.autoplay=!0,n.preload="auto",n.controls=!1,n.addEventListener("loadedmetadata",()=>{const r=()=>n.play().catch(()=>{});r(),requestAnimationFrame(r)})):(n=document.createElement("img"),n.src=e.cover.src,n.alt=e.cover.alt||e.titolo,n.loading="lazy");const i=document.createElement("div");i.className="work-overlay",i.innerHTML=`<div class="title">${e.titolo}</div><div class="subtitle">${e.anno}</div>`,t.appendChild(n),t.appendChild(i),t.addEventListener("click",()=>Wl(e.id)),jc.appendChild(t)})}function Gl(s){Kc.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-row",t.dataset.id=e.id;const n=e.cover?.src||"",i=e.cover?.type||"image",r=e.cover?.alt||e.titolo;t.innerHTML=`
       <div class="row-text">
         <div class="row-title">${e.titolo}</div>
