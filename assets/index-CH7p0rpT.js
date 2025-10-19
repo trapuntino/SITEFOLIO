@@ -3924,11 +3924,11 @@ void main() {
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Modular graphic system & social visuals
+        Social visuals
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Event signage and production coordination
+        Production coordination
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
