@@ -3848,7 +3848,7 @@ void main() {
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Social content and visual toolkit
+        Social content
       </li>
     </ul>
   </div>
@@ -3860,13 +3860,13 @@ void main() {
 
 <section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
   <div style="flex:1;min-width:280px;">
-    <h3 style="color:#ff4800;margin-bottom:.5rem;">Objective</h3>
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
     <p style="margin:0 0 1rem 0;line-height:1.6;">
-      Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.
+      Create a visual identity that could define the festival’s character: bold, playful, and instantly recognizable.
     </p>
     <p style="margin:0;line-height:1.6;">
-      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, 
-      communication materials, and animated illustrations — while coordinating the video and photo production. 
+      I was responsible for the visual direction, social media management, and all graphic outputs: logo, signage, 
+      communication materials, and animated illustrations; while coordinating the video and photo production. 
       The visual identity was conceived as a lively, modular system capable of adapting to multiple formats 
       and maintaining a strong, consistent personality across platforms.
     </p>
@@ -3905,7 +3905,7 @@ void main() {
     <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
       <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5" style="width:100%;display:block;">
       <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7" style="width:100%;display:block;">
-      <video src="portfolio/befest/befest_bts_3.webp" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/befest/befest_bts_3.webp" alt="BeFest Visual 6" style="width:100%;display:block;">
       <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8" style="width:100%;display:block;">
     </div>
   </div>
