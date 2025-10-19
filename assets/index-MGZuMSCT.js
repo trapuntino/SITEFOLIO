@@ -3854,7 +3854,7 @@ void main() {
   </div>
 
   <div style="flex:0 0 220px;max-width:220px;">
-    <img src="portfolio/befest/cover.webp" alt="BeFest cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;border-radius:6px;">
+    <img src="portfolio/befest/cover.webp" alt="BeFest cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
   </div>
 </section>
 
