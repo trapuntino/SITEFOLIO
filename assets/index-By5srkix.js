@@ -3865,20 +3865,20 @@ void main() {
       Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.
     </p>
     <p style="margin:0;line-height:1.6;">
-      BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
-      As Purple Studio, we handled the entire communication — from social strategy and content production 
-      to the brand identity and the visual setup of the event. The identity revolves around a mascot representing 
-      the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system.
+      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, 
+      communication materials, and animated illustrations — while coordinating the video and photo production. 
+      The visual identity was conceived as a lively, modular system capable of adapting to multiple formats 
+      and maintaining a strong, consistent personality across platforms.
     </p>
   </div>
 
   <div style="flex:1;min-width:280px;">
     <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
     <p style="margin:0;line-height:1.6;">
-      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, 
-      communication materials, and animated illustrations — while coordinating the video and photo production. 
-      The visual identity was conceived as a lively, modular system capable of adapting to multiple formats 
-      and maintaining a strong, consistent personality across platforms.
+    BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
+      As Purple Studio, we handled the entire communication — from social strategy and content production 
+      to the brand identity and the visual setup of the event. The identity revolves around a mascot representing 
+      the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system.
     </p>
   </div>
 </section>
