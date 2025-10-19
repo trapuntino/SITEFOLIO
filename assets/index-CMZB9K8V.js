@@ -3986,7 +3986,6 @@ void main() {
       <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
       <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
 
-      <!-- Vimeo 1 -->
       <div class="vimeo-wrapper-vertical">
         <iframe 
           src="https://player.vimeo.com/video/1128542791?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
@@ -4005,8 +4004,7 @@ void main() {
       <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
       <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
 
-      <!-- Vimeo 2 -->
-      <div class="vimeo-wrapper-vertical">
+      <div class="vimeo-wrapper">
         <iframe 
           src="https://player.vimeo.com/video/1128542861?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
           frameborder="0"
@@ -4018,52 +4016,6 @@ void main() {
       </div>
     </div>
   </section>
-`,pageCSS:`
-  .project-page .hero {
-    background: #fff;
-  }
-
-  .project-page .intro h3 {
-    margin-bottom: .25em;
-  }
-
-  .project-page .description {
-    margin-top: 2rem;
-    font-size: 1.05rem;
-    line-height: 1.6;
-  }
-
-  .project-page .moodboard {
-    margin-top: 3rem;
-  }
-
-  .project-page .moodboard .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-page .moodboard img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-  }
-
-  /* Vimeo vertical video wrapper */
-  .project-page .moodboard .vimeo-wrapper-vertical {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .project-page .moodboard .vimeo-wrapper-vertical iframe {
-    aspect-ratio: 9 / 16;
-    width: 100%;
-    height: auto;
-    border: 0;
-    display: block;
-  }
 `},{id:"sugo2025",titolo:"Sūgo 2025 – Event Identity",anno:2025,ambito:"Eventi",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${yi}portfolio/sugo2025/cover.jpg`,alt:"Sūgo 2025 – identità evento"},descrizione:"Identità e materiali per l’evento freestyle."},{id:"summershred",titolo:"Summer Shred",anno:2025,ambito:"Graphic Design",ruoli:["Illustrazione","Graphic Designer"],cover:{type:"image",src:`${yi}portfolio/summer-shred/cover.jpg`,alt:"Summer Shred - Illustrazione"},descrizione:"Illustrazione e logotipo"},{id:"stelviopaddock",titolo:"Stelvio Paddock",anno:2025,ambito:"Branding",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${yi}portfolio/stelvio-paddock/cover.jpg`,alt:"Stelvio Paddock - Branding"},descrizione:"Identità e materiali per l’evento freestyle."}];document.getElementById("works-section");const jc=document.getElementById("works-track"),Kc=document.getElementById("works-list");let $c=!1;function iv(){Vl(ar),Gl(ar),$c?window.reflowWorksScroller?.():(lv(),$c=!0)}function Vl(s){jc.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-card",t.dataset.id=e.id;let n;e.cover.type==="video"?(n=document.createElement("video"),n.src=e.cover.src,n.poster=e.cover.poster||"",n.muted=!0,n.playsInline=!0,n.loop=!0,n.autoplay=!0,n.preload="auto",n.controls=!1,n.addEventListener("loadedmetadata",()=>{const r=()=>n.play().catch(()=>{});r(),requestAnimationFrame(r)})):(n=document.createElement("img"),n.src=e.cover.src,n.alt=e.cover.alt||e.titolo,n.loading="lazy");const i=document.createElement("div");i.className="work-overlay",i.innerHTML=`<div class="title">${e.titolo}</div><div class="subtitle">${e.anno}</div>`,t.appendChild(n),t.appendChild(i),t.addEventListener("click",()=>Wl(e.id)),jc.appendChild(t)})}function Gl(s){Kc.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-row",t.dataset.id=e.id;const n=e.cover?.src||"",i=e.cover?.type||"image",r=e.cover?.alt||e.titolo;t.innerHTML=`
       <div class="row-text">
         <div class="row-title">${e.titolo}</div>
