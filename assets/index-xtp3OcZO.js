@@ -3829,7 +3829,7 @@ void main() {
   `,document.body.appendChild(e);const t=e.querySelector("video");let n=null,i=null;function r(l,u){const d=window.innerWidth,p=window.innerHeight,g=e.getBoundingClientRect();let _=l,m=u-20;_=Math.max(16+g.width/2,Math.min(d-16-g.width/2,_)),m=Math.max(16+g.height/2,Math.min(p-16-g.height/2,m)),e.style.left=_+"px",e.style.top=m+"px"}async function o(l,u,h){if(!l)return;const d=l.getAttribute("data-video");if(d){if(clearTimeout(i),n!==l||t.src!==d){t.pause(),t.src=d;try{await t.play()}catch{}requestAnimationFrame(()=>t.play().catch(()=>{}))}n=l,e.style.display="block",r(u,h),requestAnimationFrame(()=>{e.style.opacity="1"})}}function a(l=!1){clearTimeout(i);const u=()=>{e.style.opacity="0",setTimeout(()=>{t.pause(),t.currentTime=0,e.style.display="none",n=null},120)};l?u():i=setTimeout(u,40)}document.addEventListener("mousemove",l=>{const u=l.target.closest(".hotword");u?o(u,l.clientX,l.clientY):e.contains(l.target)||a()},{passive:!0}),document.addEventListener("mousemove",l=>{e.style.display==="block"&&r(l.clientX,l.clientY)},{passive:!0});let c=!1;document.addEventListener("touchstart",l=>{const u=l.target.closest(".hotword");if(u){const h=l.touches[0];o(u,h.clientX,h.clientY),c=!0}else c&&(a(!0),c=!1)},{passive:!0}),window.addEventListener("keydown",l=>{l.key==="Escape"&&a(!0)}),window.hideHoverVideo=()=>a(!0)})();const yi="/",ar=[{id:"befest",titolo:"Befest",anno:2024,ambito:"Branding, Events",ruoli:["Art Director","Graphic Designer"],cover:{type:"image",src:`${yi}portfolio/befest/cover.webp`,alt:"Befest"},pageHTML:`
   <section class="hero">
     <div class="eyebrow">Event</div>
-    <h1>Befest — visual identity and production</h1>
+    <h1>Befest</h1>
     <div class="meta">2024 · Branding · Art Direction & Production</div>
   </section>
 
@@ -3837,7 +3837,7 @@ void main() {
     <div class="grid cols-2">
       <div>
         <h3>Objective</h3>
-        <p>Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable — and translate it consistently across all touchpoints.</p>
+        <p>Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.</p>
       </div>
       <div>
         <h3>Deliverables</h3>
@@ -3857,11 +3857,10 @@ void main() {
 
   <section class="section moodboard">
     <div class="grid cols-3">
-      <img src="media/portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual">
-      <img src="media/portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
-      <img src="media/portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
+      <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual">
+      <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1">
+      <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2">
 
-      <!-- Vimeo Embed (video verticale) -->
       <div class="vimeo-wrapper-vertical">
         <iframe 
           src="https://player.vimeo.com/video/1128542791?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
@@ -3873,14 +3872,13 @@ void main() {
         </iframe>
       </div>
 
-      <img src="media/portfolio/befest/befest_3.webp" alt="BeFest Visual 3">
-      <img src="media/portfolio/befest/befest_4.webp" alt="BeFest Visual 4">
-      <img src="media/portfolio/befest/befest_5.webp" alt="BeFest Visual 5">
-      <img src="media/portfolio/befest/befest_6.webp" alt="BeFest Visual 6">
-      <img src="media/portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
-      <img src="media/portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
+      <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3">
+      <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4">
+      <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5">
+      <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6">
+      <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7">
+      <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8">
 
-      <!-- Vimeo Embed finale -->
       <div class="vimeo-wrapper">
         <iframe 
           src="https://player.vimeo.com/video/1128542861?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
@@ -3893,64 +3891,6 @@ void main() {
       </div>
     </div>
   </section>
-`,pageCSS:`
-  .project-page .hero {
-    background: #fff;
-  }
-
-  .project-page .intro h3 {
-    margin-bottom: .25em;
-  }
-
-  .project-page .description {
-    margin-top: 2rem;
-    font-size: 1.05rem;
-    line-height: 1.6;
-  }
-
-  .project-page .moodboard {
-    margin-top: 3rem;
-  }
-
-  .project-page .moodboard .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-page .moodboard img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-
-  .vimeo-wrapper,
-  .vimeo-wrapper-vertical {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 12px;
-  }
-
-  .vimeo-wrapper {
-    padding-top: 56.25%; /* 16:9 */
-  }
-
-  .vimeo-wrapper-vertical {
-    padding-top: 177.78%; /* 9:16 */
-  }
-
-  .vimeo-wrapper iframe,
-  .vimeo-wrapper-vertical iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
 `},{id:"retrogusto",titolo:"Retrogusto",anno:2024,ambito:"Web Design",ruoli:["Graphic Designer","Producer"],cover:{type:"video",src:`${yi}portfolio/retrogusto/cover.mp4`,poster:`${yi}portfolio/retrogusto/poster.jpg`},pageHTML:`
   <section class="hero">
     <div class="eyebrow">Brand System</div>
