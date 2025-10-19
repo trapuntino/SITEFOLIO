@@ -3832,47 +3832,57 @@ void main() {
     <div class="eyebrow">Event</div>
     <h1>Befest</h1>
     <div class="meta">2024 · Branding · Art Direction & Production</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Logo and mascot design
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Typographic and color system
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Event signage and illustrations
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social content and visual toolkit
+      </li>
+    </ul>
   </div>
+
   <div style="flex:0 0 220px;max-width:220px;">
     <img src="portfolio/befest/cover.webp" alt="BeFest cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;border-radius:6px;">
   </div>
 </section>
 
+<div class="divider" style="margin:2rem 0;border-bottom:2px solid #000;"></div>
 
-  <section class="section intro">
-    <div class="grid cols-2">
-      <div>
-        <h3>Objective</h3>
-        <p>Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.</p>
-      </div>
-      <div>
-        <h3>Deliverables</h3>
-        <p>Logo and mascot design, typographic and color system, event signage, animated illustrations, social content, and full visual toolkit.</p>
-      </div>
-    </div>
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Objective</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Create a visual identity that could define the festival’s character — bold, playful, and instantly recognizable.
+    </p>
+    <p style="margin:0;line-height:1.6;">
+      BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
+      As Purple Studio, we handled the entire communication — from social strategy and content production 
+      to the brand identity and the visual setup of the event. The identity revolves around a mascot representing 
+      the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system.
+    </p>
+  </div>
 
-    <div class="description">
-      <p>BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
-      As Purple Studio, we handled the entire communication — from social strategy and content production to the brand identity and the visual setup of the event. 
-      The identity revolves around a mascot representing the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system. 
-      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, communication materials, and animated illustrations — while coordinating the video and photo production.</p>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="section moodboard">
-    <div class="grid cols-3">
-      <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual" loading="lazy">
-      <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1" loading="lazy">
-      <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2" loading="lazy">
-      <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3" loading="lazy">
-      <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4" loading="lazy">
-      <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5" loading="lazy">
-      <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6" loading="lazy">
-      <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7" loading="lazy">
-      <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8" loading="lazy">
-    </div>
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      I was responsible for the visual direction, social media management, and all graphic outputs — logo, signage, 
+      communication materials, and animated illustrations — while coordinating the video and photo production. 
+      The visual identity was conceived as a lively, modular system capable of adapting to multiple formats 
+      and maintaining a strong, consistent personality across platforms.
+    </p>
+  </div>
   </section>
 `},{id:"retrogusto",titolo:"Retrogusto",anno:2024,ambito:"Web Design",ruoli:["Graphic Designer","Producer"],cover:{type:"video",src:`${Mi}portfolio/retrogusto/cover.mp4`,poster:`${Mi}portfolio/retrogusto/poster.jpg`},pageHTML:"..."},{id:"sugo2025",titolo:"Sūgo 2025",anno:2025,ambito:["Event","Visual Identity"],ruoli:["Art Director","Producer"],cover:{type:"image",src:`${Mi}portfolio/sugo2025/cover.webp`,alt:"Sūgo 2025 – event identity"},pageHTML:`
     <section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
