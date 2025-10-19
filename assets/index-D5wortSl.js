@@ -3885,26 +3885,30 @@ void main() {
 
 <section class="section moodboard" style="margin-top:2rem;">
   <div style="
-    column-count:3;
-    column-gap:0;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    justify-content:center;
+    gap:0;
   ">
-    <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2" style="width:100%;display:block;margin:0 0 0;">
+    <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2" style="width:33.333%;display:block;">
 
-    <video src="portfolio/befest/befest_bts_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;margin:0 0 0;"></video>
+    <video src="portfolio/befest/befest_bts_1.mp4" autoplay loop muted playsinline style="width:33.333%;display:block;"></video>
 
-    <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4" style="width:100%;display:block;margin:0 0 0;">
+    <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4" style="width:33.333%;display:block;">
 
-    <img src="portfolio/befest/befest_bts_2.webp" alt="BeFest Behind the Scenes 2" style="width:100%;display:block;margin:0 0 0;">
+    <img src="portfolio/befest/befest_bts_2.webp" alt="BeFest Behind the Scenes 2" style="width:33.333%;display:block;">
 
-    <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8" style="width:100%;display:block;margin:0 0 0;">
-    <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual" style="width:100%;display:block;margin:0 0 0;">
+    <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8" style="width:33.333%;display:block;">
+    <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual" style="width:33.333%;display:block;">
   </div>
 </section>
+
 
 `},{id:"retrogusto",titolo:"Retrogusto",anno:2024,ambito:"Web Design",ruoli:["Graphic Designer","Producer"],cover:{type:"video",src:`${Mi}portfolio/retrogusto/cover.mp4`,poster:`${Mi}portfolio/retrogusto/poster.jpg`},pageHTML:"..."},{id:"sugo2025",titolo:"Sūgo 2025",anno:2025,ambito:["Event","Visual Identity"],ruoli:["Art Director","Producer"],cover:{type:"image",src:`${Mi}portfolio/sugo2025/cover.webp`,alt:"Sūgo 2025 – event identity"},pageHTML:`
     <section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
