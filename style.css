@@ -97,6 +97,23 @@ canvas {
   pointer-events: none;
 }
 
+#logo-loader {
+  display: block;
+  width: 30vmin;
+  height: auto;
+  max-width: 80vw;
+  object-fit: contain;
+}
+
+
+/* Smartphone */
+@media (max-width: 600px) {
+  #logo-loader {
+    width: 40vmin;
+  }
+}
+
+
 /* Logo SVG usato solo come sorgente dati, non visibile */
 #logo-loader {
   display: none;

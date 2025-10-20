@@ -320,7 +320,13 @@ let hitCount = 0;
 let isPlayingAnimation = false;
 
 
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/'); // usa i decoder ufficiali Google
 const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
+
 
 const modelPromise = new Promise((resolve, reject) => {
   loader.load('model.glb', function (gltf) {
@@ -332,6 +338,7 @@ const modelPromise = new Promise((resolve, reject) => {
 
     mixer = new THREE.AnimationMixer(trackedModel);
     const animLoader = new GLTFLoader();
+    animLoader.setDRACOLoader(dracoLoader);
     const animations = {};
     let currentAction;
 
