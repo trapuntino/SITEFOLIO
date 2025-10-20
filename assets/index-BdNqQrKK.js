@@ -4081,16 +4081,16 @@ void main() {
   </div>
 </section>
 
-  `},{id:"fiat322",titolo:"Fiat 322",anno:2023,ambito:"Photography",ruoli:"Personal Project",cover:{type:"image",src:`${Tt}portfolio/fiat/cover.webp`,alt:"Fiat 322 — photographic experiment"},pageHTML:`
+  `},{id:"fiat522",titolo:"Fiat 522",anno:2023,ambito:"Photography",ruoli:"Personal Project",cover:{type:"image",src:`${Tt}portfolio/fiat/cover.webp`,alt:"Fiat 522 — photographic experiment"},pageHTML:`
 <section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
   <div style="flex:1;min-width:250px;">
     <div class="eyebrow">Personal Project</div>
-    <h1>Fiat 322</h1>
+    <h1>Fiat 522</h1>
     <div class="meta">2023 · Photography</div>
   </div>
 
   <div style="flex:0 0 220px;max-width:220px;">
-    <img src="portfolio/fiat/cover.webp" alt="Fiat 322 cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+    <img src="portfolio/fiat/cover.webp" alt="Fiat 522 cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
   </div>
 </section>
 
