@@ -4,7 +4,7 @@
   "homepage": "https://fabrizioconfortola.com",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "sync": "npm run deploy && git add . && git commit -m 'Sync with deploy' && git push origin main",
+    "sync": "npm run deploy && git add . && git commit -m 'Sync PRE-FINALE' && git push origin main",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",

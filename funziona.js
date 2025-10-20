@@ -218,7 +218,7 @@ window.addEventListener('load', () => {
     if (!isLoaded) requestAnimationFrame(animateLoader);
   }
 
-   const loaderDuration = 4000; // ms
+  const loaderDuration = 4000; // ms
   let startTime = null;
   let rafId = null;
 
@@ -233,10 +233,10 @@ window.addEventListener('load', () => {
 
     // UI progress
     if (progressBar) progressBar.style.width = percent + '%';
-    if (percent < 25)       loadingText.textContent = texts[0];
-    else if (percent < 50)  loadingText.textContent = texts[1];
-    else if (percent < 75)  loadingText.textContent = texts[2];
-    else                    loadingText.textContent = texts[3];
+    if (percent < 25) loadingText.textContent = texts[0];
+    else if (percent < 50) loadingText.textContent = texts[1];
+    else if (percent < 75) loadingText.textContent = texts[2];
+    else loadingText.textContent = texts[3];
 
     if (percent > 25 && logo && !logo.classList.contains('visible')) {
       logo.classList.add('visible');
@@ -254,7 +254,7 @@ window.addEventListener('load', () => {
 
     // aspetta che i modelli/animazioni siano pronti, poi rimuovi il loader
     Promise.all([modelPromise, window.animationPreloadPromise])
-      .catch(() => {}) // anche in caso di errore, proseguiamo
+      .catch(() => { }) // anche in caso di errore, proseguiamo
       .then(() => {
         setTimeout(() => {
           if (loader) {
@@ -679,11 +679,11 @@ window.showSection = showSection;
     let y = pageY - 20; // un filo sopra al cursore
 
     // clamp per non uscire dallo schermo
-    x = Math.max(margin + rect.width/2, Math.min(vw - margin - rect.width/2, x));
-    y = Math.max(margin + rect.height/2, Math.min(vh - margin - rect.height/2, y));
+    x = Math.max(margin + rect.width / 2, Math.min(vw - margin - rect.width / 2, x));
+    y = Math.max(margin + rect.height / 2, Math.min(vh - margin - rect.height / 2, y));
 
     pop.style.left = x + 'px';
-    pop.style.top  = y + 'px';
+    pop.style.top = y + 'px';
   }
 
   async function showPop(wordEl, pageX, pageY) {
@@ -699,7 +699,7 @@ window.showSection = showSection;
       video.src = src;
       try { await video.play(); } catch { /* safari/iOS ci riprova sotto */ }
       // doppio tentativo (alcuni browser richiedono un frame)
-      requestAnimationFrame(() => video.play().catch(() => {}));
+      requestAnimationFrame(() => video.play().catch(() => { }));
     }
 
     activeWord = wordEl;
@@ -773,134 +773,779 @@ const projects = [
   {
     id: "befest",
     titolo: "Befest",
-    anno: 2025,
-    ambito: "Branding",
-    ruoli: ["Art Director", "Graphic Designer"],
-    cover: { type: "image", src: `${BASE}portfolio/befest/cover.jpg`, alt: "Befest – identità visiva e applicazioni" },
-
-    // >>> CONTENUTO PAGINA INTERNA (HTML + CSS) <<<
+    anno: 2024,
+    ambito: "Events",
+    ruoli: ["Art Director", "Graphic Designer", "Social Media Manager", "Communication Strategist", "Producer"],
+    cover: { type: "image", src: `${BASE}portfolio/befest/cover.webp`, alt: "Befest" },
     pageHTML: `
-    <section class="hero">
-      <div class="eyebrow">Brand System</div>
-      <h1>Befest — identità e applicazioni</h1>
-      <div class="meta">2025 · Branding · Art Direction</div>
-    </section>
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Event</div>
+    <h1>Befest</h1>
+    <div class="meta">2024 · Branding · Art Direction & Production</div>
 
-    <section class="section">
-      <div class="grid cols-2">
-        <figure class="figure">
-          <img src="${BASE}portfolio/befest/brandbook-spread.jpg" alt="Brandbook spread">
-          <figcaption class="caption">Estratto dal brandbook</figcaption>
-        </figure>
-        <div>
-          <p>Obiettivo: costruire un sistema visivo modulare, flessibile e riconoscibile.</p>
-          <div class="callout">Deliverable: logo, sistema tipografico, palette, layout kit, mockup social.</div>
-        </div>
-      </div>
-    </section>
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Logo and mascot design
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Typographic and color system
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Event signage and illustrations
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social content
+      </li>
+    </ul>
+  </div>
 
-    <div class="divider"></div>
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/befest/cover.webp" alt="BeFest cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
 
-    <section class="section">
-      <div class="grid cols-3">
-        <img src="${BASE}portfolio/befest/post-1.jpg" alt="">
-        <img src="${BASE}portfolio/befest/post-2.jpg" alt="">
-        <img src="${BASE}portfolio/befest/post-3.jpg" alt="">
-      </div>
-    </section>
-  `,
-    // CSS opzionale per questa sola pagina (scopato dentro .project-page)
-    pageCSS: `
-    .project-page .hero { background: #fff; }
-    .project-page .callout { background: #fff0e8; }
-  `
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Create a visual identity that could define the festival’s character: bold, playful, and instantly recognizable.
+    </p>
+    <p style="margin:0;line-height:1.6;">
+      I was responsible for the visual direction, social media management, and all graphic outputs: logo, signage, 
+      communication materials, and animated illustrations; while coordinating the video and photo production. 
+      The visual identity was conceived as a lively, modular system capable of adapting to multiple formats 
+      and maintaining a strong, consistent personality across platforms.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+    BeFest is an electronic music event that gathered around a thousand people for a day of sound and visuals. 
+      As Purple Studio, we handled the entire communication — from social strategy and content production 
+      to the brand identity and the visual setup of the event. The identity revolves around a mascot representing 
+      the ironic and inclusive spirit of the festival, developed into a flexible and recognizable graphic system.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/befest/befest_hero.webp" alt="BeFest Hero Visual" style="width:100%;display:block;">
+      <img src="portfolio/befest/befest_1.webp" alt="BeFest Visual 1" style="width:100%;display:block;">
+      <video src="portfolio/befest/befest_bts_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/befest/befest_3.webp" alt="BeFest Visual 3" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/befest/befest_2.webp" alt="BeFest Visual 2" style="width:100%;display:block;">
+      <img src="portfolio/befest/befest_4.webp" alt="BeFest Visual 4" style="width:100%;display:block;">
+      <video src="portfolio/befest/befest_bts_2.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/befest/befest_6.webp" alt="BeFest Visual 6" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/befest/befest_5.webp" alt="BeFest Visual 5" style="width:100%;display:block;">
+      <img src="portfolio/befest/befest_7.webp" alt="BeFest Visual 7" style="width:100%;display:block;">
+      <img src="portfolio/befest/befest_bts_3.webp" alt="BeFest Visual 6" style="width:100%;display:block;">
+      <img src="portfolio/befest/befest_8.webp" alt="BeFest Visual 8" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+
+
+
   },
 
   {
     id: "retrogusto",
     titolo: "Retrogusto",
-    anno: 2024,
-    ambito: "Web Design",
-    ruoli: ["Graphic Designer", "Producer"],
-    cover: {
-      type: "video",
-      src: `${BASE}portfolio/retrogusto/cover.mp4`,
-      poster: `${BASE}portfolio/retrogusto/poster.jpg`
-    },
-    // >>> CONTENUTO PAGINA INTERNA (HTML + CSS) <<<
+    anno: 2025,
+    ambito: "3D & Motion Graphics",
+    ruoli: ["Graphic Designer", "Art Director"],
+    cover: { type: "video", src: `${BASE}portfolio/retrogusto/cover.mp4`, poster: `${BASE}portfolio/retrogusto/poster.webp` },
     pageHTML: `
-    <section class="hero">
-      <div class="eyebrow">Brand System</div>
-      <h1>Befest — identità e applicazioni</h1>
-      <div class="meta">2025 · Branding · Art Direction</div>
-    </section>
+    <section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Event format</div>
+    <h1>Retrogusto</h1>
+    <div class="meta">2025 · Event format · Visual Identity & Content production</div>
 
-    <section class="section">
-      <div class="grid cols-2">
-        <figure class="figure">
-          <img src="${BASE}portfolio/befest/brandbook-spread.jpg" alt="Brandbook spread">
-          <figcaption class="caption">Estratto dal brandbook</figcaption>
-        </figure>
-        <div>
-          <p>Obiettivo: costruire un sistema visivo modulare, flessibile e riconoscibile.</p>
-          <div class="callout">Deliverable: logo, sistema tipografico, palette, layout kit, mockup social.</div>
-        </div>
-      </div>
-    </section>
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Naming - logo design - payoff
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        3D logo animation
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social video production (9:16)
+      </li>
+    </ul>
+  </div>
 
-    <div class="divider"></div>
+  <div style="flex:0 0 220px;max-width:220px;">
+    <video src="portfolio/retrogusto/cover.mp4" autoplay loop muted playsinline style="width:100%;height:auto;display:block;"></video>
+  </div>
+</section>
 
-    <section class="section">
-      <div class="grid cols-3">
-        <video src="${BASE}portfolio/befest/clip-1.mp4" autoplay loop muted playsinline></video>
-        <video src="${BASE}portfolio/befest/clip-2.mp4" controls></video>
-        <video src="${BASE}portfolio/befest/clip-3.mp4" autoplay loop muted playsinline></video>
-      </div>
-    </section>
-  `,
-    // CSS opzionale per questa sola pagina (scopato dentro .project-page)
-    pageCSS: `
-    .project-page .hero { background: #fff; }
-    .project-page .callout { background: #fff0e8; }
-  `
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Develop the visual identity for Retrogusto, a summer format hosted at Ostello Alpino in Bormio — open-air afternoons of music, drinks, and alpine garden vibes. 
+      The goal was to craft a recognizable and adaptable identity that could grow across editions, translating the essence of summer leisure into a distinctive visual system.
+    </p>
+    <p style="margin:0;line-height:1.6;">
+      I led naming and logo design, created a 3D animated mark, and produced final social video assets in 9:16 for distribution.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      Each release features a color variation of the logo matched to the drink of the day, turning the series into a playful, chromatic experience. 
+      The identity captures the relaxed, sun-soaked mood of the 2025 summer at Ostello Alpino — casual, fresh, and effortlessly inviting — while keeping motion design central to its character.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/retrogusto/retrogusto_hero.webp" alt="Retrogusto Hero" style="width:100%;display:block;">
+      <video src="portfolio/retrogusto/retrogusto_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/retrogusto/retrogusto_2.webp" alt="Retrogusto Visual 2" style="width:100%;display:block;">
+      
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/retrogusto/retrogusto_3.webp" alt="Retrogusto Visual 3" style="width:100%;display:block;">
+      <video src="portfolio/retrogusto/retrogusto_5.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/retrogusto/retrogusto_4.webp" alt="Retrogusto Visual 4" style="width:100%;display:block;">
+      
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/retrogusto/retrogusto_7.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/retrogusto/retrogusto_bts_3.webp" alt="Retrogusto BTS 3" style="width:100%;display:block;">
+      <img src="portfolio/retrogusto/retrogusto_bts_1.webp" alt="Retrogusto BTS 1" style="width:100%;display:block;">
+      <img src="portfolio/retrogusto/retrogusto_bts_4.webp" alt="Retrogusto BTS 4" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+
+    `
   },
 
   {
     id: "sugo2025",
-    titolo: "Sūgo 2025 – Event Identity",
+    titolo: "Sūgo 2025",
     anno: 2025,
-    ambito: "Eventi",
+    ambito: "Events",
     ruoli: ["Art Director", "Producer"],
-    cover: { type: "image", src: `${BASE}portfolio/sugo2025/cover.jpg`, alt: "Sūgo 2025 – identità evento" },
-    descrizione: "Identità e materiali per l’evento freestyle."
+    cover: { type: "image", src: `${BASE}portfolio/sugo2025/cover.webp`, alt: "Sūgo 2025 – event identity" },
+    pageHTML: `
+    <section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Event</div>
+    <h1>Sūgo 2025</h1>
+    <div class="meta">2025 · Event · Visual Identity & Production</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Event identity
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social visuals
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Production coordination
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Partnership management and on-site setup
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/sugo2025/cover.webp" alt="Sūgo 2025 cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Conceive and direct a new freestyle event from scratch: creating a brand that could merge sport, music, and culture under one shared identity.<br>
+      The goal was to establish Sūgo as a recognizable annual happening in Bormio, translating the raw energy of freestyle into a playful, community-driven visual language.
+    </p>
+    <p style="margin:0;line-height:1.6;">
+      I handled the full creative direction, event identity, communication strategy, and coordinated the production and partnerships.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      Sūgo 2025 was born as a new freestyle event at the Bormio Snowpark, combining snowboarding, freeski, and music into an immersive, high-energy experience.<br>  
+      The event was developed in collaboration with <strong>Bormio Ski</strong> (infrastructure & logistics), <strong>Bewhite</strong> and <strong>BeClub</strong> (food & beverage), supported by <strong>Red Bull</strong>, <strong>ON3P Skis</strong>, <strong>Out Of</strong>, <strong>Level Gloves</strong>, <strong>Union Bindings</strong> and <strong>Rider Shop</strong>.<br>  
+      With almost <strong>zero budget</strong>, the campaign reached over <strong>115.000 views</strong> and <strong>28.000 unique accounts</strong>, establishing Sūgo as a new reference within the local freestyle culture.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sugo2025/sugo_1.webp" alt="Sūgo Visual 1" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_1_1.webp" alt="Sūgo Visual 1.1" style="width:100%;display:block;">
+      <video src="portfolio/sugo2025/sugo_bts_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/sugo2025/sugo_2.webp" alt="Sūgo Visual 2" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_3.webp" alt="Sūgo Visual 3" style="width:100%;display:block;">
+    <img src="portfolio/sugo2025/sugo_bts_4.webp" alt="Sūgo BTS 4" style="width:100%;display:block;"> 
+    <img src="portfolio/sugo2025/sugo_11.webp" alt="Sūgo Visual 11" style="width:100%;display:block;"> 
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sugo2025/sugo_4.webp" alt="Sūgo Visual 4" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_5.webp" alt="Sūgo Visual 5" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_bts_3.webp" alt="Sūgo BTS 3" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_6.webp" alt="Sūgo Visual 6" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_7.webp" alt="Sūgo Visual 7" style="width:100%;display:block;">
+      <video src="portfolio/sugo2025/sugo_bts_2.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <img src="portfolio/sugo2025/sugo_12.webp" alt="Sūgo Visual 12" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_13.webp" alt="Sūgo Visual 13" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sugo2025/sugo_8.webp" alt="Sūgo Visual 8" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_8_1.webp" alt="Sūgo Visual 8.1" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_bts_5.webp" alt="Sūgo BTS 5" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_8_2.webp" alt="Sūgo Visual 8.2" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_9.webp" alt="Sūgo Visual 9" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_bts_6.webp" alt="Sūgo BTS 6" style="width:100%;display:block;">
+      <img src="portfolio/sugo2025/sugo_10.webp" alt="Sūgo Visual 10" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+
+  `
   },
+
+  {
+    id: "fiat322",
+    titolo: "Fiat 322",
+    anno: 2023,
+    ambito: "Photography",
+    ruoli: "Personal Project",
+    cover: { type: "image", src: `${BASE}portfolio/fiat/cover.webp`, alt: "Fiat 322 — photographic experiment" },
+
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Personal Project</div>
+    <h1>Fiat 322</h1>
+    <div class="meta">2023 · Photography</div>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/fiat/cover.webp" alt="Fiat 322 cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- SINGLE COLUMN -->
+    <div style="width:100%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/fiat/fiat_1.webp" alt="Fiat 322 – Shot 1" style="width:100%;display:block;">
+      <img src="portfolio/fiat/fiat_2.webp" alt="Fiat 322 – Shot 2" style="width:100%;display:block;">
+      <img src="portfolio/fiat/fiat_3.webp" alt="Fiat 322 – Shot 3" style="width:100%;display:block;">
+      <img src="portfolio/fiat/fiat_4.webp" alt="Fiat 322 – Shot 4" style="width:100%;display:block;">
+      <img src="portfolio/fiat/fiat_5.webp" alt="Fiat 322 – Shot 5" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+  }
+  ,
 
   {
     id: "summershred",
     titolo: "Summer Shred",
-    anno: 2025,
-    ambito: "Graphic Design",
-    ruoli: ["Illustrazione", "Graphic Designer"],
-    cover: { type: "image", src: `${BASE}portfolio/summer-shred/cover.jpg`, alt: "Summer Shred - Illustrazione" },
-    descrizione: "Illustrazione e logotipo"
+    anno: 2022,
+    ambito: "Branding",
+    ruoli: "Graphic Designer",
+    cover: { type: "image", src: `${BASE}portfolio/summer-shred/cover.webp`, alt: "Summer Shred - Illustrazione" },
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Branding</div>
+    <h1>Summer Shred</h1>
+    <div class="meta">2022 · Graphic Design · Logo & Visual System</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Logo design
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Poster design
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social media announcement graphics
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/summer-shred/cover.webp" alt="Summer Shred cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Design the visual identity for <strong>Summer Shred</strong>, Burton Italia’s summer snowboard camp held in Cervinia.<br> 
+      The challenge was to create a logo and poster that matched Burton’s strong brand language while conveying the lighter, more playful spirit of a summer edition.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      I designed the logo, poster, and social announcement assets: developing a visual tone that balanced Burton’s bold, technical identity with a fresher and more spontaneous summer energy.  
+      The outcome was a clean yet characterful design that felt both on-brand and seasonally distinctive.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/summer-shred/summer_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/summer-shred/summer_3.webp" alt="Summer Shred Visual 3" style="width:100%;display:block;">
+      <img src="portfolio/summer-shred/summer_4.webp" alt="Summer Shred Visual 4" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/summer-shred/summer_5.webp" alt="Summer Shred Visual 5" style="width:100%;display:block;">
+      <img src="portfolio/summer-shred/summer_2.webp" alt="Summer Shred Visual 2" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+
   },
+
+  {
+    id: "3D Tyre AD",
+    titolo: "Carrozzeria Sosio – 3D",
+    anno: 2025,
+    ambito: "3D & Motion Graphics",
+    ruoli: ["Personal Project"],
+    cover: { type: "video", src: `${BASE}portfolio/gomme/cover.mp4`, poster: `${BASE}portfolio/gomme/poster.webp`, alt: "Carrozzeria Sosio 3D Tyre Campaign" },
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">3D</div>
+    <h1>Carrozzeria Sosio – 3D ad</h1>
+    <div class="meta">2025 · Personal Project</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        3D scene build and animation
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Lighting and composition
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/gomme/poster.webp" alt="Carrozzeria Sosio 3D Tyre Campaign poster" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Design and animate a short 3D motion video for <strong>Carrozzeria Sosio’s</strong> tyre season-switch campaign.  
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      A personal exploration in 3D and motion graphics — blending industrial forms, studio lighting, and tactile surfaces 
+      to give energy and character to everyday automotive communication.  
+      Scene built entirely in Blender and finalized in After Effects.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/gomme/cover.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/gomme/gomme_1.webp" alt="3D visual 1 – Tyre Campaign" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/gomme/gomme_2.webp" alt="3D visual 2 – Tyre Campaign" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+  },
+
+
+  {
+    id: "skibike",
+    titolo: "Ski & Bike Bormio",
+    anno: 2025,
+    ambito: "3D & Motion Graphics",
+    ruoli: ["Communication Strategist", "Social Media Manager", "Graphic Designer"],
+    cover: { type: "video", src: `${BASE}portfolio/skibike/cover.mp4`, poster: `${BASE}portfolio/skibike/poster.webp`, alt: "Ski & Bike — End-of-Season Campaign" },
+
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Social Media Campaign</div>
+    <h1>Ski & Bike — End-of-Season</h1>
+    <div class="meta">2025 · 3D & Motion Graphics · Social Media Strategy</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Campaign concept and visual strategy
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        3D motion graphics and content creation
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Social media and community management
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/skibike/poster.webp" alt="Ski & Bike Campaign Poster" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Develop and manage a two-phase social media campaign for <strong>Ski & Bike</strong>, a leading bike shop based in Bormio.  
+      The objective was to promote the store’s end-of-season sales while maintaining brand consistency and maximizing engagement across both local and online audiences.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      The campaign was executed in two phases: mid-August and late September; featuring different visual moods yet connected through a unified strategy.  
+      I designed the 3D motion visuals, product catalogue layouts, and managed the daily communication via Meta Business Suite.  
+      The campaign reached <strong>over 565,000 views</strong> and <strong>92,000 accounts</strong>, with <strong>80% of the audience being non-followers</strong>, confirming its strong reach and community genuine interest.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/skibike/skibike_hero.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+      <video src="portfolio/skibike/cover.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/skibike/skibike_1.webp" alt="Ski & Bike Visual 1" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_2.webp" alt="Ski & Bike Visual 2" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_7.webp" alt="Ski & Bike Visual 7" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_6.webp" alt="Ski & Bike Visual 6" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_10.webp" alt="Ski & Bike Visual 10" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/skibike/skibike_3.webp" alt="Ski & Bike Visual 3" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_4.webp" alt="Ski & Bike Visual 4" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_5.webp" alt="Ski & Bike Visual 5" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_7.webp" alt="Ski & Bike Visual 7" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_8.webp" alt="Ski & Bike Visual 8" style="width:100%;display:block;">
+      <img src="portfolio/skibike/skibike_9.webp" alt="Ski & Bike Visual 9" style="width:100%;display:block;">
+      
+    </div>
+  </div>
+</section>
+`
+  }
+  ,
+
+  {
+    id: "levelgloves",
+    titolo: "Level Gloves",
+    anno: 2023,
+    ambito: "Graphic Design",
+    ruoli: "Graphic Designer",
+    cover: {
+      type: "video",
+      src: `${BASE}portfolio/level-gloves/cover.mp4`,
+      poster: `${BASE}portfolio/level-gloves/poster.webp`,
+      alt: "Level Gloves – Social Motion Design"
+    },
+
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Graphic Design</div>
+    <h1>Level Gloves</h1>
+    <div class="meta">2023 · Graphic Design</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Graphic system for social videos
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Layout and typographic composition
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/level-gloves/poster.webp" alt="Level Gloves — social motion design poster" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Design graphic assets for a series of short video clips created for <strong>Level Gloves</strong>’s official Instagram channel.<br>  
+      The goal was to enhance brand consistency across different motion contents while keeping the visuals dynamic and product-focused.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      I created a set of motion-ready layouts and visual elements adapted to three social videos, ensuring a clean, technical aesthetic consistent with Level’s brand phylosophy.
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/level-gloves/cover.mp4" autoplay loop muted playsinline style="width:100%;display:block;" title="Level Gloves Cover Video"></video>
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/level-gloves/level_1.mp4" autoplay loop muted playsinline style="width:100%;display:block;" title="Level Gloves Social Video 1"></video>
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <video src="portfolio/level-gloves/level_3.mp4" autoplay loop muted playsinline style="width:100%;display:block;" title="Level Gloves Social Video 3"></video>
+    </div>
+  </div>
+</section>
+`
+  },
+
+  {
+    id: "sito-carr",
+    titolo: "Carrozzeria Sosio — Website",
+    anno: 2025,
+    ambito: "Web Design",
+    ruoli: ["UI Designer", "Front-End Developer"],
+    cover: { type: "image", src: `${BASE}portfolio/sito-carr/cover.webp`, alt: "Carrozzeria Sosio Website cover" },
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Web Design</div>
+    <h1>Carrozzeria Sosio — Website</h1>
+    <div class="meta">2025 · UI Design · Front-End Development</div>
+
+    <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Front-end development
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        Responsive and modular layout
+      </li>
+      <li style="display:flex;align-items:center;gap:.5rem;">
+        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
+        <a href="https://www.carrozzeriasosio.com" target="_blank" rel="noopener noreferrer" style="color:#000;text-decoration:underline;">Visit the website</a>
+      </li>
+    </ul>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/sito-carr/cover.webp" alt="Carrozzeria Sosio website cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section style="display:flex;gap:2rem;flex-wrap:wrap;align-items:flex-start;">
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
+    <p style="margin:0 0 1rem 0;line-height:1.6;">
+      Design and develop the cfront-end for the new website of <strong>Carrozzeria Sosio</strong>, a body shop in Bormio.
+    </p>
+  </div>
+
+  <div style="flex:1;min-width:280px;">
+    <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
+    <p style="margin:0;line-height:1.6;">
+      I designed and coded the website from scratch, managing the entire front-end process: structure, layout, and animations.  
+    </p>
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- COL 1 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sito-carr/sito_hero.webp" alt="Carrozzeria Sosio Website Hero" style="width:100%;display:block;">
+      <img src="portfolio/sito-carr/sito_1.webp" alt="Website layout preview 1" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 2 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sito-carr/sito_2.webp" alt="Website layout preview 2" style="width:100%;display:block;">
+      <img src="portfolio/sito-carr/sito_3.webp" alt="Website layout preview 3" style="width:100%;display:block;">
+    </div>
+
+    <!-- COL 3 -->
+    <div style="width:33.333%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/sito-carr/sito_4.webp" alt="Website layout preview 4" style="width:100%;display:block;">
+      <img src="portfolio/sito-carr/sito_5.webp" alt="Website layout preview 5" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+  },
+
+
+  {
+    id: "giulia2000",
+    titolo: "Giulia 2000",
+    anno: 2023,
+    ambito: "Photography",
+    ruoli: "Personal Project",
+    cover: { type: "image", src: `${BASE}portfolio/alfaromeo/cover.webp`, alt: "Giulia 2000 — photographic experiment" },
+
+    pageHTML: `
+<section class="hero" style="display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:250px;">
+    <div class="eyebrow">Personal Project</div>
+    <h1>Giulia 2000</h1>
+    <div class="meta">2023 · Photography</div>
+  </div>
+
+  <div style="flex:0 0 220px;max-width:220px;">
+    <img src="portfolio/alfaromeo/cover.webp" alt="Giulia 2000 cover" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+  </div>
+</section>
+
+<section class="section moodboard" style="margin-top:2rem;">
+  <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- SINGLE COLUMN -->
+    <div style="width:100%;display:flex;flex-direction:column;gap:1rem;">
+      <img src="portfolio/alfaromeo/alfa_1.webp" alt="Giulia 2000 – Shot 1" style="width:100%;display:block;">
+      <img src="portfolio/alfaromeo/alfa_2.webp" alt="Giulia 2000 – Shot 2" style="width:100%;display:block;">
+      <img src="portfolio/alfaromeo/alfa_3.webp" alt="Giulia 2000 – Shot 3" style="width:100%;display:block;">
+      <img src="portfolio/alfaromeo/alfa_4.webp" alt="Giulia 2000 – Shot 4" style="width:100%;display:block;">
+    </div>
+  </div>
+</section>
+`
+  }
+  ,
+
 
   {
     id: "stelviopaddock",
     titolo: "Stelvio Paddock",
     anno: 2025,
-    ambito: "Branding",
+    ambito: "Graphic Design",
     ruoli: ["Art Director", "Producer"],
-    cover: { type: "image", src: `${BASE}portfolio/stelvio-paddock/cover.jpg`, alt: "Stelvio Paddock - Branding" },
-    descrizione: "Identità e materiali per l’evento freestyle."
-  }
+    cover: { type: "image", src: `${BASE}portfolio/stelvio-paddock/cover.jpg`, alt: "Stelvio Paddock" },
+    descrizione: "Concept in progress...",
+  },
+
+  {
+    id: "selfmade",
+    titolo: "This Website",
+    anno: 2025,
+    ambito: "Web Design",
+    ruoli: ["UI Designer", "Front-End Developer"],
+    cover: { type: "color", color: "#ff4800" },
+    pageHTML: "", 
+    noModal: true
+  },
+
 ];
 
 
 // Elementi base
 const worksSection = document.getElementById('works-section');
 const worksTrack = document.getElementById('works-track');
-const worksList  = document.getElementById('works-list');
+const worksList = document.getElementById('works-list');
 
 let worksInited = false;
 function initWorks() {
@@ -927,24 +1572,45 @@ function renderWorksTrack(list) {
     card.dataset.id = p.id;
 
     let mediaEl;
-    if (p.cover.type === 'video') {
+
+    // CARD SPECIALE (tipo colore / no modale)
+    if (p.cover.type === 'color') {
+      mediaEl = document.createElement('div');
+      mediaEl.style.background = p.cover.color;
+      mediaEl.style.width = "100%";
+      mediaEl.style.height = "100%";
+      mediaEl.style.display = "flex";
+      mediaEl.style.alignItems = "center";
+      mediaEl.style.justifyContent = "center";
+      mediaEl.style.color = "#000";
+      mediaEl.style.fontWeight = "600";
+      mediaEl.style.fontFamily = "var(--font, 'KeyframeTest', monospace)";
+      mediaEl.style.textAlign = "center";
+      mediaEl.style.fontSize = "1.1rem";
+      mediaEl.innerHTML = "<span>I built this one myself.</span>";
+    }
+
+    // VIDEO
+    else if (p.cover.type === 'video') {
       mediaEl = document.createElement('video');
       mediaEl.src = p.cover.src;
       mediaEl.poster = p.cover.poster || '';
-      mediaEl.muted = true;           // requisito per autoplay mobile
-      mediaEl.playsInline = true;     // iOS Safari
-      mediaEl.loop = true;            // loop continuo
-      mediaEl.autoplay = true;        // tenta autoplay subito
-      mediaEl.preload = 'auto';       // carica per partire al volo
+      mediaEl.muted = true;
+      mediaEl.playsInline = true;
+      mediaEl.loop = true;
+      mediaEl.autoplay = true;
+      mediaEl.preload = 'auto';
       mediaEl.controls = false;
 
-      // appena abbiamo i metadata, forziamo play (iOS/Android)
       mediaEl.addEventListener('loadedmetadata', () => {
-        const tryPlay = () => mediaEl.play().catch(() => {});
+        const tryPlay = () => mediaEl.play().catch(() => { });
         tryPlay();
         requestAnimationFrame(tryPlay);
       });
-    } else {
+    }
+
+    // IMMAGINE
+    else {
       mediaEl = document.createElement('img');
       mediaEl.src = p.cover.src;
       mediaEl.alt = p.cover.alt || p.titolo;
@@ -957,7 +1623,12 @@ function renderWorksTrack(list) {
 
     card.appendChild(mediaEl);
     card.appendChild(overlay);
-    card.addEventListener('click', () => openProjectModal(p.id));
+
+    // Disabilita apertura modale se è la card "color"
+    if (p.cover.type !== 'color') {
+      card.addEventListener('click', () => openProjectModal(p.id));
+    }
+
     worksTrack.appendChild(card);
   });
 }
@@ -965,23 +1636,59 @@ function renderWorksTrack(list) {
 // Render lista mobile
 function renderWorksList(list) {
   worksList.innerHTML = '';
+
+  const isMobile = window.innerWidth < 768; // rileva mobile
+
   list.forEach(p => {
     const row = document.createElement('div');
     row.className = 'work-row';
     row.dataset.id = p.id;
-    row.innerHTML = `<div class="row-title">${p.titolo}</div><div class="row-sub">${p.anno} · ${p.ambito}</div>`;
-    row.addEventListener('click', () => openProjectModal(p.id));
+
+    // Cover data
+    const coverSrc = p.cover?.src || '';
+    const coverPoster = p.cover?.poster || '';
+    const coverType = p.cover?.type || 'image';
+    const coverAlt = p.cover?.alt || p.titolo;
+
+    // Se è una card colorata → crea div arancione
+    const coverHTML =
+      coverType === 'color'
+        ? `<div style="background:${p.cover.color};width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#000;font-weight:600;font-family:var(--font, 'KeyframeTest', monospace);text-align:center;">I built this one myself.</div>`
+        : coverType === 'video' && isMobile
+          ? `<img src="${coverPoster}" alt="${coverAlt}" loading="lazy" decoding="async">`
+          : coverType === 'video'
+            ? `<video src="${coverSrc}" poster="${coverPoster}" muted playsinline preload="metadata"></video>`
+            : `<img src="${coverSrc}" alt="${coverAlt}" loading="lazy" decoding="async">`;
+
+    row.innerHTML = `
+      <div class="row-text">
+        <div class="row-title">${p.titolo}</div>
+        <div class="row-sub">${p.anno} · ${p.ambito}</div>
+      </div>
+      <div class="row-thumb">
+        ${coverHTML}
+      </div>
+    `;
+
+    // Disabilita click se card colorata
+    if (coverType !== 'color') {
+      row.addEventListener('click', () => openProjectModal(p.id));
+    }
+
     worksList.appendChild(row);
   });
 }
 
-// Modal
-const modal      = document.getElementById('project-modal');
+
+
+// ======================= WORKS MODAL =======================
+
+const modal = document.getElementById('project-modal');
 const modalClose = document.getElementById('project-modal-close');
-const modalBack  = document.getElementById('project-modal-backdrop');
-const modalPage  = document.getElementById('project-modal-page');
+const modalBack = document.getElementById('project-modal-backdrop');
+const modalPage = document.getElementById('project-modal-page');
 const modalMedia = document.getElementById('project-modal-media');
-const modalText  = document.querySelector('.project-modal__content');
+const modalText = document.querySelector('.project-modal__content');
 
 function openProjectModal(id) {
   const p = projects.find(x => x.id === id);
@@ -989,8 +1696,8 @@ function openProjectModal(id) {
 
   // Header
   document.getElementById('project-modal-title').textContent = p.titolo || '';
-  document.getElementById('project-meta-year').textContent   = p.anno ?? '';
-  document.getElementById('project-meta-field').textContent  = p.ambito || '';
+  document.getElementById('project-meta-year').textContent = p.anno ?? '';
+  document.getElementById('project-meta-field').textContent = p.ambito || '';
 
   // Reset stato
   modal.classList.remove('is-page');
@@ -1053,21 +1760,21 @@ function closeProjectModal() { modal.classList.remove('open'); }
 
 // ================== WORKS FILTERS (aggiornato con switch anno) ==================
 
-const roleSel  = document.getElementById('filter-role');
+const roleSel = document.getElementById('filter-role');
 const fieldSel = document.getElementById('filter-field');
 const yearToggle = document.getElementById('year-toggle');
-const yearLabel  = document.getElementById('year-label');
+const yearLabel = document.getElementById('year-label');
 
 // Stato corrente
 let sortDescending = true;
 
 function applyFilters() {
-  const role  = roleSel?.value || '';
+  const role = roleSel?.value || '';
   const field = fieldSel?.value || '';
 
   // Filtra in base ai valori selezionati
   const filtered = projects.filter(p => {
-    const matchRole  = !role  || p.ruoli.includes(role);
+    const matchRole = !role || p.ruoli.includes(role);
     const matchField = !field || p.ambito === field;
     return matchRole && matchField;
   });
@@ -1100,13 +1807,27 @@ yearToggle?.addEventListener('change', () => {
 applyFilters();
 
 
+// ====================== FIX HEIGHT WORKS ======================
+const filtersEl = document.getElementById('works-filters');
+
+function updateFiltersHeight() {
+  if (!filtersEl) return;
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const filtersHeightRem = filtersEl.offsetHeight / rem;
+  document.documentElement.style.setProperty('--filtersH', `${filtersHeightRem}rem`);
+}
+
+window.addEventListener('load', updateFiltersHeight);
+window.addEventListener('resize', updateFiltersHeight);
+
+
 
 /* ===== WORKS: stessa larghezza (dalla più alta) + overflow a destra + pin ===== */
 async function setUniformWorkWidth() {
   const section = document.getElementById('works-section');
-  const pin     = document.getElementById('works-pin');
-  const track   = document.getElementById('works-track');
-  const navbar  = document.getElementById('bottom-navbar');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
+  const navbar = document.getElementById('bottom-navbar');
   const filters = document.getElementById('works-filters');
   if (!section || !pin || !track) return;
 
@@ -1115,8 +1836,8 @@ async function setUniformWorkWidth() {
   const filH = filters ? filters.offsetHeight : 0;
 
   // Altezza pin e track
-  const pinH   = Math.max(320, viewportH - navH - filH - 16);
-  pin.style.height   = pinH + 'px';
+  const pinH = Math.max(320, viewportH - navH - filH - 16);
+  pin.style.height = pinH + 'px';
   const trackH = Math.max(280, pinH - 16);
   track.style.height = trackH + 'px';
 
@@ -1125,9 +1846,9 @@ async function setUniformWorkWidth() {
   const vids = Array.from(track.querySelectorAll('video'));
 
   const preloadImg = (img) => new Promise((resolve) => {
-    try { img.loading = 'eager'; } catch {}
-    try { img.decoding = 'sync'; } catch {}
-    try { img.fetchPriority = 'low'; } catch {}
+    try { img.loading = 'eager'; } catch { }
+    try { img.decoding = 'sync'; } catch { }
+    try { img.fetchPriority = 'low'; } catch { }
     const src = img.currentSrc || img.src;
     if (!src || (img.complete && img.naturalWidth)) return resolve();
     const ghost = new Image();
@@ -1135,17 +1856,17 @@ async function setUniformWorkWidth() {
     ghost.src = src;
     if (ghost.decode) ghost.decode().then(resolve).catch(() => ghost.addEventListener('load', resolve, { once: true }));
     else {
-      ghost.addEventListener('load', resolve,  { once: true });
+      ghost.addEventListener('load', resolve, { once: true });
       ghost.addEventListener('error', resolve, { once: true });
     }
   });
 
   const preloadVideoMeta = (v) => new Promise((resolve) => {
-    try { v.preload = 'metadata'; } catch {}
+    try { v.preload = 'metadata'; } catch { }
     if (v.readyState >= 1 && v.videoWidth) return resolve();
     const done = () => { v.removeEventListener('loadedmetadata', done); resolve(); };
     v.addEventListener('loadedmetadata', done, { once: true });
-    try { v.load(); } catch {}
+    try { v.load(); } catch { }
   });
 
   await Promise.all([...imgs.map(preloadImg), ...vids.map(preloadVideoMeta)]);
@@ -1171,7 +1892,7 @@ async function setUniformWorkWidth() {
 
   // Altezza sezione in base all’overflow orizzontale reale
   const totalWidth = track.scrollWidth;
-  const overflowX  = Math.max(0, totalWidth - window.innerWidth);
+  const overflowX = Math.max(0, totalWidth - window.innerWidth);
   section.style.height = Math.ceil(pinH + overflowX) + 'px';
 }
 
@@ -1179,24 +1900,24 @@ async function setUniformWorkWidth() {
 /* ===== WORKS: gestione scroll — Desktop blocco Y in sezione, Mobile libero ===== */
 function setupWorksPin() {
   const section = document.getElementById('works-section');
-  const pin     = document.getElementById('works-pin');
-  const track   = document.getElementById('works-track');
+  const pin = document.getElementById('works-pin');
+  const track = document.getElementById('works-track');
   if (!section || !pin || !track) return;
 
-  const clamp    = (x, min, max) => Math.max(min, Math.min(max, x));
+  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
   const mqMobile = window.matchMedia('(max-width: 768px)');
 
-  let lockActive   = false; // true quando (desktop) siamo in sezione e Y è bloccata
-  let progress01   = 0;     // 0..1 posizione orizzontale
-  let lastTouchY   = 0;
-  const EPS        = 1e-4;
+  let lockActive = false; // true quando (desktop) siamo in sezione e Y è bloccata
+  let progress01 = 0;     // 0..1 posizione orizzontale
+  let lastTouchY = 0;
+  const EPS = 1e-4;
   const RELEASE_DELTA = 8;
   let unlockCooldownUntil = 0;
 
   const ranges = () => {
     const pinH = pin.clientHeight;
     const totalWidth = track.scrollWidth;
-    const overflowX  = Math.max(0, totalWidth - window.innerWidth);
+    const overflowX = Math.max(0, totalWidth - window.innerWidth);
     const secTop = section.offsetTop;
     const secEnd = secTop + section.offsetHeight - pinH;
     const totalY = Math.max(1, secEnd - secTop);
@@ -1322,22 +2043,22 @@ function setupWorksPin() {
   }
 
   // Eventi
-  window.addEventListener('resize',            recalc);
+  window.addEventListener('resize', recalc);
   window.addEventListener('orientationchange', recalc);
-  window.addEventListener('scroll',            updateLockByScroll, { passive: true  });
-  window.addEventListener('wheel',             onWheel,            { passive: false });
-  window.addEventListener('touchstart',        onTouchStart,       { passive: false });
-  window.addEventListener('touchmove',         onTouchMove,        { passive: false });
-  window.addEventListener('touchend',          onTouchEnd,         { passive: true  });
-  window.addEventListener('keydown',           onKeydown);
-  mqMobile.addEventListener?.('change',        recalc);
+  window.addEventListener('scroll', updateLockByScroll, { passive: true });
+  window.addEventListener('wheel', onWheel, { passive: false });
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('touchend', onTouchEnd, { passive: true });
+  window.addEventListener('keydown', onKeydown);
+  mqMobile.addEventListener?.('change', recalc);
 
   // Prima misura
   recalc();
 
   // Espone utility globali per showSection()/applyFilters()
   window.reflowWorksScroller = recalc;
-  window.disableWorksLock    = disableLock;
+  window.disableWorksLock = disableLock;
 }
 
 
@@ -1624,3 +2345,85 @@ function stopToolbarFX() {
   }
 }
 
+
+// === VIDEO FULLSCREEN CON AUDIO — FIX AUTOPLAY CHROME ===
+document.addEventListener("click", async (e) => {
+  const video = e.target.closest(".section.moodboard video");
+  if (!video) return;
+
+  // Ferma tutti gli altri video della moodboard
+  document.querySelectorAll(".section.moodboard video").forEach((v) => {
+    if (v !== video) {
+      v.pause();
+      v.muted = true;
+      v.currentTime = 0;
+    }
+  });
+
+  // Se è già in riproduzione, ferma e silenzia
+  if (!video.paused) {
+    video.pause();
+    video.muted = true;
+    return;
+  }
+
+  // Sblocca audio e prepara
+  video.muted = false;
+  video.currentTime = 0;
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  try {
+    if (isMobile) {
+      // MOBILE — fullscreen nativo (iOS/Android)
+      video.playsInline = false;
+      await video.play();
+
+      // Rientro silenzioso dopo fine o chiusura
+      const stopAndMute = () => {
+        video.pause();
+        video.muted = true;
+        video.playsInline = true;
+        video.removeEventListener("ended", stopAndMute);
+        document.removeEventListener("visibilitychange", stopAndMute);
+      };
+      video.addEventListener("ended", stopAndMute);
+      document.addEventListener("visibilitychange", stopAndMute);
+    } else {
+      // DESKTOP — fullscreen standard
+      await video.play();
+
+      if (video.requestFullscreen) {
+        await video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) {
+        await video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        await video.msRequestFullscreen();
+      }
+
+      const exitHandler = () => {
+        if (
+          !document.fullscreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.msFullscreenElement
+        ) {
+          video.pause();
+          video.muted = true;
+          document.removeEventListener("fullscreenchange", exitHandler);
+          document.removeEventListener("webkitfullscreenchange", exitHandler);
+          document.removeEventListener("msfullscreenchange", exitHandler);
+        }
+      };
+      document.addEventListener("fullscreenchange", exitHandler);
+      document.addEventListener("webkitfullscreenchange", exitHandler);
+      document.addEventListener("msfullscreenchange", exitHandler);
+    }
+  } catch (err) {
+    // Se Chrome blocca la riproduzione, forziamo l'avvio mutato
+    console.warn("Playback blocked, retrying muted:", err);
+    video.muted = true;
+    try {
+      await video.play();
+    } catch { }
+  }
+});

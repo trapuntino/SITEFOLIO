@@ -129,17 +129,20 @@ canvas {
 
 
 
-/* TOOLBAR VERTICALE */
+/* ================== TOOLBAR ================== */
+
 #toolbar {
   position: fixed;
-  top: 30vh;
+  top: 35vh;
   right: 15vw;
   transform: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   background-color: #ff4800;
-  padding: 10px 6px;
+  border-left: 2px solid #ffc4ac;
+  border-right: 2px solid #611b00;
+  border-bottom: 2px solid #611b00;
+  border-top: 2px solid #ffc4ac;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   opacity: 0;
@@ -151,6 +154,10 @@ canvas {
 .tool {
   width: 4rem;
   height: 4rem;
+  border-left: 5px solid #ff8555;
+  border-right: 5px solid #a42e00;
+  border-bottom: 5px solid #a42e00;
+  border-top: 5px solid #ff8555;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -184,19 +191,48 @@ body[data-section="home"] #toolbar {
   width: calc(6rem + 40px);
   height: calc((4rem + 12px) * 3 + 90px);
   pointer-events: none;
-  z-index: 5; /* subito sotto la toolbar */
+  z-index: 5;
+  /* subito sotto la toolbar */
   opacity: 0.9;
+}
+
+/* ======= TOOLBAR RESPONSIVE ======= */
+
+@media (max-width: 768px) {
+  #toolbar {
+    right: 6vw;
+  }
+
+  #toolbar .tool {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  #toolbar .tool img {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  /* canvas effetti allineato */
+  #toolbar-fx-canvas {
+    display: none;
+    /* opzionale su mobile */
+  }
 }
 
 
 
 
 
+
+/* ================== BOTTOM NAVBAR (responsive minimal fix) ================== */
+
 #bottom-navbar {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  /* sostituisce width:100% per evitare micro scroll */
   height: 5rem;
   background: #ff4800;
   color: #000000;
@@ -210,16 +246,14 @@ body[data-section="home"] #toolbar {
   justify-content: space-around;
   align-items: center;
   list-style: none;
-  padding: 12px 20px;
+  padding: 15px 15px;
   margin: 0;
 }
-
 
 #bottom-navbar .nav-item {
   all: unset;
   cursor: pointer;
   font-size: 3rem;
-  letter-spacing: 1px;
   transition: opacity 0.2s ease;
   font-family: inherit;
   font-weight: inherit;
@@ -237,12 +271,33 @@ body[data-section="home"] #toolbar {
   outline: none;
 }
 
+/* ======= MOBILE ADJUSTMENTS (solo ciò che serve) ======= */
+@media (max-width: 768px) {
+  #bottom-navbar {
+    height: 4.2rem;
+    /* più compatto su mobile */
+  }
+
+  #bottom-navbar .nav-item {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    /* riduce il testo in modo fluido */
+  }
+}
+
+@media (max-width: 480px) {
+  #bottom-navbar {
+    height: 3.8rem;
+  }
+
+  #bottom-navbar .nav-item {
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+  }
+}
 
 
 
+/* ============================VIEWPORT-3D============================ */
 
-
-/* VIEWPORT: fuori dal layout (sempre assoluto) */
 #viewport-container {
   position: absolute;
   top: 10vh;
@@ -298,15 +353,38 @@ body[data-section="cv"] #viewport-container {
 
 /* Mobile: fototessera responsive 3:4 e centrata */
 @media (max-width: 768px) {
-  body[data-section="cv"] #viewport-container {
-    width: 80vw;
-    height: auto;
-    aspect-ratio: 3/4;
-    top: auto;
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+
+  #viewport-container {
+    transform: none;
   }
+
+  /* HOME/BIO: viewport full-screen (come prima) */
+  body[data-section="home"] #viewport-container,
+  body[data-section="bio"] #viewport-container {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+
+  /* Works → rimuovi davvero dal layout */
+
+  body[data-section="progetti"] #viewport-container {
+    display: none;
+  }
+
+  body[data-section="cv"] #viewport-container {
+    width: 60vw;
+    height: 60vw;
+    top: 0;
+    right: 6vw;
+  }
+
+
 }
 
 
@@ -362,8 +440,6 @@ body[data-section="cv"] #viewport-container {
 .hotword {
   position: relative;
   text-decoration: underline;
-  text-decoration-thickness: 5px;
-  text-underline-offset: 3px;
   cursor: pointer;
   transition: color .15s ease, text-decoration-color .15s ease;
   text-decoration-color: currentColor;
@@ -374,9 +450,9 @@ body[data-section="cv"] #viewport-container {
 }
 
 .highlight {
-  background-color: #ff4800; 
-  color: #000000;               
-  padding: 0 0.2em;         
+  background-color: #ff4800;
+  color: #000000;
+  padding: 0 0.2em;
 }
 
 #hover-video-pop {
@@ -397,6 +473,42 @@ body[data-section="cv"] #viewport-container {
   display: block;
   object-fit: cover;
 }
+
+/* ===== HOME - MOBILE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+
+  /* Testo home */
+  #home-text {
+    max-width: 80vw;
+    top: 35vh;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.25;
+    padding-left: 6vw;
+  }
+
+  /* Modello 3D */
+  #viewport-container {
+    transform: translateX(12%);
+  }
+}
+
+/* ===== ABOUT - MOBILE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  #about-text {
+    max-width: 90vw;
+    top: 35vh;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.25;
+    padding-left: 6vw;
+  }
+
+
+  body[data-section="about"] #viewport-container {
+    transform: translateX(12%);
+  }
+}
+
+
 
 /* mobile: più piccolo e centrato orizzontalmente */
 @media (max-width: 768px) {
@@ -456,8 +568,6 @@ body[data-section="cv"] #viewport-container {
 .cv-text a {
   color: inherit;
   text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 3px;
   transition: color .15s ease;
 }
 
@@ -483,15 +593,70 @@ body[data-section="cv"] #viewport-container {
 }
 
 
-/* Responsive: testo pieno su mobile */
 @media (max-width: 768px) {
   .cv-text {
-    max-width: 90vw;
-    padding-left: 5vw;
-    font-size: 1.25rem;
-    line-height: 1.5;
+    max-width: 95vw;
+    padding-left: 6vw;
+    top: 20vh;
+    font-size: clamp(1rem, 3.6vw, 1.3rem);
+    line-height: 1.25;
+  }
+
+  .cv-text h2 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-top: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .cv-text p,
+  .cv-text li {
+    font-size: clamp(0.8rem, 3.2vw, 1.5rem);
+    line-height: 1.6;
+  }
+
+  .cv-text a {
+    color: inherit;
+    text-decoration: underline;
+    transition: color .15s ease;
   }
 }
+
+.cv-download {
+  margin: 2rem 0;
+}
+
+.download-btn {
+  display: inline-block;
+  background: #ff4800;
+  color: #000;
+  font-family: 'PPSupplyMono', monospace;
+  font-weight: 400;
+  font-size: 2rem;
+  padding: 0.8rem 1.4rem;
+  border-left: 2px solid #ffc4ac;
+  border-right: 2px solid #611b00;
+  border-bottom: 2px solid #611b00;
+  border-top: 2px solid #ffc4ac;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #000;
+  color: #fff;
+  border-color: #ff4800;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .download-btn {
+    font-size: clamp(0.8rem, 3.8vw, 1.5rem);
+    padding: 0.7rem 1.1rem;
+  }
+}
+
+
+
 
 
 
@@ -603,11 +768,11 @@ body[data-section="cv"] #viewport-container {
   transition: transform 0.2s ease;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #fff;
 }
 
-input:checked + .slider::before {
+input:checked+.slider::before {
   transform: translateX(20px);
   background-color: #000;
 }
@@ -659,11 +824,11 @@ input:checked + .slider::before {
     background-color: #000;
   }
 
-  input:checked + .slider {
+  input:checked+.slider {
     background-color: #000;
   }
 
-  input:checked + .slider::before {
+  input:checked+.slider::before {
     background-color: #ff4800;
   }
 }
@@ -771,19 +936,19 @@ input:checked + .slider::before {
 
 .works-list .work-row {
   padding: 14px 10px;
-  border-bottom: 2px solid #000000;
+  border-bottom: 4px solid #000000;
   cursor: pointer;
 }
 
 .works-list .work-row .row-title {
   font-family: 'PPSupplyMono', monospace;
-  font-size: 1.1rem;
+  font-size: 2rem;
 }
 
 .works-list .work-row .row-sub {
   font-family: 'PPSupplyMono', monospace;
-  font-size: .9rem;
-  opacity: .7;
+  font-size: 1.5rem;
+  color: #ff4800;
 }
 
 /* ================= MODAL PROGETTO ================= */
@@ -792,7 +957,6 @@ input:checked + .slider::before {
   position: fixed;
   inset: 0;
   display: none;
-  /* .open => flex */
   z-index: 1100;
 }
 
@@ -931,7 +1095,8 @@ input:checked + .slider::before {
   --page-pad: clamp(16px, 4vw, 32px);
   background: #fff;
   color: #111;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'PPSupplyMono', monospace;
+  font-weight: 400;
   line-height: 1.55;
 }
 
@@ -1099,6 +1264,9 @@ body.has-open-modal {
   height: 100%;
 }
 
+
+
+
 /* ================= FINE MODAL PROGETTO ================= */
 
 /* responsive */
@@ -1167,5 +1335,100 @@ html {
   z-index: 1050;
   mix-blend-mode: normal;
 }
+
+/* === FIX altezza galleria Works === */
+#works-section .works-pin {
+  height: calc(100dvh - var(--navH) - var(--filtersH)) !important;
+}
+
+@supports not (height: 100dvh) {
+  #works-section .works-pin {
+    height: calc(100vh - var(--navH) - var(--filtersH)) !important;
+  }
+}
+
+/* ================= MOBILE LIST THUMB (cropped 1:1) ================= */
+@media (max-width: 768px) {
+  .works-list .work-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 10px;
+    border-bottom: 2px solid #000;
+  }
+
+  .works-list .row-text {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .works-list .row-thumb {
+    flex: 0 0 auto;
+    width: 30vw;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .works-list .row-thumb img,
+  .works-list .row-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* croppa automaticamente */
+    object-position: center center;
+    display: block;
+  }
+}
+
+/* ===== FIX MOBILE SCROLL WORKS ===== */
+@media (max-width: 768px) {
+
+  html,
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  #works-section {
+    overflow-y: visible !important;
+  }
+
+  .works-pin {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .works-track {
+    position: static !important;
+    transform: none !important;
+  }
+}
+
+/* ===== UNLOCK SCROLL ON MOBILE, EVEN IF 'is-locking-works' IS PRESENT ===== */
+@media (max-width: 768px) {
+
+  html.is-locking-works,
+  html.is-locking-works body {
+    overflow-y: auto !important;
+    height: auto !important;
+    overscroll-behavior-y: auto !important;
+  }
+
+  /* per scrupolo, sblocca anche la sezione works */
+  #works-section {
+    overflow: visible !important;
+  }
+}
+
+
+
 
 /* ============ FINE WORKS ============ */
