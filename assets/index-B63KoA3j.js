@@ -4376,7 +4376,7 @@ void main() {
     <ul style="list-style:none;padding:0;margin:1.25rem 0 0 0;line-height:1.6;">
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Full website design and front-end development
+        Front-end development
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
@@ -4384,11 +4384,7 @@ void main() {
       </li>
       <li style="display:flex;align-items:center;gap:.5rem;">
         <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Animation and loading effects
-      </li>
-      <li style="display:flex;align-items:center;gap:.5rem;">
-        <span style="width:10px;height:10px;background:#ff4800;display:inline-block;"></span>
-        Image optimization and performance tuning
+        <a href="https://www.carrozzeriasosio.com" target="_blank" rel="noopener noreferrer" style="color:#000;text-decoration:underline;">Visit the website</a>
       </li>
     </ul>
   </div>
@@ -4402,8 +4398,7 @@ void main() {
   <div style="flex:1;min-width:280px;">
     <h3 style="color:#ff4800;margin-bottom:.5rem;">Project Scope</h3>
     <p style="margin:0 0 1rem 0;line-height:1.6;">
-      Design and develop the complete website for <strong>Carrozzeria Sosio</strong>, defining a digital identity that combines clarity, visual balance, and technical precision.  
-      The goal was to create a fast and consistent experience that communicates reliability and attention to detail.
+      Design and develop the cfront-end for the new website of <strong>Carrozzeria Sosio</strong>, a body shop in Bormio.
     </p>
   </div>
 
@@ -4411,8 +4406,6 @@ void main() {
     <h3 style="color:#ff4800;margin-bottom:.5rem;">Description</h3>
     <p style="margin:0;line-height:1.6;">
       I designed and coded the website from scratch, managing the entire front-end process: structure, layout, and animations.  
-      The interface was conceived with a modular approach, ensuring flexibility and strong readability across devices.  
-      Subtle transitions and micro-interactions enrich the browsing experience without compromising performance.
     </p>
   </div>
 </section>
@@ -4462,7 +4455,7 @@ void main() {
     </div>
   </div>
 </section>
-`},{id:"stelviopaddock",titolo:"Stelvio Paddock",anno:2025,ambito:"Branding",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${Et}portfolio/stelvio-paddock/cover.jpg`,alt:"Stelvio Paddock - Branding"},descrizione:"Identità e materiali per l’evento freestyle."}];document.getElementById("works-section");const jl=document.getElementById("works-track"),Kl=document.getElementById("works-list");let $l=!1;function iv(){Vc(ar),Gc(ar),$l?window.reflowWorksScroller?.():(cv(),$l=!0)}function Vc(s){jl.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-card",t.dataset.id=e.id;let n;e.cover.type==="video"?(n=document.createElement("video"),n.src=e.cover.src,n.poster=e.cover.poster||"",n.muted=!0,n.playsInline=!0,n.loop=!0,n.autoplay=!0,n.preload="auto",n.controls=!1,n.addEventListener("loadedmetadata",()=>{const r=()=>n.play().catch(()=>{});r(),requestAnimationFrame(r)})):(n=document.createElement("img"),n.src=e.cover.src,n.alt=e.cover.alt||e.titolo,n.loading="lazy");const i=document.createElement("div");i.className="work-overlay",i.innerHTML=`<div class="title">${e.titolo}</div><div class="subtitle">${e.anno}</div>`,t.appendChild(n),t.appendChild(i),t.addEventListener("click",()=>Wc(e.id)),jl.appendChild(t)})}function Gc(s){Kl.innerHTML="";const e=window.innerWidth<768;s.forEach(t=>{const n=document.createElement("div");n.className="work-row",n.dataset.id=t.id;const i=t.cover?.src||"",r=t.cover?.poster||"",o=t.cover?.type||"image",a=t.cover?.alt||t.titolo,l=o==="video"&&e?`<img src="${r}" alt="${a}" loading="lazy" decoding="async">`:o==="video"?`<video src="${i}" poster="${r}" muted playsinline preload="metadata"></video>`:`<img src="${i}" alt="${a}" loading="lazy" decoding="async">`;n.innerHTML=`
+`},{id:"stelviopaddock",titolo:"Stelvio Paddock",anno:2025,ambito:"Branding",ruoli:["Art Director","Producer"],cover:{type:"image",src:`${Et}portfolio/stelvio-paddock/cover.jpg`,alt:"Stelvio Paddock - Branding"},descrizione:"Identità e materiali per l’evento freestyle."},{id:"selfmade",titolo:"This Website",anno:2025,ambito:"Web Design",ruoli:["UI Designer","Front-End Developer"],cover:{type:"color",color:"#ff4800"},pageHTML:"",noModal:!0}];document.getElementById("works-section");const jl=document.getElementById("works-track"),Kl=document.getElementById("works-list");let $l=!1;function iv(){Vc(ar),Gc(ar),$l?window.reflowWorksScroller?.():(cv(),$l=!0)}function Vc(s){jl.innerHTML="",s.forEach(e=>{const t=document.createElement("div");t.className="work-card",t.dataset.id=e.id;let n;e.cover.type==="color"?(n=document.createElement("div"),n.style.background=e.cover.color,n.style.width="100%",n.style.height="100%",n.style.display="flex",n.style.alignItems="center",n.style.justifyContent="center",n.style.color="#000",n.style.fontWeight="600",n.style.fontFamily="var(--font, 'KeyframeTest', monospace)",n.style.textAlign="center",n.style.fontSize="1.1rem",n.innerHTML="<span>I built this one myself.</span>"):e.cover.type==="video"?(n=document.createElement("video"),n.src=e.cover.src,n.poster=e.cover.poster||"",n.muted=!0,n.playsInline=!0,n.loop=!0,n.autoplay=!0,n.preload="auto",n.controls=!1,n.addEventListener("loadedmetadata",()=>{const r=()=>n.play().catch(()=>{});r(),requestAnimationFrame(r)})):(n=document.createElement("img"),n.src=e.cover.src,n.alt=e.cover.alt||e.titolo,n.loading="lazy");const i=document.createElement("div");i.className="work-overlay",i.innerHTML=`<div class="title">${e.titolo}</div><div class="subtitle">${e.anno}</div>`,t.appendChild(n),t.appendChild(i),e.cover.type!=="color"&&t.addEventListener("click",()=>Wc(e.id)),jl.appendChild(t)})}function Gc(s){Kl.innerHTML="";const e=window.innerWidth<768;s.forEach(t=>{const n=document.createElement("div");n.className="work-row",n.dataset.id=t.id;const i=t.cover?.src||"",r=t.cover?.poster||"",o=t.cover?.type||"image",a=t.cover?.alt||t.titolo,l=o==="color"?`<div style="background:${t.cover.color};width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#000;font-weight:600;font-family:var(--font, 'KeyframeTest', monospace);text-align:center;">I built this one myself.</div>`:o==="video"&&e?`<img src="${r}" alt="${a}" loading="lazy" decoding="async">`:o==="video"?`<video src="${i}" poster="${r}" muted playsinline preload="metadata"></video>`:`<img src="${i}" alt="${a}" loading="lazy" decoding="async">`;n.innerHTML=`
       <div class="row-text">
         <div class="row-title">${t.titolo}</div>
         <div class="row-sub">${t.anno} · ${t.ambito}</div>
@@ -4470,7 +4463,7 @@ void main() {
       <div class="row-thumb">
         ${l}
       </div>
-    `,n.addEventListener("click",()=>Wc(t.id)),Kl.appendChild(n)})}const er=document.getElementById("project-modal"),sv=document.getElementById("project-modal-close"),rv=document.getElementById("project-modal-backdrop"),Si=document.getElementById("project-modal-page"),qs=document.getElementById("project-modal-media"),to=document.querySelector(".project-modal__content");function Wc(s){const e=ar.find(t=>t.id===s);if(e){if(document.getElementById("project-modal-title").textContent=e.titolo||"",document.getElementById("project-meta-year").textContent=e.anno??"",document.getElementById("project-meta-field").textContent=e.ambito||"",er.classList.remove("is-page"),Si.hidden=!0,Si.setAttribute("aria-hidden","true"),Si.innerHTML="",qs.innerHTML="",to.querySelector("#project-modal-desc").innerHTML="",qs.setAttribute("aria-hidden","false"),to.setAttribute("aria-hidden","false"),e.pageHTML){er.classList.add("is-page"),qs.setAttribute("aria-hidden","true"),to.setAttribute("aria-hidden","true");const t=e.pageCSS?`<style>${e.pageCSS}</style>`:"";Si.innerHTML=`
+    `,o!=="color"&&n.addEventListener("click",()=>Wc(t.id)),Kl.appendChild(n)})}const er=document.getElementById("project-modal"),sv=document.getElementById("project-modal-close"),rv=document.getElementById("project-modal-backdrop"),Si=document.getElementById("project-modal-page"),qs=document.getElementById("project-modal-media"),to=document.querySelector(".project-modal__content");function Wc(s){const e=ar.find(t=>t.id===s);if(e){if(document.getElementById("project-modal-title").textContent=e.titolo||"",document.getElementById("project-meta-year").textContent=e.anno??"",document.getElementById("project-meta-field").textContent=e.ambito||"",er.classList.remove("is-page"),Si.hidden=!0,Si.setAttribute("aria-hidden","true"),Si.innerHTML="",qs.innerHTML="",to.querySelector("#project-modal-desc").innerHTML="",qs.setAttribute("aria-hidden","false"),to.setAttribute("aria-hidden","false"),e.pageHTML){er.classList.add("is-page"),qs.setAttribute("aria-hidden","true"),to.setAttribute("aria-hidden","true");const t=e.pageCSS?`<style>${e.pageCSS}</style>`:"";Si.innerHTML=`
       <div class="container">
         ${e.pageHTML}
       </div>
